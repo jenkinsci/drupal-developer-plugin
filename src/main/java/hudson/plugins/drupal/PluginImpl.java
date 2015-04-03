@@ -1,4 +1,4 @@
-package jenkins.plugins.drupal;
+package hudson.plugins.drupal;
 
 import hudson.Plugin;
 
@@ -15,8 +15,8 @@ import java.util.logging.Logger;
  */
 public class PluginImpl extends Plugin {
 
-  private transient static final Logger logger = Logger.getLogger("hudson.plugins.drupal");
-
+  private transient static final Logger logger = Logger.getLogger("jenkins.plugins.drupal");
+  // TODO this class is not necessary
   public void start() {
 	  logger.info("Starting Drupal plugin");
   }
