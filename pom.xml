@@ -15,8 +15,8 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
-  <name>TODO Plugin</name>
-  <description>TODO</description>
+  <name>Drupal</name>
+  <description>This plugin allows to run code reviews and unit tests on Drupal modules.</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
   <licenses>
     <license>
