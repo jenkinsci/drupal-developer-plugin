@@ -1,7 +1,10 @@
 package hudson.plugins.drupal;
 
 import hudson.Extension;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
 import hudson.model.ItemGroup;
+import hudson.model.Items;
 import hudson.model.TopLevelItem;
 import hudson.model.TopLevelItemDescriptor;
 import hudson.model.Project;
@@ -25,7 +28,7 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 	}
 	
     @Restricted(NoExternalUse.class)
-    @Extension(ordinal=700)
+    @Extension(ordinal=1000)
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
     public static final class DescriptorImpl extends AbstractProjectDescriptor {
@@ -38,4 +41,14 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
         }
     }
 
+    /**
+     * Give the class an alias for configuration XML.
+     * 
+     * TODO do we need this ?
+     */
+    @Initializer(before = InitMilestone.PLUGINS_STARTED)
+    public static void registerXStream() {
+    	Items.XSTREAM.alias("jenkins-drupal", DrupalProject.class);
+    }
+    
 }

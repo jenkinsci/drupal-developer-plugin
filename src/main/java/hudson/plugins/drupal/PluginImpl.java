@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 public class PluginImpl extends Plugin {
 
   private transient static final Logger logger = Logger.getLogger("jenkins.plugins.drupal");
+
   // TODO this class is not necessary
   public void start() {
 	  logger.info("Starting Drupal plugin");

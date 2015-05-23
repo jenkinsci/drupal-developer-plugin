@@ -1,8 +1,8 @@
 package hudson.plugins.drupal;
 
-import java.io.IOException;
-
 import hudson.model.Build;
+
+import java.io.IOException;
 
 public class DrupalBuild extends Build<DrupalProject, DrupalBuild> {
 
