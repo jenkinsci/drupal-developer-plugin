@@ -21,7 +21,7 @@ import java.io.IOException;
  * <p>
  * When the user configures the project and enables this builder,
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link DrupalCodeReviewBuilder} is created. The created
+ * and a new {@link DrupalCoderBuilder} is created. The created
  * instance is persisted to the project configuration XML by using
  * XStream, so this allows you to use instance fields (like {@link #name})
  * to remember the configuration.
@@ -32,13 +32,13 @@ import java.io.IOException;
  *
  * @author Fengtan
  */
-public class DrupalCodeReviewBuilder extends Builder {
+public class DrupalCoderBuilder extends Builder {
 
     private final String name;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public DrupalCodeReviewBuilder(String name) {
+    public DrupalCoderBuilder(String name) {
         this.name = name;
     }
 
@@ -71,11 +71,11 @@ public class DrupalCodeReviewBuilder extends Builder {
     }
 
     /**
-     * Descriptor for {@link DrupalCodeReviewBuilder}. Used as a singleton.
+     * Descriptor for {@link DrupalCoderBuilder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.
      *
      * <p>
-     * See <tt>src/main/resources/hudson/plugins/drupal/DrupalCodeReviewBuilder/*.jelly</tt>
+     * See <tt>src/main/resources/hudson/plugins/drupal/DrupalCoderBuilder/*.jelly</tt>
      * for the actual HTML fragment for the configuration screen.
      */
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
