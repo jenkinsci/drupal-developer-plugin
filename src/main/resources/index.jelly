@@ -3,5 +3,5 @@
   This view is used to render the installed plugins page (/pluginManager/installed).
 -->
 <div>
-  This plugin allows to run code reviews and unit tests on Drupal modules.
+  This plugin allows to run Coder Review and Simpletest on Drupal.
 </div>

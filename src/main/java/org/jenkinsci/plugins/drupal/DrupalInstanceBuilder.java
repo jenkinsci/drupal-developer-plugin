@@ -1,4 +1,6 @@
 package org.jenkinsci.plugins.drupal;
+import java.io.IOException;
+
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -48,7 +50,7 @@ public class DrupalInstanceBuilder extends Builder {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	DrushInvocation invocation = new DrushInvocation(build, launcher, listener);
     	return invocation.execute();
     }
