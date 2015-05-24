@@ -1,5 +1,7 @@
 package org.jenkinsci.plugins.drupal;
+import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
@@ -12,6 +14,8 @@ import java.io.IOException;
 
 import net.sf.json.JSONObject;
 
+import org.jenkinsci.plugins.gitclient.Git;
+import org.jenkinsci.plugins.gitclient.GitClient;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -50,23 +54,24 @@ public class DrupalInstanceBuilder extends Builder {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	
-    	
-    	/*
-    	 * Git clone Drupal
-    	 */
-    	
-    	
+    	// Clone Drupal.
+    	listener.getLogger().println("Cloning Drupal"); // TODO version/tag
+    	EnvVars envVars = build.getEnvironment(listener);
+    	FilePath repo = build.getWorkspace();
+    	GitClient git = Git.with(listener, envVars).in(repo).getClient();
+    	// TODO put URL in properties file / constant
+    	git.clone("http://git.drupal.org/project/drupal.git", null, false, null); // TODO version/tag
+
     	DrushInvocation drush = new DrushInvocation(build, launcher, listener);
     	drush.siteInstall(db); // TODO do not re-install if user said so
-    	if (coder) { // TODO if box was checked
+    	if (coder) {
     		// TODO coder version should be selectable from UI
     		// TODO do not download module is already exists -- makes the task slow
     		drush.download("coder-7.x-2.5");
     		drush.enable("coder_review");
     		drush.coderReview();
     	}
-    	if (simpletest) { // TODO if box was checked
+    	if (simpletest) {
     		drush.testRun(uri);
     	}
     	return true;
