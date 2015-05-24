@@ -1,6 +1,4 @@
 package org.jenkinsci.plugins.drupal;
-import java.io.IOException;
-
 import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.BuildListener;
@@ -9,6 +7,9 @@ import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+
+import java.io.IOException;
+
 import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -35,24 +36,40 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DrupalInstanceBuilder extends Builder {
 
     private final String db;
-
-    // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
+    private final boolean coder;
+    private final boolean simpletest;
+    private final String uri;
+    
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db) {
+    public DrupalInstanceBuilder(String db, boolean coder, boolean simpletest, String uri) {
         this.db = db;
-    }
-
-    /**
-     * We'll use this from the <tt>config.jelly</tt>.
-     */
-    public String getDb() {
-        return db;
+        this.coder = coder;
+        this.simpletest = simpletest;
+        this.uri = uri;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	DrushInvocation invocation = new DrushInvocation(build, launcher, listener);
-    	return invocation.execute();
+    	
+    	
+    	/*
+    	 * Git clone Drupal
+    	 */
+    	
+    	
+    	DrushInvocation drush = new DrushInvocation(build, launcher, listener);
+    	drush.siteInstall(db); // TODO do not re-install if user said so
+    	if (coder) { // TODO if box was checked
+    		// TODO coder version should be selectable from UI
+    		// TODO do not download module is already exists -- makes the task slow
+    		drush.download("coder-7.x-2.5");
+    		drush.enable("coder_review");
+    		drush.coderReview();
+    	}
+    	if (simpletest) { // TODO if box was checked
+    		drush.testRun(uri);
+    	}
+    	return true;
     }
 
     // Overridden for better type safety.
