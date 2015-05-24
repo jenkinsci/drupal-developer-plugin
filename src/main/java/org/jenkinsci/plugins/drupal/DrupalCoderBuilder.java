@@ -109,8 +109,7 @@ public class DrupalCoderBuilder extends Builder {
          *      prevent the form from being saved. It just means that a message
          *      will be displayed to the user. 
          */
-        public FormValidation doCheckName(@QueryParameter String value)
-                throws IOException, ServletException {
+        public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error("Please set a name");
             if (value.length() < 4)
@@ -127,7 +126,7 @@ public class DrupalCoderBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Review Drupal code";
+            return "Run Coder review on Drupal";
         }
 
         @Override

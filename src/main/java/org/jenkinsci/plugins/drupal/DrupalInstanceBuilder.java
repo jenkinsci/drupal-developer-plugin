@@ -109,8 +109,7 @@ public class DrupalInstanceBuilder extends Builder {
          *      prevent the form from being saved. It just means that a message
          *      will be displayed to the user. 
          */
-        public FormValidation doCheckName(@QueryParameter String value)
-                throws IOException, ServletException {
+        public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
             if (value.length() == 0)
                 return FormValidation.error("Please set a name");
             if (value.length() < 4)
