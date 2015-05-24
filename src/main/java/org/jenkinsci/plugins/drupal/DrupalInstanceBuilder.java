@@ -34,24 +34,24 @@ import java.io.IOException;
  */
 public class DrupalInstanceBuilder extends Builder {
 
-    private final String name;
+    private final String db;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String name) {
-        this.name = name;
+    public DrupalInstanceBuilder(String db) {
+        this.db = db;
     }
 
     /**
      * We'll use this from the <tt>config.jelly</tt>.
      */
-    public String getName() {
-        return name;
+    public String getDb() {
+        return db;
     }
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        listener.getLogger().println("Hello, "+name+"!");
+        listener.getLogger().println("Hello, "+db+"!");
         return true;
     }
 
@@ -93,11 +93,10 @@ public class DrupalInstanceBuilder extends Builder {
          *      prevent the form from being saved. It just means that a message
          *      will be displayed to the user. 
          */
-        public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
-            if (value.length() == 0)
-                return FormValidation.error("Please set a name");
-            if (value.length() < 4)
-                return FormValidation.warning("Isn't the name too short?");
+        public FormValidation doCheckDb(@QueryParameter String value) {
+            if (value.length() == 0) {
+              return FormValidation.error("Please set a database URL"); // TODO check DB connection works
+            }
             return FormValidation.ok();
         }
 

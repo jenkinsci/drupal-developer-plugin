@@ -1,7 +1,9 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Name" field="name">
-    <f:textbox />
+  <f:entry title="Database URL" field="db">
+    <!-- TODO what if sqlite is not installed ? -->
+    <!-- TODO doc: sqlite is ok for coder, probably not for simpletest -->
+    <f:textbox default="sqlite://sites/default/files/.ht.sqlite"/>
   </f:entry>
   <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
   <!-- TODO mention additional info from admin/config/development/coder, including links to drupal.org -->
