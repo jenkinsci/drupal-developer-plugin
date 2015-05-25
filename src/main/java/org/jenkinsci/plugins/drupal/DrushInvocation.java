@@ -52,6 +52,7 @@ public class DrushInvocation {
 	public boolean coderReview() throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
+		args.add("--checkstyle");
 		return execute(args);
 	}
 	
@@ -59,6 +60,8 @@ public class DrushInvocation {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
 		args.add("--uri="+uri);
+		args.add("--all");
+		args.add("--xml");
 		return execute(args);
 	}
 

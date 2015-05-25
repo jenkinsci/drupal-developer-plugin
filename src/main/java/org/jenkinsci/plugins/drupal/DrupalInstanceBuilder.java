@@ -56,17 +56,23 @@ public class DrupalInstanceBuilder extends Builder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Clone Drupal code.
-    	listener.getLogger().println("Cloning Drupal"); // TODO version/tag
     	EnvVars env = build.getEnvironment(listener);
     	FilePath repo = build.getWorkspace();
     	String exe = GitTool.getDefaultInstallation().getGitExe();
     	GitClient git = Git.with(listener, env).in(repo).using(exe).getClient();
-    	// TODO if git.hasGitRepo() then it is an update
-    	git.clone("http://git.drupal.org/project/drupal.git", "origin", false, null);
-    	git.checkoutBranch("7.x", "tags/7.37"); // TODO let user select version/tag
-    	// TODO throw exception if clone fails
-    	// TODO put URL in properties file / constant
-	    // TODO if user changed version, re-checkout (even if no rebuild)
+    	if (git.hasGitRepo()) {
+    		// Drupal code already cloned, do nothing.
+    		// TODO unlesss user wants to re-clone Drupal
+    	    // TODO if user changed version, re-checkout (even if no rebuild)
+    		// TODO could be a git repo checked out by user (i.e. not drupal)
+    		listener.getLogger().println("Drupal code detected, no need to clone");
+    	} else {
+        	listener.getLogger().println("Cloning Drupal, please be patient"); // TODO mention version/tag
+        	git.clone("http://git.drupal.org/project/drupal.git", "origin", false, null);
+        	git.checkoutBranch("7.x", "tags/7.37"); // TODO let user select version/tag
+        	// TODO throw exception if clone fails
+        	// TODO put URL in properties file / constant
+    	}
     	
     	// Build Drupal instance.
     	DrushInvocation drush = new DrushInvocation(build, launcher, listener);
@@ -83,6 +89,7 @@ public class DrupalInstanceBuilder extends Builder {
     	
     	// Run Simpletest.
     	if (simpletest) {
+    		drush.enable("simpletest");
     		drush.testRun(uri);
     	}
     	
