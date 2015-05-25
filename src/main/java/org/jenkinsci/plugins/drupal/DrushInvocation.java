@@ -1,19 +1,23 @@
 package org.jenkinsci.plugins.drupal;
 
-import java.io.IOException;
-
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.util.ArgumentListBuilder;
 
+import java.io.File;
+import java.io.IOException;
+
 public class DrushInvocation {
 
+	protected final File root;
 	protected final AbstractBuild<?, ?> build;
 	protected final Launcher launcher;
 	protected final BuildListener listener;
 	
-	public DrushInvocation(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+	// TODO document
+	public DrushInvocation(File root, AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+		this.root = root;
 		this.build = build;
 		this.launcher = launcher;
 		this.listener = listener;
@@ -21,7 +25,7 @@ public class DrushInvocation {
 	}
 	
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor");
+		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--root="+root.getAbsolutePath());
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {

@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.EnvVars;
 import hudson.Extension;
-import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
@@ -11,6 +10,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 
+import java.io.File;
 import java.io.IOException;
 
 import net.sf.json.JSONObject;
@@ -55,11 +55,15 @@ public class DrupalInstanceBuilder extends Builder {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
+    	// Create Drupal directory.
+    	// TODO allow user to use a different subdirectory
+    	File root = new File(build.getWorkspace().getRemote(), "drupal");
+    	root.mkdir(); // TODO what if already exists
+
     	// Clone Drupal code.
     	EnvVars env = build.getEnvironment(listener);
-    	FilePath repo = build.getWorkspace();
     	String exe = GitTool.getDefaultInstallation().getGitExe();
-    	GitClient git = Git.with(listener, env).in(repo).using(exe).getClient();
+    	GitClient git = Git.with(listener, env).in(root).using(exe).getClient();
     	if (git.hasGitRepo()) {
     		// Drupal code already cloned, do nothing.
     		// TODO unlesss user wants to re-clone Drupal
@@ -75,7 +79,7 @@ public class DrupalInstanceBuilder extends Builder {
     	}
     	
     	// Build Drupal instance.
-    	DrushInvocation drush = new DrushInvocation(build, launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(root, build, launcher, listener);
     	drush.siteInstall(db); // TODO do not re-install if user said so
     	
     	// Run Coder Review.
