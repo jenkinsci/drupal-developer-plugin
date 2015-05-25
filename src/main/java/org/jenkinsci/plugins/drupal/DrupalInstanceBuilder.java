@@ -6,6 +6,7 @@ import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.plugins.git.GitTool;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
@@ -54,16 +55,24 @@ public class DrupalInstanceBuilder extends Builder {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	// Clone Drupal.
+    	// Clone Drupal code.
     	listener.getLogger().println("Cloning Drupal"); // TODO version/tag
-    	EnvVars envVars = build.getEnvironment(listener);
+    	EnvVars env = build.getEnvironment(listener);
     	FilePath repo = build.getWorkspace();
-    	GitClient git = Git.with(listener, envVars).in(repo).getClient();
+    	String exe = GitTool.getDefaultInstallation().getGitExe();
+    	GitClient git = Git.with(listener, env).in(repo).using(exe).getClient();
+    	// TODO if git.hasGitRepo() then it is an update
+    	git.clone("http://git.drupal.org/project/drupal.git", "origin", false, null);
+    	git.checkoutBranch("7.x", "tags/7.37"); // TODO let user select version/tag
+    	// TODO throw exception if clone fails
     	// TODO put URL in properties file / constant
-    	git.clone("http://git.drupal.org/project/drupal.git", null, false, null); // TODO version/tag
-
+	    // TODO if user changed version, re-checkout (even if no rebuild)
+    	
+    	// Build Drupal instance.
     	DrushInvocation drush = new DrushInvocation(build, launcher, listener);
     	drush.siteInstall(db); // TODO do not re-install if user said so
+    	
+    	// Run Coder Review.
     	if (coder) {
     		// TODO coder version should be selectable from UI
     		// TODO do not download module is already exists -- makes the task slow
@@ -71,9 +80,12 @@ public class DrupalInstanceBuilder extends Builder {
     		drush.enable("coder_review");
     		drush.coderReview();
     	}
+    	
+    	// Run Simpletest.
     	if (simpletest) {
     		drush.testRun(uri);
     	}
+    	
     	return true;
     }
 
