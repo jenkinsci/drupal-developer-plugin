@@ -2,8 +2,10 @@ package org.jenkinsci.plugins.drupal;
 
 import hudson.Launcher;
 import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 import hudson.model.AbstractBuild;
 import hudson.util.ArgumentListBuilder;
+import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,8 +31,12 @@ public class DrushInvocation {
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
-		// TODO detect drush return codes
-		return (launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(listener).join() == 0);
+		return execute(args, listener);
+	}
+
+	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
+		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).join();
+		return true; // TODO detect drush return codes
 	}
 
 	public boolean siteInstall(String db) throws IOException, InterruptedException {
@@ -53,19 +59,25 @@ public class DrushInvocation {
 		return execute(args);
 	}
 	
-	public boolean coderReview() throws IOException, InterruptedException {
+	public boolean coderReview(File outputDir) throws IOException, InterruptedException {
+    	File outputFile = new File(outputDir, "coder_review.xml");
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--checkstyle");
-		return execute(args);
+		return execute(args, new StreamTaskListener(outputFile));
 	}
 	
-	public boolean testRun(String uri) throws IOException, InterruptedException {
+	public boolean testRun(String uri, File xml) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
 		args.add("--uri="+uri);
-		args.add("--all");
-		args.add("--xml");
+		
+		// TODO
+		// args.add("--all");
+		args.add("--methods=testSettingsPage");
+		args.add("AggregatorConfigurationTestCase");
+		
+		args.add("--xml="+xml.getAbsolutePath());
 		return execute(args);
 	}
 

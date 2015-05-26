@@ -9,6 +9,7 @@ import hudson.plugins.git.GitTool;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
+import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,13 +58,18 @@ public class DrupalInstanceBuilder extends Builder {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Create Drupal directory.
     	// TODO allow user to use a different subdirectory
-    	File root = new File(build.getWorkspace().getRemote(), "drupal");
-    	root.mkdir(); // TODO what if already exists
+    	File rootDir = new File(build.getWorkspace().getRemote(), "drupal");
+    	rootDir.mkdir(); // TODO what if already exists
+    	
+    	// Create logs directory.
+		// TODO let user decide of a different dir ?
+    	File logsDir = new File(build.getWorkspace().getRemote(), "logs");
+    	logsDir.mkdir(); // TODO what if already exists
 
     	// Clone Drupal code.
     	EnvVars env = build.getEnvironment(listener);
     	String exe = GitTool.getDefaultInstallation().getGitExe();
-    	GitClient git = Git.with(listener, env).in(root).using(exe).getClient();
+    	GitClient git = Git.with(listener, env).in(rootDir).using(exe).getClient();
     	if (git.hasGitRepo()) {
     		// Drupal code already cloned, do nothing.
     		// TODO unlesss user wants to re-clone Drupal
@@ -79,7 +85,7 @@ public class DrupalInstanceBuilder extends Builder {
     	}
     	
     	// Build Drupal instance.
-    	DrushInvocation drush = new DrushInvocation(root, build, launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.siteInstall(db); // TODO do not re-install if user said so
     	
     	// Run Coder Review.
@@ -88,13 +94,13 @@ public class DrupalInstanceBuilder extends Builder {
     		// TODO do not download module is already exists -- makes the task slow
     		drush.download("coder-7.x-2.5");
     		drush.enable("coder_review");
-    		drush.coderReview();
+    		drush.coderReview(logsDir);
     	}
     	
     	// Run Simpletest.
     	if (simpletest) {
     		drush.enable("simpletest");
-    		drush.testRun(uri);
+    		drush.testRun(uri, logsDir);
     	}
     	
     	return true;
