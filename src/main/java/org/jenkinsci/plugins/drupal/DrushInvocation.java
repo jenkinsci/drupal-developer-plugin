@@ -9,6 +9,9 @@ import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import org.eclipse.jgit.util.io.NullOutputStream;
 
 public class DrushInvocation {
 
@@ -35,7 +38,8 @@ public class DrushInvocation {
 	}
 
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
-		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).join();
+		// Do not display stderr since this breaks the XML formatting on stdout.
+		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.INSTANCE).join();
 		return true; // TODO detect drush return codes
 	}
 
