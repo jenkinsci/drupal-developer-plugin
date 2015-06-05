@@ -9,24 +9,6 @@
     <f:textbox default="mysql://user:password@localhost/db"/>
   </f:entry>
   <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
-  <!-- TODO mention additional info from admin/config/development/coder, including links to drupal.org -->
-  <f:optionalBlock name="coder" title="${%Run Coder Review}" checked="${instance.coder}" inline="true">
-    <f:entry title="${%Drupal Coding Standards}" field="style">
-      <f:checkbox default="true"/>
-    </f:entry>
-    <f:entry title="${%Drupal Commenting Standards}" field="comment">
-      <f:checkbox default="true"/>
-    </f:entry>
-    <f:entry title="${%Drupal SQL Standards}" field="sql">
-      <f:checkbox default="true"/>
-    </f:entry>
-    <f:entry title="${%Drupal Security Checks}" field="security">
-      <f:checkbox default="true"/>
-    </f:entry>
-    <f:entry title="${%Internationalization}" field="i18n">
-      <f:checkbox default="true"/>
-    </f:entry>
-  </f:optionalBlock>
   <f:optionalBlock name="simpletest" title="${%Run Simpletest}" checked="${instance.simpletest}" inline="true">
     <f:entry title="${%URI}" field="uri"><!-- TODO "help/documentation: this will be used when running drush -uri" -->
       <f:textbox default="http://example.net/"/>

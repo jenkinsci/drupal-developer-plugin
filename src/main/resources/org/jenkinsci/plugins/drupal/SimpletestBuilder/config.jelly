@@ -1,0 +1,9 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!-- TODO mention additional info from admin/config/development/coder, including links to drupal.org -->
+  <f:entry title="${%Drupal Coding Standards}"     field="style"   ><f:checkbox default="true"/></f:entry>
+  <f:entry title="${%Drupal Commenting Standards}" field="comment" ><f:checkbox default="true"/></f:entry>
+  <f:entry title="${%Drupal SQL Standards}"        field="sql"     ><f:checkbox default="true"/></f:entry>
+  <f:entry title="${%Drupal Security Checks}"      field="security"><f:checkbox default="true"/></f:entry>
+  <f:entry title="${%Internationalization}"        field="i18n"    ><f:checkbox default="true"/></f:entry>
+</j:jelly>

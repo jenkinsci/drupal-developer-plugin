@@ -3,5 +3,5 @@
   This view is used to render the installed plugins page (/pluginManager/installed).
 -->
 <div>
-  Run Coder Review and Simpletest on Drupal.
+  Run code reviews and tests on Drupal projects.
 </div>
