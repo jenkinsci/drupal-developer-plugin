@@ -37,16 +37,10 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DrupalInstanceBuilder extends Builder {
 
     private final String db;
-    private final boolean coder;
-    private final boolean simpletest;
-    private final String uri;
     
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, boolean coder, boolean simpletest, String uri) {
+    public DrupalInstanceBuilder(String db) {
         this.db = db;
-        this.coder = coder;
-        this.simpletest = simpletest;
-        this.uri = uri;
     }
 
     @Override

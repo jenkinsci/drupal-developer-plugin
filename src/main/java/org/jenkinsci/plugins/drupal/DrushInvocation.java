@@ -10,6 +10,8 @@ import hudson.util.StreamTaskListener;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.output.NullOutputStream;
+
 public class DrushInvocation {
 
 	protected final File root;
@@ -27,7 +29,7 @@ public class DrushInvocation {
 	}
 	
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--root="+root.getAbsolutePath());
+		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--verbose").add("--root="+root.getAbsolutePath());
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
@@ -36,7 +38,7 @@ public class DrushInvocation {
 
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		// Do not display stderr since this breaks the XML formatting on stdout.
-		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).join();
+		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
 		return true; // TODO detect drush return codes
 	}
 
@@ -64,7 +66,7 @@ public class DrushInvocation {
 		return execute(args);
 	}
 
-	public boolean testRun(String uri, File xml) throws IOException, InterruptedException {
+	public boolean testRun(String uri, File outputDir) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
 		args.add("--uri="+uri);
@@ -74,15 +76,15 @@ public class DrushInvocation {
 		args.add("--methods=testSettingsPage");
 		args.add("AggregatorConfigurationTestCase");
 		
-		args.add("--xml="+xml.getAbsolutePath());
+		args.add("--xml="+outputDir.getAbsolutePath());
 		return execute(args);
 	}
 	
 	public boolean coderReview(File outputDir) throws IOException, InterruptedException {
-    	File outputFile = new File(outputDir, "coder_review.xml");
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--checkstyle");
+    	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));
 	}
 

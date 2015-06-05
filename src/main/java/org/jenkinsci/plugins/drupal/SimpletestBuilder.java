@@ -35,10 +35,12 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class SimpletestBuilder extends Builder {
 
+    private final String uri;
+	
     @DataBoundConstructor
-    public SimpletestBuilder() {
+    public SimpletestBuilder(String uri) {
         //TOOD this.root = root;
-        //TODO this.uri = uri;
+        this.uri = uri;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class SimpletestBuilder extends Builder {
     	File rootDir = new File(build.getWorkspace().getRemote(), "drupal"); // TODO user should be able to set root
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.enable("simpletest"); // TODO unless already enabled
-    	drush.testRun("", logsDir); // TODO set uri + user should be able to choose
+    	drush.testRun(uri, logsDir); // TODO user should be able to choose
     	    	
     	return true;
     }
