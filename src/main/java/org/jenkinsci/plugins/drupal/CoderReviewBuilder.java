@@ -6,11 +6,11 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.util.ArgumentListBuilder;
-import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import net.sf.json.JSONObject;
 
@@ -36,10 +36,21 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class CoderReviewBuilder extends Builder {
 
+	public final boolean style;
+	public final boolean comment;
+	public final boolean sql;
+	public final boolean security;
+	public final boolean i18n;
+	
     @DataBoundConstructor
-    public CoderReviewBuilder() {
+    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n) {
         //TOOD this.root = root;
         //TODO this.uri = uri;
+    	this.style = style;
+    	this.comment = comment;
+    	this.sql = sql;
+    	this.security = security;
+    	this.i18n = i18n;
     }
 
     @Override
@@ -55,7 +66,14 @@ public class CoderReviewBuilder extends Builder {
   		// TODO do not download module is already exists -- makes the task slow
 		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
-		drush.coderReview(logsDir);
+		Set<String> reviews = new TreeSet<String>();
+		// TODO any chance to have Jelly return directly a Set ?
+		if (this.style) reviews.add("style");
+		if (this.comment) reviews.add("comment");
+		if (this.sql) reviews.add("sql");
+		if (this.security) reviews.add("security");
+		if (this.i18n) reviews.add("i18n");
+		drush.coderReview(logsDir, reviews);
     			
     	return true;
     }

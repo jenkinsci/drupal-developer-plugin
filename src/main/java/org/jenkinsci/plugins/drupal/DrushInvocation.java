@@ -9,8 +9,10 @@ import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.commons.io.output.NullOutputStream;
+import org.apache.commons.lang.StringUtils;
 
 public class DrushInvocation {
 
@@ -81,10 +83,21 @@ public class DrushInvocation {
 		return execute(args);
 	}
 	
-	public boolean coderReview(File outputDir) throws IOException, InterruptedException {
+	/**
+	 * 
+	 * @param outputDir
+	 * @param reviews See drush coder-review --reviews (set of i18n, style, etc)
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public boolean coderReview(File outputDir, Set reviews) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
+		args.add("--minor");
+		args.add("--ignores-pass");
 		args.add("--checkstyle");
+		args.add("--reviews="+StringUtils.join(reviews, ",")); // TODO pom.xml apache stringutils
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));
 	}
