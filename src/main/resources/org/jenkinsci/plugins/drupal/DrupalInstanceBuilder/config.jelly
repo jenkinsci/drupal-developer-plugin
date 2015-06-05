@@ -9,9 +9,4 @@
     <f:textbox default="mysql://user:password@localhost/db"/>
   </f:entry>
   <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
-  <f:optionalBlock name="simpletest" title="${%Run Simpletest}" checked="${instance.simpletest}" inline="true">
-    <f:entry title="${%URI}" field="uri"><!-- TODO "help/documentation: this will be used when running drush -uri" -->
-      <f:textbox default="http://example.net/"/>
-    </f:entry>
-  </f:optionalBlock>
 </j:jelly>
