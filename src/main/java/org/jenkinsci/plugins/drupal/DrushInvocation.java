@@ -48,26 +48,22 @@ public class DrushInvocation {
 	}
 	
 	// TODO what if codebase already contains coder / has the wrong version of coder
-	public boolean download(String module) throws IOException, InterruptedException {
+	public boolean download(String projects) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
-		args.add("pm-download").add(module);
+		args.add("pm-download").add(projects);
+		// Downloading Drupal generates a folder "drupal-x-y". We want a folder simply named "drupal".
+		if (projects.equals("drupal")) {
+			args.add("--drupal-project-rename=drupal");
+		}
 		return execute(args);
 	}
 	
-	public boolean enable(String module) throws IOException, InterruptedException {
+	public boolean enable(String extensions) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
-		args.add("pm-enable").add(module);
+		args.add("pm-enable").add(extensions);
 		return execute(args);
 	}
-	
-	public boolean coderReview(File outputDir) throws IOException, InterruptedException {
-    	File outputFile = new File(outputDir, "coder_review.xml");
-		ArgumentListBuilder args = getArgumentListBuilder();
-		args.add("coder-review");
-		args.add("--checkstyle");
-		return execute(args, new StreamTaskListener(outputFile));
-	}
-	
+
 	public boolean testRun(String uri, File xml) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
@@ -80,6 +76,14 @@ public class DrushInvocation {
 		
 		args.add("--xml="+xml.getAbsolutePath());
 		return execute(args);
+	}
+	
+	public boolean coderReview(File outputDir) throws IOException, InterruptedException {
+    	File outputFile = new File(outputDir, "coder_review.xml");
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("coder-review");
+		args.add("--checkstyle");
+		return execute(args, new StreamTaskListener(outputFile));
 	}
 
 }

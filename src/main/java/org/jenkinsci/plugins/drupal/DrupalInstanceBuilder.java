@@ -58,7 +58,7 @@ public class DrupalInstanceBuilder extends Builder {
 
     	// Download Drupal core.
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
-    	drush.download("drupal --drupal-project-rename=drupal"); // TODO move option in addArg() TODO min drush versio nsupporting --drupal-project-rename
+    	drush.download("drupal"); // TODO move option in addArg() TODO min drush versio nsupporting --drupal-project-rename
     	// TODO what if drupal core already exists
     	// TODO let user select version/tag 7.37
     	// TODO throw exception if no internet / cannot dowload core

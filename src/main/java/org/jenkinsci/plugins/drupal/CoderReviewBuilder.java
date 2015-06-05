@@ -6,6 +6,8 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import hudson.util.ArgumentListBuilder;
+import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +56,7 @@ public class CoderReviewBuilder extends Builder {
 		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
 		drush.coderReview(logsDir);
-    	
+    			
     	return true;
     }
 
@@ -95,7 +97,7 @@ public class CoderReviewBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Coder Review on a Drupal instance";
+            return "Run Coder Review on Drupal";
         }
 
         @Override

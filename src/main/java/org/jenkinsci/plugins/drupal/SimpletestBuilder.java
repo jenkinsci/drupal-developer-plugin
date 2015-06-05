@@ -6,6 +6,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import hudson.util.ArgumentListBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class SimpletestBuilder extends Builder {
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.enable("simpletest"); // TODO unless already enabled
     	drush.testRun("", logsDir); // TODO set uri + user should be able to choose
-    	
+    	    	
     	return true;
     }
 
@@ -93,7 +94,7 @@ public class SimpletestBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Simpletest on a Drupal instance";
+            return "Run Simpletest on Drupal";
         }
 
         @Override
