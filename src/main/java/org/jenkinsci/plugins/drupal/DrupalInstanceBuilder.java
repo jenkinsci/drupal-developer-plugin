@@ -36,7 +36,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class DrupalInstanceBuilder extends Builder {
 
-    private final String db;
+    public final String db;
     
     @DataBoundConstructor
     public DrupalInstanceBuilder(String db) {

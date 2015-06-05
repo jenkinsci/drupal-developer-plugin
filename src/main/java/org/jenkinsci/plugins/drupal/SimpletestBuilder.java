@@ -35,7 +35,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class SimpletestBuilder extends Builder {
 
-    private final String uri;
+    public final String uri;
 	
     @DataBoundConstructor
     public SimpletestBuilder(String uri) {

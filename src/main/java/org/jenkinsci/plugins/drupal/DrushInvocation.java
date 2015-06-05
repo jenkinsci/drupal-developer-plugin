@@ -38,6 +38,7 @@ public class DrushInvocation {
 
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		// Do not display stderr since this breaks the XML formatting on stdout.
+		// TODO pom.xml dependency on apache commons ? NullOutputStream
 		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
 		return true; // TODO detect drush return codes
 	}
