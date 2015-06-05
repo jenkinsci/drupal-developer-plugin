@@ -21,7 +21,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * <p>
  * When the user configures the project and enables this builder,
  * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link SimpletestBuilder} is created. The created
+ * and a new {@link CoderReviewBuilder} is created. The created
  * instance is persisted to the project configuration XML by using
  * XStream, so this allows you to use instance fields (like {@link #name})
  * to remember the configuration.
@@ -32,10 +32,10 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Fengtan
  */
-public class SimpletestBuilder extends Builder {
+public class CoderReviewBuilder extends Builder {
 
     @DataBoundConstructor
-    public SimpletestBuilder() {
+    public CoderReviewBuilder() {
         //TOOD this.root = root;
         //TODO this.uri = uri;
     }
@@ -47,11 +47,13 @@ public class SimpletestBuilder extends Builder {
     	File logsDir = new File(build.getWorkspace().getRemote(), "logs");
     	logsDir.mkdir(); // TODO what if already exists
 
-    	// Run Simpletest.
+    	// Run Coder Review.
     	File rootDir = new File(build.getWorkspace().getRemote(), "drupal"); // TODO user should be able to set root
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
-    	drush.enable("simpletest"); // TODO unless already enabled
-    	drush.testRun("", logsDir); // TODO set uri + user should be able to choose
+  		// TODO do not download module is already exists -- makes the task slow
+		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
+		drush.enable("coder_review"); // TODO unless already enabled
+		drush.coderReview(logsDir);
     	
     	return true;
     }
@@ -65,7 +67,7 @@ public class SimpletestBuilder extends Builder {
     }
 
     /**
-     * Descriptor for {@link SimpletestBuilder}. Used as a singleton.
+     * Descriptor for {@link CoderReviewBuilder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.
      *
      * <p>
@@ -93,7 +95,7 @@ public class SimpletestBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Simpletest on a Drupal instance";
+            return "Run Coder Review on a Drupal instance";
         }
 
         @Override

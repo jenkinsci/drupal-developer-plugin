@@ -51,15 +51,10 @@ public class DrupalInstanceBuilder extends Builder {
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	// Create Drupal directory.
+    	// Make sure Drupal root directory exists.
     	// TODO allow user to use a different subdirectory
     	File rootDir = new File(build.getWorkspace().getRemote(), "drupal");
     	rootDir.mkdir(); // TODO what if already exists
-    	
-    	// Create logs directory.
-		// TODO let user decide of a different dir ?
-    	File logsDir = new File(build.getWorkspace().getRemote(), "logs");
-    	logsDir.mkdir(); // TODO what if already exists
 
     	// Download Drupal core.
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
@@ -74,22 +69,7 @@ public class DrupalInstanceBuilder extends Builder {
     	
     	// Build Drupal instance.
     	drush.siteInstall(db); // TODO do not re-install if user said so
-    	
-    	// Run Coder Review.
-    	if (coder) {
-    		// TODO coder version should be selectable from UI
-    		// TODO do not download module is already exists -- makes the task slow
-    		drush.download("coder-7.x-2.5");
-    		drush.enable("coder_review");
-    		drush.coderReview(logsDir);
-    	}
-    	
-    	// Run Simpletest.
-    	if (simpletest) {
-    		drush.enable("simpletest");
-    		drush.testRun(uri, logsDir);
-    	}
-    	
+   	
     	return true;
     }
 
@@ -153,7 +133,7 @@ public class DrupalInstanceBuilder extends Builder {
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             save();
-            return super.configure(req,formData);
+            return super.configure(req, formData);
         }
     }
 }
