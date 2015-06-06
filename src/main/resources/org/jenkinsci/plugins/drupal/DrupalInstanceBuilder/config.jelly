@@ -1,5 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
   <!-- TODO what if mysql/sqlite is not installed ? -->
   <!-- TODO doc: sqlite is ok for coder, probably not for simpletest -->
   <!-- TODO test works sqlite -->
@@ -7,12 +8,19 @@
   <!-- TODO documentation "create a Mysql DB" -->
   <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
   <f:entry title="${%Database URL}" field="db"><f:textbox default="mysql://user:password@localhost/db"/></f:entry>
-  <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
-  <!-- TODO explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"-->
-  <f:optionalBlock title="${%Run a PHP web server}" name="webServer" checked="${instance.webServer}" inline="true">
-    <!-- TODO explain: must be a different port for each job ; web server will run only during -->
-    <!-- TODO make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
-    <!-- TODO another default port at random ? -->
-    <f:entry title="${%Port}" field="webServerPort"><f:textbox default="8888"/></f:entry>
-  </f:optionalBlock>
+
+  <f:advanced>
+
+    <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+
+    <!-- TODO explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"-->
+    <f:optionalBlock title="${%Run a PHP web server}" name="webServer" checked="${instance.webServer}" inline="true">
+      <!-- TODO explain: must be a different port for each job ; web server will run only during -->
+      <!-- TODO make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
+      <!-- TODO another default port at random ? -->
+      <f:entry title="${%Port}" field="webServerPort"><f:textbox default="8888"/></f:entry>
+    </f:optionalBlock>
+
+  </f:advanced>
+
 </j:jelly>

@@ -8,6 +8,8 @@
   <f:entry title="${%Drupal Security Checks}"      field="security"><f:checkbox default="true"/></f:entry>
   <f:entry title="${%Internationalization}"        field="i18n"    ><f:checkbox default="true"/></f:entry>
   
-  <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+  <f:advanced>
+    <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+  </f:advanced>
   
 </j:jelly>

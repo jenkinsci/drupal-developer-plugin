@@ -4,6 +4,8 @@
   <!-- TODO "help/documentation: this will be used when running drush -uri" -->
   <f:entry title="${%URI}" field="uri"><f:textbox default="http://example.net/"/></f:entry>
   
-  <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+  <f:advanced>
+    <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+  </f:advanced>
   
 </j:jelly>
