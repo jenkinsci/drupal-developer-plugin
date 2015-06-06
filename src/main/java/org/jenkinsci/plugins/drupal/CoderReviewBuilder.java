@@ -42,15 +42,17 @@ public class CoderReviewBuilder extends Builder {
 	public final boolean security;
 	public final boolean i18n;
 	
+	public final String root;
+	
     @DataBoundConstructor
-    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n) {
-        //TOOD this.root = root;
+    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root) {
         //TODO this.uri = uri;
     	this.style = style;
     	this.comment = comment;
     	this.sql = sql;
     	this.security = security;
     	this.i18n = i18n;
+    	this.root = root;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class CoderReviewBuilder extends Builder {
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Coder Review.
-    	File rootDir = new File(build.getWorkspace().getRemote(), "drupal"); // TODO user should be able to set root
+    	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
   		// TODO do not download module is already exists -- makes the task slow
 		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
@@ -115,7 +117,7 @@ public class CoderReviewBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Coder Review on Drupal";
+            return "Run Coder Review on Drupal"; // TODO "Run code review on Drupal" ?
         }
 
         @Override

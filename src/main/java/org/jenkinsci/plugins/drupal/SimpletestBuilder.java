@@ -36,11 +36,12 @@ import org.kohsuke.stapler.StaplerRequest;
 public class SimpletestBuilder extends Builder {
 
     public final String uri;
+    public final String root;
 	
     @DataBoundConstructor
-    public SimpletestBuilder(String uri) {
-        //TOOD this.root = root;
+    public SimpletestBuilder(String uri, String root) {
         this.uri = uri;
+        this.root = root;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SimpletestBuilder extends Builder {
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Simpletest.
-    	File rootDir = new File(build.getWorkspace().getRemote(), "drupal"); // TODO user should be able to set root
+    	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.enable("simpletest"); // TODO unless already enabled
     	drush.testRun(logsDir, uri); // TODO user should be able to choose
@@ -96,7 +97,7 @@ public class SimpletestBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Simpletest on Drupal";
+            return "Run Simpletest on Drupal"; // TODO "Run unit tests on Drupal ?"
         }
 
         @Override
