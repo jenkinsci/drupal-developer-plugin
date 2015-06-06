@@ -11,7 +11,7 @@
 
   <f:advanced>
 
-    <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+    <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 
     <!-- TODO explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"-->
     <f:optionalBlock title="${%Run a PHP web server}" name="webServer" checked="${instance.webServer}" inline="true">

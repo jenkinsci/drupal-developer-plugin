@@ -9,9 +9,13 @@
   <f:entry title="${%Internationalization}"        field="i18n"    ><f:checkbox default="true"/></f:entry>
   
   <f:advanced>
-    <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
-    <!-- TOOD explain: "you can publish checkstyle by using value in this textfield" -->
+    <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+    <!-- TODO explain: "you can publish checkstyle by using value in this textfield" -->
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.coder"/></f:entry>
+    <!-- TODO radio "review everything / only these modules / everything except these modules -->
+    <!-- TODO explain "multiple directory on multiple lines" -->
+    <!-- TODO explain syntax with wildcards, relative to Drupal root directory -->
+    <f:entry title="${%Review everything except code in these directories}" field="except"><f:textarea default="modules/*&#10;themes/*&#10;sites/all/modules/contrib/*&#10;sites/default/modules/contrib/*"/></f:entry>
   </f:advanced>
 
 </j:jelly>

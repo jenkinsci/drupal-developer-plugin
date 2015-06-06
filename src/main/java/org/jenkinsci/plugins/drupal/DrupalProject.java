@@ -1,7 +1,7 @@
 package org.jenkinsci.plugins.drupal;
 
 /**
- * Drupal project: module, theme, etc.
+ * Drupal project (module or theme).
  * 
  * @author Fengtan
  *

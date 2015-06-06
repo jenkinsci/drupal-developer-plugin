@@ -99,6 +99,7 @@ public class DrushInvocation {
 	 * @throws InterruptedException
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<DrupalProject> projects) throws IOException, InterruptedException {
+		// TODO add more options to user (see drush help coder-review)
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");
@@ -106,7 +107,11 @@ public class DrushInvocation {
 		args.add("--checkstyle");
 		args.add("--reviews="+StringUtils.join(reviews, ",")); // TODO pom.xml apache stringutils
 		for(DrupalProject project: projects) {
-			args.add(project.getName());
+			// drush coder-review comment ends up with error "use --reviews or --comment."
+			// TODO find a workaround
+			if (!project.getName().equals("comment")) {
+				args.add(project.getName());
+			}
 		}
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));

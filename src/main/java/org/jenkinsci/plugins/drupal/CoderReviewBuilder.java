@@ -45,10 +45,10 @@ public class CoderReviewBuilder extends Builder {
 	
 	public final String root;
 	public final String logs;
+	public final String except;
 	
     @DataBoundConstructor
-    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs) {
-        //TODO this.uri = uri;
+    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except) {
     	this.style = style;
     	this.comment = comment;
     	this.sql = sql;
@@ -56,6 +56,7 @@ public class CoderReviewBuilder extends Builder {
     	this.i18n = i18n;
     	this.root = root;
     	this.logs = logs;
+    	this.except = except;
     }
 
     @Override
@@ -80,6 +81,7 @@ public class CoderReviewBuilder extends Builder {
 		if (this.i18n) reviews.add("i18n");
 		
 		Collection<DrupalProject> projects = drush.getProjects();
+		// TODO apply this.except
 		
 		drush.coderReview(logsDir, reviews, projects);
 
