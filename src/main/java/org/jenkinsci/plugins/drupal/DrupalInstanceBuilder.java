@@ -66,6 +66,7 @@ public class DrupalInstanceBuilder extends Builder {
 		// TODO unlesss user wants to re-clone Drupal
 	    // TODO if user changed version, re-checkout (even if no rebuild)
     	// TODO do not download again each build
+    	// TODO support make files + ability to use drupal core if in version control + install profile
     	
     	// Build Drupal instance.
     	drush.siteInstall(db); // TODO do not re-install if user said so

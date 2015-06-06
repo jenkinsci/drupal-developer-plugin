@@ -7,10 +7,16 @@ import hudson.model.AbstractBuild;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 
@@ -100,6 +106,29 @@ public class DrushInvocation {
 		args.add("--reviews="+StringUtils.join(reviews, ",")); // TODO pom.xml apache stringutils
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));
+	}
+	
+	/**
+	 * 
+	 * @return List of project filenames (modules & themes).
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public List<String> getProjects() throws IOException, InterruptedException {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("sqlq");
+		args.add("'select filename from {system} order by filename");
+		args.add("--extra='--skip-column-names'");
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		execute(args, new StreamTaskListener(stream)); // TODO check result of execute()
+		
+		List<String> projects = new ArrayList<String>();
+		CSVParser parser = CSVParser.parse(stream.toString(), CSVFormat.MYSQL);
+		for (CSVRecord project : parser) {
+			projects.add(project.toString());
+		}
+				
+		return projects;
 	}
 
 }
