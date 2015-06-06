@@ -54,8 +54,8 @@ public class SimpletestBuilder extends Builder {
     	File rootDir = new File(build.getWorkspace().getRemote(), "drupal"); // TODO user should be able to set root
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.enable("simpletest"); // TODO unless already enabled
-    	drush.testRun(uri, logsDir); // TODO user should be able to choose
-    	    	
+    	drush.testRun(logsDir, uri); // TODO user should be able to choose
+
     	return true;
     }
 

@@ -69,10 +69,10 @@ public class DrushInvocation {
 		return execute(args);
 	}
 
-	public boolean testRun(String uri, File outputDir) throws IOException, InterruptedException {
+	public boolean testRun(File outputDir, String uri) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
-		args.add("--uri="+uri);
+		args.add("--uri="+uri); // TODO if user did not provide uri, then do not set --uri
 		
 		// TODO
 		// args.add("--all");
@@ -91,7 +91,7 @@ public class DrushInvocation {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public boolean coderReview(File outputDir, Set reviews) throws IOException, InterruptedException {
+	public boolean coderReview(File outputDir, Set<String> reviews) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");

@@ -10,6 +10,7 @@ import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import net.sf.json.JSONObject;
 
@@ -37,17 +38,22 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DrupalInstanceBuilder extends Builder {
 
     public final String db;
+    public final String root;
+    public final boolean webServer;
+    public final String webServerPort;
     
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db) {
+    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort) {
         this.db = db;
+        this.root = root;
+        this.webServer = webServer;
+        this.webServerPort = webServerPort;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure Drupal root directory exists.
-    	// TODO allow user to use a different subdirectory
-    	File rootDir = new File(build.getWorkspace().getRemote(), "drupal");
+    	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	rootDir.mkdir(); // TODO what if already exists
 
     	// Download Drupal core.
@@ -63,6 +69,8 @@ public class DrupalInstanceBuilder extends Builder {
     	
     	// Build Drupal instance.
     	drush.siteInstall(db); // TODO do not re-install if user said so
+    	
+    	// TODO start / stop php web server depending on this.webServerPort/Use (in this.prebuild() ?)
    	
     	return true;
     }
