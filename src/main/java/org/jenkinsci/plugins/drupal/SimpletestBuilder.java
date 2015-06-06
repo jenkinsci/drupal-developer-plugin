@@ -37,18 +37,19 @@ public class SimpletestBuilder extends Builder {
 
     public final String uri;
     public final String root;
+    public final String logs;
 	
     @DataBoundConstructor
-    public SimpletestBuilder(String uri, String root) {
+    public SimpletestBuilder(String uri, String root, String logs) {
         this.uri = uri;
         this.root = root;
+        this.logs = logs;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.
-		// TODO let user decide of a different dir ?
-    	File logsDir = new File(build.getWorkspace().getRemote(), "logs");
+    	File logsDir = new File(build.getWorkspace().getRemote(), logs);
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Simpletest.

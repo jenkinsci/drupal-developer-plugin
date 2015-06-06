@@ -43,9 +43,10 @@ public class CoderReviewBuilder extends Builder {
 	public final boolean i18n;
 	
 	public final String root;
+	public final String logs;
 	
     @DataBoundConstructor
-    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root) {
+    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs) {
         //TODO this.uri = uri;
     	this.style = style;
     	this.comment = comment;
@@ -53,13 +54,13 @@ public class CoderReviewBuilder extends Builder {
     	this.security = security;
     	this.i18n = i18n;
     	this.root = root;
+    	this.logs = logs;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.
-		// TODO let user decide of a different dir ?
-    	File logsDir = new File(build.getWorkspace().getRemote(), "logs");
+    	File logsDir = new File(build.getWorkspace().getRemote(), logs);
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Coder Review.

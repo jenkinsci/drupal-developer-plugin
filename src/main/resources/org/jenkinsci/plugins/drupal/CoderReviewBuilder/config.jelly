@@ -10,6 +10,8 @@
   
   <f:advanced>
     <f:entry title="${%Root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+    <!-- TOOD explain: "you can publish checkstyle by using value in this textfield" -->
+    <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.coder"/></f:entry>
   </f:advanced>
-  
+
 </j:jelly>
