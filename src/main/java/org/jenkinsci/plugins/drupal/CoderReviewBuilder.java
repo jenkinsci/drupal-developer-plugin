@@ -9,8 +9,9 @@ import hudson.tasks.Builder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import net.sf.json.JSONObject;
 
@@ -69,15 +70,19 @@ public class CoderReviewBuilder extends Builder {
   		// TODO do not download module is already exists -- makes the task slow
 		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
-		Set<String> reviews = new TreeSet<String>();
+		
+		Collection<String> reviews = new HashSet<String>();
 		// TODO any chance to have Jelly return directly a Set ?
 		if (this.style) reviews.add("style");
 		if (this.comment) reviews.add("comment");
 		if (this.sql) reviews.add("sql");
 		if (this.security) reviews.add("security");
 		if (this.i18n) reviews.add("i18n");
-		drush.coderReview(logsDir, reviews);
-    			
+		
+		Collection<DrupalProject> projects = drush.getProjects();
+		
+		drush.coderReview(logsDir, reviews, projects);
+
     	return true;
     }
 

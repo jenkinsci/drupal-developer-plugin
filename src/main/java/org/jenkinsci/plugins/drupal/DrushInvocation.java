@@ -7,12 +7,11 @@ import hudson.model.AbstractBuild;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.HashSet;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -47,6 +46,7 @@ public class DrushInvocation {
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		// Do not display stderr since this breaks the XML formatting on stdout.
 		// TODO pom.xml dependency on apache commons ? NullOutputStream
+		// TODO find a way to display stderr in console
 		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
 		return true; // TODO detect drush return codes
 	}
@@ -64,7 +64,7 @@ public class DrushInvocation {
 		args.add("pm-download").add(projects);
 		// Downloading Drupal generates a folder "drupal-x-y". We want a folder simply named "drupal".
 		if (projects.equals("drupal")) {
-			args.add("--drupal-project-rename=drupal");
+			args.add("--drupal-project-rename=drupal");// TODO should rename according to root specified by user
 		}
 		return execute(args);
 	}
@@ -93,17 +93,21 @@ public class DrushInvocation {
 	 * 
 	 * @param outputDir
 	 * @param reviews See drush coder-review --reviews (set of i18n, style, etc)
+	 * @param projects Drupal projects to review
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public boolean coderReview(File outputDir, Set<String> reviews) throws IOException, InterruptedException {
+	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<DrupalProject> projects) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");
 		args.add("--ignores-pass");
 		args.add("--checkstyle");
 		args.add("--reviews="+StringUtils.join(reviews, ",")); // TODO pom.xml apache stringutils
+		for(DrupalProject project: projects) {
+			args.add(project.getName());
+		}
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));
 	}
@@ -114,20 +118,21 @@ public class DrushInvocation {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public List<String> getProjects() throws IOException, InterruptedException {
-		ArgumentListBuilder args = getArgumentListBuilder();
-		args.add("sqlq");
-		args.add("'select filename from {system} order by filename");
-		args.add("--extra='--skip-column-names'");
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		execute(args, new StreamTaskListener(stream)); // TODO check result of execute()
+	public Collection<DrupalProject> getProjects() throws IOException, InterruptedException {
+		File file = new File("/tmp/modules"); // TODO do not use an intermediate file
+		file.delete(); // Make sure file does not already exists TODO do not use intermediate file
 		
-		List<String> projects = new ArrayList<String>();
-		CSVParser parser = CSVParser.parse(stream.toString(), CSVFormat.MYSQL);
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("sql-query");
+		args.add("select filename, name from system order by filename into outfile '/tmp/modules' fields terminated  by ',' enclosed by '\"' lines terminated by '\\n'"); // TODO do not dump into intermediate file TODO does this work with mariadb, psql etc
+		execute(args); // TODO check result of execute()
+
+		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
+		CSVParser parser = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT);
 		for (CSVRecord project : parser) {
-			projects.add(project.toString());
+			projects.add(new DrupalProject(project.get(0).toString(), project.get(1).toString()));
 		}
-				
+
 		return projects;
 	}
 
