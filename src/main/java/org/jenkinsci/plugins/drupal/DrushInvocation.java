@@ -117,12 +117,7 @@ public class DrushInvocation {
 		return execute(args, new StreamTaskListener(outputFile));
 	}
 	
-	/**
-	 * 
-	 * @return List of project filenames (modules & themes).
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
+	/* TODO drop (unused)
 	public Collection<DrupalProject> getProjects() throws IOException, InterruptedException {
 		File file = new File("/tmp/modules"); // TODO do not use an intermediate file
 		file.delete(); // Make sure file does not already exists TODO do not use intermediate file
@@ -140,5 +135,27 @@ public class DrushInvocation {
 
 		return projects;
 	}
+	
+	class DrupalProject {
+	
+		private String filename;
+		private String name;
+		
+		public DrupalProject(String filename, String name) {
+			this.filename = filename;
+			this.name = name;
+		}
+		
+		public String getFilename() {
+			return filename;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+	}
+	
+	*/
 
 }
