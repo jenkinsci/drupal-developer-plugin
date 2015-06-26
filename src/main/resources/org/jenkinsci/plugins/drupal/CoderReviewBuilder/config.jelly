@@ -14,8 +14,8 @@
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.coder"/></f:entry>
     <!-- TODO radio "review everything / only these modules / everything except these modules -->
     <!-- TODO explain "multiple directory on multiple lines" -->
-    <!-- TODO explain syntax with wildcards (Glob file mask), relative to Drupal root directory -->
-    <f:entry title="${%Exclude these files}" field="except"><f:textarea default="modules/*,themes/*,sites/all/modules/contrib/*,sites/default/modules/contrib/*"/></f:entry>
+    <!-- TODO explain syntax with wildcards (Ant file mask pattern), relative to Drupal root directory -->
+    <f:entry title="${%Exclude these files}" field="except"><f:textarea default="modules/**,profiles/**,themes/**,sites/all/modules/contrib/**,sites/default/modules/contrib/**"/></f:entry>
   </f:advanced>
 
 </j:jelly>

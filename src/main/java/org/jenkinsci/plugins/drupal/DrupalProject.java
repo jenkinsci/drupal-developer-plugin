@@ -7,6 +7,8 @@ import java.io.File;
 /**
  * Drupal project (module or theme).
  * 
+ * TODO do we need this class ?
+ * 
  * @author Fengtan
  *
  */

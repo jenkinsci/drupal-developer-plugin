@@ -10,6 +10,7 @@ import hudson.tasks.Builder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -17,10 +18,13 @@ import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
+import org.jenkinsci.plugins.drupal.*;
 
 /**
  * Sample {@link Builder}.
@@ -83,47 +87,24 @@ public class CoderReviewBuilder extends Builder {
 		if (this.sql) reviews.add("sql");
 		if (this.security) reviews.add("security");
 		if (this.i18n) reviews.add("i18n");
-		
-		// Get all projects.
-		Collection<DrupalProject> projectsAvailable = drush.getProjects();
-
-		CollectionUtils.transform(arg0, arg1);
 
 		// Remove projects the user wants to exclude.
-		FileSet fileSet = Util.createFileSet(rootDir, StringUtils.join(projectsAvailable, ","), except);
+		// TODO check Drupal algorithm to build module list: **/*.module OK ? (plus $DRUPAL/profiles/**.module should not match by default)
+		// TODO pattern should also match themes
+		FileSet fileSet = Util.createFileSet(rootDir, "**/*.module", except);
 		DirectoryScanner scanner = fileSet.getDirectoryScanner();
-		String[] projectsReviewed = scanner.getIncludedFiles();
-
-final Logger l = Logger.getLogger(CoderReviewBuilder.class.getName()); // TODO tmp
-l.warning("projectsReviewed: "+StringUtils.join(projectsReviewed, ", "));
-l.warning("projectsAvailable: "+StringUtils.join(projectsAvailable, ", "));
+		Collection<String> projects = Arrays.asList(scanner.getIncludedFiles());
 		
-		/*
-		// TODO drop CollectionUtils from pom.xml ?
-		CollectionUtils.filter(projects, new Predicate<DrupalProject>() {
-			public boolean evaluate(DrupalProject project) {
-				try {
-					//FilePath projectFilePath = new FilePath(new File(rootDir, project.getFilename()));
-					//String msg = projectFilePath.getParent().validateAntFileMask(except);
-					//return (msg == null);
-					
-					
-					return true;
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				}
+		// Transform sites/all/modules/mymodule/mymodule.module into mymodule.
+		CollectionUtils.transform(projects, new Transformer<String, String>() {
+			@Override
+			public String transform(String project) {
+				return FilenameUtils.getBaseName(project);
 			}
 		});
-		*/
 
-		// TODO drush.coderReview(logsDir, reviews, projects);
+		// Run the code review.
+		drush.coderReview(logsDir, reviews, projects);
 
     	return true;
     }
