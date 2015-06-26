@@ -1,5 +1,9 @@
 package org.jenkinsci.plugins.drupal;
 
+import hudson.FilePath;
+
+import java.io.File;
+
 /**
  * Drupal project (module or theme).
  * 
@@ -19,6 +23,10 @@ public class DrupalProject {
 	public DrupalProject(String filename, String name) {
 		this.filename = filename;
 		this.name = name;
+	}
+	
+	public String getFilename() {
+		return filename;
 	}
 	
 	public String getName() {

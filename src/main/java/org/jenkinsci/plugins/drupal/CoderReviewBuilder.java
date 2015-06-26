@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -11,10 +12,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.tools.ant.DirectoryScanner;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -66,7 +70,7 @@ public class CoderReviewBuilder extends Builder {
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Coder Review.
-    	File rootDir = new File(build.getWorkspace().getRemote(), root);
+    	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
   		// TODO do not download module is already exists -- makes the task slow
 		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI
@@ -80,10 +84,46 @@ public class CoderReviewBuilder extends Builder {
 		if (this.security) reviews.add("security");
 		if (this.i18n) reviews.add("i18n");
 		
-		Collection<DrupalProject> projects = drush.getProjects();
-		// TODO apply this.except
+		// Get all projects.
+		Collection<DrupalProject> projectsAvailable = drush.getProjects();
+
+		CollectionUtils.transform(arg0, arg1);
+
+		// Remove projects the user wants to exclude.
+		FileSet fileSet = Util.createFileSet(rootDir, StringUtils.join(projectsAvailable, ","), except);
+		DirectoryScanner scanner = fileSet.getDirectoryScanner();
+		String[] projectsReviewed = scanner.getIncludedFiles();
+
+final Logger l = Logger.getLogger(CoderReviewBuilder.class.getName()); // TODO tmp
+l.warning("projectsReviewed: "+StringUtils.join(projectsReviewed, ", "));
+l.warning("projectsAvailable: "+StringUtils.join(projectsAvailable, ", "));
 		
-		drush.coderReview(logsDir, reviews, projects);
+		/*
+		// TODO drop CollectionUtils from pom.xml ?
+		CollectionUtils.filter(projects, new Predicate<DrupalProject>() {
+			public boolean evaluate(DrupalProject project) {
+				try {
+					//FilePath projectFilePath = new FilePath(new File(rootDir, project.getFilename()));
+					//String msg = projectFilePath.getParent().validateAntFileMask(except);
+					//return (msg == null);
+					
+					
+					return true;
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
+			}
+		});
+		*/
+
+		// TODO drush.coderReview(logsDir, reviews, projects);
 
     	return true;
     }
