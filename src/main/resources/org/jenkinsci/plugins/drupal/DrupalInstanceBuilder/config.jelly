@@ -7,9 +7,23 @@
   <!-- TODO set sqlite as default ? -->
   <!-- TODO documentation "create a Mysql DB" -->
   <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
+  <!-- TODO in readme.md: "if you have drupal root in your code, then do this, otherwise, do this" -->
   <f:entry title="${%Database URL}" field="db"><f:textbox default="mysql://user:password@localhost/db"/></f:entry>
 
   <f:advanced>
+
+    <!-- TODO explain symbolic link sites/all/modules -->
+    <f:optionalBlock title="${%Use a custom modules directory}" name="customModulesDir" checked="${instance.customModulesDir}" inline="true">
+      <f:entry title="${%Modules directory}" field="modulesDir"><f:textbox default="modules"/></f:entry>
+    </f:optionalBlock>
+
+    <f:optionalBlock title="${%Use a custom themes directory}" name="customThemesDir" checked="${instance.customThemesDir}" inline="true">
+      <f:entry title="${%Themes directory}" field="themesDir"><f:textbox default="themes"/></f:entry>
+    </f:optionalBlock>
+
+    <f:optionalBlock title="${%Use a custom libraries directory}" name="customLibrariesDir" checked="${instance.customLibrariesDir}" inline="true">
+      <f:entry title="${%Libraries directory}" field="librariesDir"><f:textbox default="libraries"/></f:entry>
+    </f:optionalBlock>
 
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 

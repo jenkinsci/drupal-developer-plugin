@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -10,10 +11,11 @@ import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.nio.file.Files;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.FileUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -41,13 +43,25 @@ public class DrupalInstanceBuilder extends Builder {
     public final String root;
     public final boolean webServer;
     public final String webServerPort;
+    public final boolean customModulesDir;
+    public final String modulesDir;
+    public final boolean customThemesDir;
+    public final String themesDir;
+    public final boolean customLibrariesDir;
+    public final String librariesDir;
     
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort) {
+    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort, boolean customModulesDir, String modulesDir, boolean customThemesDir, String themesDir, boolean customLibrariesDir, String librariesDir) {
         this.db = db;
         this.root = root;
         this.webServer = webServer;
         this.webServerPort = webServerPort;
+        this.customModulesDir = customModulesDir;
+        this.modulesDir = modulesDir;
+        this.customThemesDir = customThemesDir;
+        this.themesDir = themesDir;
+        this.customLibrariesDir = customLibrariesDir;
+        this.librariesDir = librariesDir;
     }
 
     @Override
@@ -58,7 +72,7 @@ public class DrupalInstanceBuilder extends Builder {
 
     	// Download Drupal core.
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
-    	drush.download("drupal"); // TODO move option in addArg() TODO min drush versio nsupporting --drupal-project-rename
+    	drush.download("drupal"); // TODO move option in addArg() TODO min drush version supporting --drupal-project-rename
     	// TODO what if drupal core already exists
     	// TODO let user select version/tag 7.37
     	// TODO throw exception if no internet / cannot dowload core
@@ -67,6 +81,24 @@ public class DrupalInstanceBuilder extends Builder {
 	    // TODO if user changed version, re-checkout (even if no rebuild)
     	// TODO do not download again each build
     	// TODO support make files + ability to use drupal core if in version control + install profile
+    	
+    	// Create symbolic links if needed. Delete the file in case it already exits.
+    	// TODO tell user symbolic link sites/all/modules (impact on JUnit/Coder results)
+    	if (customModulesDir) {
+    		File target = new File(build.getWorkspace().getRemote(), modulesDir);
+    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/modules"));
+    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/modules", listener);
+    	}
+    	if (customThemesDir) {
+    		File target = new File(build.getWorkspace().getRemote(), themesDir);
+    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/themes"));
+    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/themes", listener);
+    	}
+    	if (customLibrariesDir) {
+    		File target = new File(build.getWorkspace().getRemote(), librariesDir);
+    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/libaries"));
+    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/libraries", listener);
+    	}
     	
     	// Build Drupal instance.
     	drush.siteInstall(db); // TODO do not re-install if user said so

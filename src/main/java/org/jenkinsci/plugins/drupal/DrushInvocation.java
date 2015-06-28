@@ -19,6 +19,9 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * TODO do not download drupal root once this plugin is stable (user should be responsible for checking out drupal): https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin
+ */
 public class DrushInvocation {
 
 	protected final File root;
@@ -116,6 +119,18 @@ public class DrushInvocation {
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
 		return execute(args, new StreamTaskListener(outputFile));
 	}
+	
+	
+	
+	
+	
+	// TODO user should be able to decide where the sites/all/modules and sites/all/themes stuff is
+
+	
+	
+	
+	
+	
 	
 	/* TODO drop (unused)
 	public Collection<DrupalProject> getProjects() throws IOException, InterruptedException {
