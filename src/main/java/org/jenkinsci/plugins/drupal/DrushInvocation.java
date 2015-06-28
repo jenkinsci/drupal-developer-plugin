@@ -62,14 +62,21 @@ public class DrushInvocation {
 	}
 	
 	// TODO what if codebase already contains coder / has the wrong version of coder
-	public boolean download(String projects) throws IOException, InterruptedException {
+	public boolean download(String projects, String destination) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-download").add(projects);
 		// Downloading Drupal generates a folder "drupal-x-y". We want a folder simply named "drupal".
 		if (projects.equals("drupal")) {
 			args.add("--drupal-project-rename=drupal");// TODO should rename according to root specified by user
 		}
+		if (StringUtils.isNotEmpty(destination)) {
+			args.add("--destination="+destination);
+		}
 		return execute(args);
+	}
+	
+	public boolean download(String projects) throws IOException, InterruptedException {
+		return download(projects, null);
 	}
 	
 	public boolean enable(String extensions) throws IOException, InterruptedException {

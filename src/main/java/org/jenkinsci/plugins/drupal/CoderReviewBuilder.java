@@ -74,10 +74,11 @@ public class CoderReviewBuilder extends Builder {
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Coder Review.
+    	// TODO tell user Coder gets downloaded into $DRUPAL/modules (let user decide where to download it ?
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
   		// TODO do not download module is already exists -- makes the task slow
-		drush.download("coder-7.x-2.5"); // TODO coder version should be selectable from UI TODO --destination=$DRUPAL/modules/ so we don't mess up with the user's code base
+		drush.download("coder-7.x-2.5", "modules"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
 		
 		Collection<String> reviews = new HashSet<String>();
