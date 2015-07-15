@@ -127,18 +127,6 @@ public class DrushInvocation {
 		return execute(args, new StreamTaskListener(outputFile));
 	}
 	
-	
-	
-	
-	
-	// TODO user should be able to decide where the sites/all/modules and sites/all/themes stuff is
-
-	
-	
-	
-	
-	
-	
 	/* TODO drop (unused)
 	public Collection<DrupalProject> getProjects() throws IOException, InterruptedException {
 		File file = new File("/tmp/modules"); // TODO do not use an intermediate file

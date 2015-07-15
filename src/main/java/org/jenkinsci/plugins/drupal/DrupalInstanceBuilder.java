@@ -42,62 +42,29 @@ public class DrupalInstanceBuilder extends Builder {
     public final String root;
     public final boolean webServer;
     public final String webServerPort;
-    public final boolean customModulesDir;
-    public final String modulesDir;
-    public final boolean customThemesDir;
-    public final String themesDir;
-    public final boolean customLibrariesDir;
-    public final String librariesDir;
     
+    // TODO webServer should be in a separate plugin
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort, boolean customModulesDir, String modulesDir, boolean customThemesDir, String themesDir, boolean customLibrariesDir, String librariesDir) {
+    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort) {
         this.db = db;
         this.root = root;
         this.webServer = webServer;
         this.webServerPort = webServerPort;
-        this.customModulesDir = customModulesDir;
-        this.modulesDir = modulesDir;
-        this.customThemesDir = customThemesDir;
-        this.themesDir = themesDir;
-        this.customLibrariesDir = customLibrariesDir;
-        this.librariesDir = librariesDir;
     }
 
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure Drupal root directory exists.
+    	// TODO responsibility of user: we should not be downloading drupal here
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	rootDir.mkdir(); // TODO what if already exists
 
     	// Download Drupal core.
     	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
     	drush.download("drupal"); // TODO move option in addArg() TODO min drush version supporting --drupal-project-rename
-    	// TODO what if drupal core already exists
-    	// TODO let user select version/tag 7.37
-    	// TODO throw exception if no internet / cannot dowload core
-    	// TODO listener.getLogger().println("Cloning Drupal, please be patient"); 
-		// TODO unlesss user wants to re-clone Drupal
-	    // TODO if user changed version, re-checkout (even if no rebuild)
     	// TODO do not download again each build
-    	// TODO support make files + ability to use drupal core if in version control + install profile
-    	
-    	// Create symbolic links if needed. Delete the file in case it already exits.
-    	// TODO tell user symbolic link sites/all/modules (impact on JUnit/Coder results)
-    	if (customModulesDir) {
-    		File target = new File(build.getWorkspace().getRemote(), modulesDir);
-    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/modules"));
-    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/modules", listener);
-    	}
-    	if (customThemesDir) {
-    		File target = new File(build.getWorkspace().getRemote(), themesDir);
-    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/themes"));
-    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/themes", listener);
-    	}
-    	if (customLibrariesDir) {
-    		File target = new File(build.getWorkspace().getRemote(), librariesDir);
-    		FileUtils.deleteDirectory(new File(rootDir, "sites/all/libaries"));
-    		Util.createSymlink(rootDir, target.getAbsolutePath(), "sites/all/libraries", listener);
-    	}
+    	// TODO support make files + install profile
+    	// TODO radio "1) codebase contains drupal core (if not, can use multiple-scms) 2) use makefile
     	
     	// Build Drupal instance.
     	drush.siteInstall(db); // TODO do not re-install if user said so

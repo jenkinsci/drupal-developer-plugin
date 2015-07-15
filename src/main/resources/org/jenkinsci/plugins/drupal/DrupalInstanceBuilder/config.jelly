@@ -12,23 +12,20 @@
 
   <f:advanced>
 
-    <!-- TODO explain symbolic link sites/all/modules -->
-    <f:optionalBlock title="${%Use a custom modules directory}" name="customModulesDir" checked="${instance.customModulesDir}" inline="true">
-      <f:entry title="${%Modules directory}" field="modulesDir"><f:textbox default="modules"/></f:entry>
-    </f:optionalBlock>
-
-    <f:optionalBlock title="${%Use a custom themes directory}" name="customThemesDir" checked="${instance.customThemesDir}" inline="true">
-      <f:entry title="${%Themes directory}" field="themesDir"><f:textbox default="themes"/></f:entry>
-    </f:optionalBlock>
-
-    <f:optionalBlock title="${%Use a custom libraries directory}" name="customLibrariesDir" checked="${instance.customLibrariesDir}" inline="true">
-      <f:entry title="${%Libraries directory}" field="librariesDir"><f:textbox default="libraries"/></f:entry>
-    </f:optionalBlock>
-
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 
+	<!-- TODO if pb see jenkins_git/core/src/main/resources/hudson/tasks/BuildTrigger/config.jelly -->
+	<!-- TODO checked by default if needed -->
+	<!-- TODO allow to write a make file right in UI -->
+	<!-- TODO code.source is the default -->
+	<!-- TODO fields 'drupal root directory' might apply only to code.source -->
+	<!-- TODO radio buttons seem to be indented -->
+	<f:entry><f:radio name="core" title="${%Source code contains Drupal core}" value="code.source"/></f:entry>
+	<f:entry><f:radio name="core" title="${%Source code contains a Makefile}" value="make.source"/></f:entry>
+	<f:entry><f:radio name="core" title="${%Specify a Makefile}" value="make.input"/></f:entry>
+
     <!-- TODO explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"-->
-    <f:optionalBlock title="${%Run a PHP web server}" name="webServer" checked="${instance.webServer}" inline="true">
+    <f:optionalBlock title="${%Run a PHP web server}" name="webServer" checked="${instance.webServer}" inline="true">    
       <!-- TODO explain: must be a different port for each job ; web server will run only during -->
       <!-- TODO make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
       <!-- TODO another default port at random ? -->
