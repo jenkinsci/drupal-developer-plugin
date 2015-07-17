@@ -67,6 +67,7 @@ public class CoderReviewBuilder extends Builder {
     	this.except = except;
     }
 
+    // TODO logs.coder -> coder ; logs.simpletest -> simpletest
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.

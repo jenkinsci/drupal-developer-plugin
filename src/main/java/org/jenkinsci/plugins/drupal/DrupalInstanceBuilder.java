@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.Util;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -14,7 +13,7 @@ import java.io.IOException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -39,38 +38,38 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DrupalInstanceBuilder extends Builder {
 
     public final String db;
+    public final String core;
     public final String root;
-    public final boolean webServer;
-    public final String webServerPort;
+    public final String profile;
+    public final String makefile;
     
-    // TODO webServer should be in a separate plugin
+    // TODO separate plugin to run php webserver:
+    // TODO - explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"
+    // TODO - explain must be a different port for each job ; web server will run only during -->
+    // TODO - make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
+    // TODO - another default port at random ?
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String root, boolean webServer, String webServerPort) {
-        this.db = db;
+    public DrupalInstanceBuilder(String db, String core, String root, String profile, String makefile) {
+    	this.db = db;
+        this.core = core;
         this.root = root;
-        this.webServer = webServer;
-        this.webServerPort = webServerPort;
+        this.profile = profile;
+        this.makefile = makefile;
     }
 
+    // TODO do not re-install if user said so (checkbox "rebuild a fresh instance for every build")
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	// Make sure Drupal root directory exists.
-    	// TODO responsibility of user: we should not be downloading drupal here
-    	File rootDir = new File(build.getWorkspace().getRemote(), root);
-    	rootDir.mkdir(); // TODO what if already exists
-
-    	// Download Drupal core.
-    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
-    	drush.download("drupal"); // TODO move option in addArg() TODO min drush version supporting --drupal-project-rename
-    	// TODO do not download again each build
-    	// TODO support make files + install profile
-    	// TODO radio "1) codebase contains drupal core (if not, can use multiple-scms) 2) use makefile
-    	
-    	// Build Drupal instance.
-    	drush.siteInstall(db); // TODO do not re-install if user said so
-    	
-    	// TODO start / stop php web server depending on this.webServerPort/Use (in this.prebuild() ?)
-   	
+		if (StringUtils.equals(core, "code")) {
+			// Source code contains a Drupal core
+	    	File rootDir = new File(build.getWorkspace().getRemote(), root);
+	    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
+	    	drush.siteInstall(db, profile);
+		}
+		else {
+			// Source code contains a Makefile
+			// TODO
+		}
     	return true;
     }
 
