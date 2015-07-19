@@ -22,11 +22,6 @@
 	<!-- TODO default makefileBuild should be workspace root -->
 	<f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 	<f:entry title="${%Installation profile}" field="profile"><f:textbox default="standard"/></f:entry>
-	<f:radioBlock name="core" value="code" title="${%Source code contains a Drupal core}" inline="true" checked="true">
-	</f:radioBlock>
-	<f:radioBlock name="core" value="makefile" title="${%Source code contains a Makefile}" inline="true" checked="false">
-		<f:entry title="${%Makefile}" field="makefile"><f:textbox default="drupal.make"/></f:entry>
-	</f:radioBlock>
 
   </f:advanced>
 
