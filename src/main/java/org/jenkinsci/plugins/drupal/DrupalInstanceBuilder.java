@@ -60,16 +60,22 @@ public class DrupalInstanceBuilder extends Builder {
     // TODO do not re-install if user said so (checkbox "rebuild a fresh instance for every build")
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-		if (StringUtils.equals(core, "code")) {
-			// Source code contains a Drupal core
-	    	File rootDir = new File(build.getWorkspace().getRemote(), root);
-	    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
-	    	drush.siteInstall(db, profile);
+		// Get Drush object.
+    	File rootDir = new File(build.getWorkspace().getRemote(), root);
+    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
+
+    	// Make codebase if necessary.
+    	if (StringUtils.equals(core, "makefile")) {
+    		drush.make(makefile, root);
+    		
+    		
+    		// TODO impossible de drush make apres git clone -> definir drush make en tant que source de code
+    		
+    		
 		}
-		else {
-			// Source code contains a Makefile
-			// TODO
-		}
+
+    	// Install Drupal.
+    	drush.siteInstall(db, profile);
     	return true;
     }
 
