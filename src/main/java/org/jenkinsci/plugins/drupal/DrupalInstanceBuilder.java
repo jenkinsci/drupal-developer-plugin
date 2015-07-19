@@ -56,6 +56,7 @@ public class DrupalInstanceBuilder extends Builder {
     }
 
     // TODO do not re-install if user said so (checkbox "rebuild a fresh instance for every build")
+    // TODO allow to run drush updb if we don't re-install the site for every build
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
@@ -66,7 +67,7 @@ public class DrupalInstanceBuilder extends Builder {
 
     // Overridden for better type safety.
     // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
+    // you don't have to do this. TODO drop ?
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();

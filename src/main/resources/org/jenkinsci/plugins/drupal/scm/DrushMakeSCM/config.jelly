@@ -1,0 +1,12 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <!-- TODO set default value -->
+    <!-- TODO explain relative to worspace folder -->
+    <!-- TODO can be a http URL -->
+    <!-- TODO ability to write makefile into jenkins  UI -->
+    <f:entry title="${%Makefile path}" field="makefile"><f:textbox default="drupal.make"/></f:entry>
+    
+    <f:entry title="${%Drupal root}" field="root"><f:textbox default=""/></f:entry>
+
+</j:jelly>

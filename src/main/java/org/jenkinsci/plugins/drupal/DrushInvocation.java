@@ -46,6 +46,7 @@ public class DrushInvocation {
 		return execute(args, listener);
 	}
 
+	// TODO global option to set the location of drush executable
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		// Do not display stderr since this breaks the XML formatting on stdout.
 		// TODO pom.xml dependency on apache commons ? NullOutputStream
@@ -53,7 +54,16 @@ public class DrushInvocation {
 		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
 		return true; // TODO detect drush return codes
 	}
-
+	
+	public boolean make(String makefile, String buildPath) throws IOException, InterruptedException {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("make");
+		args.add(makefile);
+		args.add(buildPath);
+		return execute(args);
+	}
+	
+	
 	public boolean siteInstall(String db, String profile) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("site-install");
