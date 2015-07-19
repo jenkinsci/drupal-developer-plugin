@@ -41,7 +41,6 @@ public class DrupalInstanceBuilder extends Builder {
     public final String core;
     public final String root;
     public final String profile;
-    public final String makefile;
     
     // TODO separate plugin to run php webserver:
     // TODO - explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"
@@ -49,12 +48,11 @@ public class DrupalInstanceBuilder extends Builder {
     // TODO - make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
     // TODO - another default port at random ?
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String core, String root, String profile, String makefile) {
+    public DrupalInstanceBuilder(String db, String core, String root, String profile) {
     	this.db = db;
         this.core = core;
         this.root = root;
         this.profile = profile;
-        this.makefile = makefile;
     }
 
     // TODO do not re-install if user said so (checkbox "rebuild a fresh instance for every build")
