@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.drupal;
+package org.jenkinsci.plugins.drupal.beans;
 
 import hudson.FilePath;
 import hudson.Launcher;

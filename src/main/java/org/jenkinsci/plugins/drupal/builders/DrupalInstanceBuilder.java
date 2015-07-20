@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.drupal;
+package org.jenkinsci.plugins.drupal.builders;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import net.sf.json.JSONObject;
 
+import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;

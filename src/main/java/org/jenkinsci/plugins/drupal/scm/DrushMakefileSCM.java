@@ -15,7 +15,7 @@ import hudson.scm.SCM;
 import java.io.File;
 import java.io.IOException;
 
-import org.jenkinsci.plugins.drupal.DrushInvocation;
+import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class DrushMakefileSCM extends SCM {
