@@ -1,12 +1,12 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.util.ArgumentListBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class SimpletestBuilder extends Builder {
 
     	// Run Simpletest.
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
-    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
     	drush.enable("simpletest"); // TODO unless already enabled
     	drush.testRun(logsDir, uri); // TODO user should be able to choose
 

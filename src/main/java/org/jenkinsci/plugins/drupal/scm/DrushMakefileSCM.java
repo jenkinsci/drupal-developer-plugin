@@ -13,17 +13,19 @@ import hudson.scm.SCMRevisionState;
 import hudson.scm.SCM;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.jenkinsci.plugins.drupal.DrushInvocation;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class DrushMakeSCM extends SCM {
+public class DrushMakefileSCM extends SCM {
 
 	private String makefile; // Makefile path.
 	private String root; // Drupal root path.
 	
 	// TODO if root is not specified, should be workspace root
 	@DataBoundConstructor
-	public DrushMakeSCM(String makefile, String root) {
+	public DrushMakefileSCM(String makefile, String root) {
 		this.makefile = makefile;
 		this.root = root;
 	}
@@ -43,9 +45,9 @@ public class DrushMakeSCM extends SCM {
 	}
 
 	@Override
-	public void checkout(Run<?,?> build, Launcher launcher, FilePath workspace, TaskListener listener, File changelogFile, SCMRevisionState baseline) {
-		// TODO DrushInvocation drush = new DrushInvocation(root, build, launcher, listener);
-		// TODO drush.make(makefile, root);
+	public void checkout(Run<?,?> build, Launcher launcher, FilePath workspace, TaskListener listener, File changelogFile, SCMRevisionState baseline) throws IOException, InterruptedException {
+		DrushInvocation drush = new DrushInvocation(new FilePath(new File(root)), workspace, launcher, listener);
+		drush.make(makefile, root);
 		// TODO drush remake if already exists
 	}
 	
@@ -59,13 +61,13 @@ public class DrushMakeSCM extends SCM {
     public static class DescriptorImpl extends SCMDescriptor {
 
         public DescriptorImpl() {
-            super(DrushMakeSCM.class, null);
+            super(DrushMakefileSCM.class, null);
             load();
         }
 
 		@Override
 		public String getDisplayName() {
-		    return "Drush Make";
+		    return "Drush Makefile";
 		}
 	}
 	

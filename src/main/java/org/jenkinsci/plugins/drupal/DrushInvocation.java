@@ -1,21 +1,16 @@
 package org.jenkinsci.plugins.drupal;
 
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.TaskListener;
-import hudson.model.AbstractBuild;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Collection;
-import java.util.HashSet;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 
@@ -24,22 +19,23 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DrushInvocation {
 
-	protected final File root;
-	protected final AbstractBuild<?, ?> build;
+	protected final FilePath root;
+	protected final FilePath workspace;
 	protected final Launcher launcher;
-	protected final BuildListener listener;
+	protected final TaskListener listener;
 	
 	// TODO document
-	public DrushInvocation(File root, AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+	// TODO drop workspace and merge with root
+	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener) {
 		this.root = root;
-		this.build = build;
+		this.workspace = workspace;
 		this.launcher = launcher;
 		this.listener = listener;
 		// TODO make sure drush is installed
 	}
 	
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--verbose").add("--root="+root.getAbsolutePath());
+		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--verbose").add("--root="+root.getRemote());
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
@@ -51,7 +47,7 @@ public class DrushInvocation {
 		// Do not display stderr since this breaks the XML formatting on stdout.
 		// TODO pom.xml dependency on apache commons ? NullOutputStream
 		// TODO find a way to display stderr in console
-		launcher.launch().pwd(build.getWorkspace()).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
+		launcher.launch().pwd(workspace).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
 		return true; // TODO detect drush return codes
 	}
 	

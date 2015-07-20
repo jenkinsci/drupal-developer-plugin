@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
@@ -13,7 +14,6 @@ import java.io.IOException;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -59,8 +59,7 @@ public class DrupalInstanceBuilder extends Builder {
     // TODO allow to run drush updb if we don't re-install the site for every build
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-    	File rootDir = new File(build.getWorkspace().getRemote(), root);
-    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(new FilePath(new File(root)), build.getWorkspace(), launcher, listener);
     	drush.siteInstall(db, profile);
     	return true;
     }

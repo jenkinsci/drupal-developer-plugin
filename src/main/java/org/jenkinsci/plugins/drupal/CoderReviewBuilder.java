@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.drupal;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
 import hudson.model.BuildListener;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
 
@@ -24,7 +24,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.jenkinsci.plugins.drupal.*;
 
 /**
  * Sample {@link Builder}.
@@ -77,7 +76,7 @@ public class CoderReviewBuilder extends Builder {
     	// Run Coder Review.
     	// TODO tell user Coder gets downloaded into $DRUPAL/modules (let user decide where to download it ?
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
-    	DrushInvocation drush = new DrushInvocation(rootDir, build, launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
   		// TODO do not download module is already exists -- makes the task slow
 		drush.download("coder-7.x-2.5", "modules"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
