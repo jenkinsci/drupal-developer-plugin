@@ -81,7 +81,7 @@ public class DrupalInstanceBuilder extends Builder {
      * See <tt>src/main/resources/hudson/plugins/drupal/DrupalInstanceBuilder/*.jelly</tt>
      * for the actual HTML fragment for the configuration screen.
      */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         /**
          * In order to load the persisted global configuration, you have to 
@@ -105,7 +105,7 @@ public class DrupalInstanceBuilder extends Builder {
          */
         public FormValidation doCheckDb(@QueryParameter String value) {
             if (value.length() == 0) {
-              return FormValidation.error("Please set a database URL"); // TODO check DB connection works
+              return FormValidation.error("Please set a database URL");
             }
             return FormValidation.ok();
         }

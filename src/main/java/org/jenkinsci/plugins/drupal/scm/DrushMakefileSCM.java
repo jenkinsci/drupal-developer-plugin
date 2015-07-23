@@ -14,7 +14,6 @@ import hudson.scm.SCM;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,7 +28,7 @@ public class DrushMakefileSCM extends SCM {
 	private String makefileInput;
 	
 	// TODO if root is not specified, should be workspace root
-	// TODO help "codebase will be fully recreated when makefile is updated"
+	// TODO-0 help "codebase will be fully recreated when makefile is updated"
 	@DataBoundConstructor
 	public DrushMakefileSCM(String root, String type, String makefilePath, String makefileInput) {
 		this.root = root;
@@ -59,8 +58,7 @@ public class DrushMakefileSCM extends SCM {
 		// TODO does not seem to be called
 		// TODO compare with _baseline ?
 
-		// TODO support drush remake ?
-		// TODO if (type has changed) return PollingResult.BUILD_NOW
+		// TODO-0 support drush remake ?
 		// TODO support when Makefile type==input
 		// TODO support when Makefile is http remote
 		// If Drupal root does not exist, then build now.
@@ -114,6 +112,8 @@ public class DrushMakefileSCM extends SCM {
             load();
         }
 
+		// TODO-0 validate that makefile exists
+        
 		@Override
 		public String getDisplayName() {
 		    return "Drush Makefile";

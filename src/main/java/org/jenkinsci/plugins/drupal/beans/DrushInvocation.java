@@ -24,14 +24,13 @@ public class DrushInvocation {
 	protected final Launcher launcher;
 	protected final TaskListener listener;
 	
-	// TODO document
-	// TODO drop workspace and merge with root
+	// TODO-0 document
+	// TODO make sure drush is installed
 	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener) {
 		this.root = root;
 		this.workspace = workspace;
 		this.launcher = launcher;
 		this.listener = listener;
-		// TODO make sure drush is installed
 	}
 	
 	protected ArgumentListBuilder getArgumentListBuilder() {
@@ -97,8 +96,7 @@ public class DrushInvocation {
 			args.add("--uri="+uri);
 		}
 		
-		// TODO
-		// args.add("--all");
+		// TODO-0 args.add("--all");
 		args.add("--methods=testSettingsPage");
 		args.add("AggregatorConfigurationTestCase");
 		
@@ -116,7 +114,7 @@ public class DrushInvocation {
 	 * @throws InterruptedException
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {
-		// TODO offer more options to user (see drush help coder-review)
+		// TODO-0 offer more options to user (see drush help coder-review)
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");
@@ -125,7 +123,7 @@ public class DrushInvocation {
 		args.add("--reviews="+StringUtils.join(reviews, ","));
 		for(String projectName: projectNames) {
 			// drush coder-review comment ends up with error "use --reviews or --comment."
-			// TODO find a workaround
+			// TODO-0 find a workaround
 			if (!projectName.equals("comment")) {
 				args.add(projectName);
 			}

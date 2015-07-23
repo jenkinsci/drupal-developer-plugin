@@ -56,8 +56,8 @@ public class SimpletestBuilder extends Builder {
     	// Run Simpletest.
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
-    	drush.enable("simpletest"); // TODO unless already enabled
-    	drush.testRun(logsDir, uri); // TODO user should be able to choose
+    	drush.enable("simpletest"); // TODO-0 unless already enabled
+    	drush.testRun(logsDir, uri);
 
     	return true;
     }
@@ -88,7 +88,7 @@ public class SimpletestBuilder extends Builder {
             load();
         }
 
-        // TODO doCheckRoot to make sure Drupal exists ?
+        // TODO-0 doCheckRoot to make sure Drupal exists ?
         
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types 

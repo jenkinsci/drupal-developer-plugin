@@ -3,6 +3,7 @@
     
 	<f:entry title="${%Drupal root}" field="root"><f:textbox default=""/></f:entry>
 	
+	<!-- TODO-0 explain: makefile location relative to workspace dir -->
 	<f:entry title="${%Location of Makefile}">
 	    <!-- TODO set default value -->
 	    <!-- TODO explain relative to worspace folder -->

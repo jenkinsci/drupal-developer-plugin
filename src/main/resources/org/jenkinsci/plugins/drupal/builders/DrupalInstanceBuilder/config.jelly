@@ -1,25 +1,16 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-  <!-- TODO what if mysql/sqlite is not installed ? -->
-  <!-- TODO doc: sqlite is ok for coder, probably not for simpletest -->
-  <!-- TODO test works sqlite -->
-  <!-- TODO set sqlite as default ? -->
-  <!-- TODO documentation "create a Mysql DB" -->
-  <!-- TODO help="{descriptor.getHelpFile('coder')}" -->
-  <!-- TODO in readme.md: "if you have drupal root in your code, then do this, otherwise, do this" -->
+  <!-- TODO-0 doc: sqlite is ok for coder, probably not for simpletest -->
+  <!-- TODO-0 test works sqlite -->
+  <!-- TODO-0 documentation "create a Mysql DB" -->
+  <!-- TODO-0 help="{descriptor.getHelpFile('coder')}" -->
+  <!-- TODO-0 in readme.md: "if you have drupal root in your code, then do this, otherwise, do this" -->
   <f:entry title="${%Database URL}" field="db"><f:textbox default="mysql://user:password@localhost/db"/></f:entry>
 
   <f:advanced>
 
-	<!-- TODO checked by default if needed -->
-	<!-- TODO allow to write a make file right in UI -->
-	<!-- TODO code.source is the default -->
-	<!-- TODO fields 'drupal root directory' might apply only to code.source -->
-	<!-- TODO validate that makefile/rootdir exists -->
-	<!-- TODO explain: makefile location relative to workspace dir -->
-	<!-- TODO explain: if codebase does not contain drupal core, can use multiple-scms -->
-	<!-- TODO default makefileBuild should be workspace root -->
+	<!-- TODO-0 checked by default if needed -->
 	<f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 	<f:entry title="${%Installation profile}" field="profile"><f:textbox default="standard"/></f:entry>
 

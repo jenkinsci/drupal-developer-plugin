@@ -67,7 +67,6 @@ public class CoderReviewBuilder extends Builder {
     	this.except = except;
     }
 
-    // TODO logs.coder -> coder ; logs.simpletest -> simpletest
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.
@@ -75,7 +74,6 @@ public class CoderReviewBuilder extends Builder {
     	logsDir.mkdir(); // TODO what if already exists
 
     	// Run Coder Review.
-    	// TODO tell user Coder gets downloaded into $DRUPAL/modules (let user decide where to download it ?
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
   		// TODO do not download module is already exists -- makes the task slow
@@ -137,12 +135,12 @@ public class CoderReviewBuilder extends Builder {
             load();
         }
 
-        // TODO doCheckRoot to make sure Drupal exists ?
-        
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types 
             return true;
         }
+        
+		// TODO-0 validate that rootDir exists (for all builders)
 
         /**
          * This human readable name is used in the configuration screen.
