@@ -76,21 +76,21 @@ public class CoderReviewBuilder extends Builder {
     	// Run Coder Review.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
-  		// TODO do not download module is already exists -- makes the task slow
+    	// TODO do not download module if already exists -- makes the task slow
 		drush.download("coder-7.x-2.5", "modules"); // TODO coder version should be selectable from UI
 		drush.enable("coder_review"); // TODO unless already enabled
-		
+
 		Collection<String> reviews = new HashSet<String>();
-		// TODO any chance to have Jelly return directly a Set ?
-		if (this.style) reviews.add("style");
-		if (this.comment) reviews.add("comment");
-		if (this.sql) reviews.add("sql");
+		if (this.style)    reviews.add("style");
+		if (this.comment)  reviews.add("comment");
+		if (this.sql)      reviews.add("sql");
 		if (this.security) reviews.add("security");
-		if (this.i18n) reviews.add("i18n");
+		if (this.i18n)     reviews.add("i18n");
 
 		// Remove projects the user wants to exclude.
 		// **/*.info matches all modules, themes and installation profiles.
 		// Installation profiles cannot be reviewed and will be just ignored by Coder.
+		// TODO array_diff with drush pml --status=enabled --format=json ? 
 		FileSet fileSet = Util.createFileSet(rootDir, "**/*.info", except);
 		DirectoryScanner scanner = fileSet.getDirectoryScanner();
 		Collection<String> projects = Arrays.asList(scanner.getIncludedFiles());
