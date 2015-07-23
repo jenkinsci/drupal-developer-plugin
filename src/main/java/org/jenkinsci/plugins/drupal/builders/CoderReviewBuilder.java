@@ -109,14 +109,6 @@ public class CoderReviewBuilder extends Builder {
     	return true;
     }
 
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl)super.getDescriptor();
-    }
-
     /**
      * Descriptor for {@link CoderReviewBuilder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.
@@ -146,7 +138,7 @@ public class CoderReviewBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Coder Review on Drupal"; // TODO "Run code review on Drupal" ?
+            return "Run Coder Review on Drupal";
         }
 
         @Override

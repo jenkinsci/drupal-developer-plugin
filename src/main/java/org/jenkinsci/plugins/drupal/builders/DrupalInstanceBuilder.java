@@ -65,14 +65,6 @@ public class DrupalInstanceBuilder extends Builder {
     	return true;
     }
 
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this. TODO drop ?
-    @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl)super.getDescriptor();
-    }
-
     /**
      * Descriptor for {@link DrupalInstanceBuilder}. Used as a singleton.
      * The class is marked as public so that it can be accessed from views.

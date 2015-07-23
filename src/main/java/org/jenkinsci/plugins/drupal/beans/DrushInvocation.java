@@ -74,7 +74,6 @@ public class DrushInvocation {
 	}
 	
 	// TODO what if codebase already contains coder / has the wrong version of coder ? delete (mention in help)
-	// TODO download coder using git ?
 	public boolean download(String projects, String destination) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-download").add(projects);
