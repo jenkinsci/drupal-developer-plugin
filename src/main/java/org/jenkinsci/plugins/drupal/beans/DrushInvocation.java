@@ -42,7 +42,6 @@ public class DrushInvocation {
 	}
 
 	// TODO global option to set the location of drush executable
-	// TODO detect drush return codes ?
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		ProcStarter starter = launcher.launch().pwd(workspace).cmds(args);
 		if (out == null) {

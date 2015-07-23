@@ -89,9 +89,9 @@ public class CoderReviewBuilder extends Builder {
 		if (this.i18n) reviews.add("i18n");
 
 		// Remove projects the user wants to exclude.
-		// TODO check Drupal algorithm to build module list: **/*.module OK ? (plus $DRUPAL/profiles/**.module should not match by default)
-		// TODO pattern should also match themes
-		FileSet fileSet = Util.createFileSet(rootDir, "**/*.module", except);
+		// **/*.info matches all modules, themes and installation profiles.
+		// Installation profiles cannot be reviewed and will be just ignored by Coder.
+		FileSet fileSet = Util.createFileSet(rootDir, "**/*.info", except);
 		DirectoryScanner scanner = fileSet.getDirectoryScanner();
 		Collection<String> projects = Arrays.asList(scanner.getIncludedFiles());
 		
