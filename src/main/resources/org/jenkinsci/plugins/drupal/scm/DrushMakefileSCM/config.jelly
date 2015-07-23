@@ -1,6 +1,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-
+    
+	<f:entry title="${%Drupal root}" field="root"><f:textbox default=""/></f:entry>
+	
 	<f:entry title="${%Location of Makefile}">
 	    <!-- TODO set default value -->
 	    <!-- TODO explain relative to worspace folder -->
@@ -9,17 +11,15 @@
 	    <!-- TODO persist radioblock checked -->
 	    <!-- TODO indent UI so it looks cleaner -->
 	    <!-- TODO filesystem/url should be checked by default -->
-	    <f:radioBlock name="type" value="path" title="${%Filesystem/URL}">
+	    <f:radioBlock name="type" inline="true" value="path" title="${%Filesystem/URL}">
 	    	<f:entry field="makefilePath"><f:textbox default="drupal.make"/></f:entry>
 	    </f:radioBlock>
-	    <f:radioBlock name="type" value="input" title="${%Write a Makefile}">
+	    <f:radioBlock name="type" inline="true" value="input" title="${%Write a Makefile}">
 	    	<!-- TODO latest 7.x instead of 7.38 -->
 	    	<!-- TODO set default value in yaml -->
 	    	<!-- TODO getHTMLValue http://wiki.servicenow.com/index.php?title=How_to_Escape_in_Jelly#gsc.tab=0 -->
 	    	<f:entry field="makefileInput"><f:textarea default="core=7.x\napi=2\nprojects[drupal][version]=7.38"/></f:entry>
 	    </f:radioBlock>
 	</f:entry>
-	    
-	<f:entry title="${%Drupal root}" field="root"><f:textbox default=""/></f:entry>
 
 </j:jelly>

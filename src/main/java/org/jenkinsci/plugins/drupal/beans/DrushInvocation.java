@@ -2,13 +2,14 @@ package org.jenkinsci.plugins.drupal.beans;
 
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.BuildListener;
+import hudson.Launcher.ProcStarter;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 
 import org.apache.commons.io.output.NullOutputStream;
@@ -35,20 +36,26 @@ public class DrushInvocation {
 	}
 	
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--verbose").add("--root="+root.getRemote());
+		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--root="+root.getRemote());
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
-		return execute(args, listener);
+		return execute(args, null);
 	}
 
 	// TODO global option to set the location of drush executable
+	// TODO detect drush return codes ?
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
-		// Do not display stderr since this breaks the XML formatting on stdout.
-		// TODO pom.xml dependency on apache commons ? NullOutputStream
-		// TODO find a way to display stderr in console
-		launcher.launch().pwd(workspace).cmds(args).stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM).join();
-		return true; // TODO detect drush return codes
+		ProcStarter starter = launcher.launch().pwd(workspace).cmds(args);
+		if (out == null) {
+			starter.stdout(listener);
+		} else {
+			// Do not display stderr since this breaks the XML formatting on stdout.
+			// TODO pom.xml dependency on apache commons ? NullOutputStream
+			starter.stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM);
+		}
+		starter.join();
+		return true;
 	}
 	
 	public boolean make(String makefile, String buildPath) throws IOException, InterruptedException {
@@ -124,7 +131,7 @@ public class DrushInvocation {
 			}
 		}
     	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
-		return execute(args, new StreamTaskListener(outputFile));
+    	return execute(args, new StreamTaskListener(outputFile));
 	}
 	
 	/* TODO drop (unused)
