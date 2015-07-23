@@ -9,7 +9,6 @@ import hudson.util.StreamTaskListener;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 
 import org.apache.commons.io.output.NullOutputStream;
@@ -51,7 +50,6 @@ public class DrushInvocation {
 			starter.stdout(listener);
 		} else {
 			// Do not display stderr since this breaks the XML formatting on stdout.
-			// TODO pom.xml dependency on apache commons ? NullOutputStream
 			starter.stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM);
 		}
 		starter.join();
@@ -95,7 +93,9 @@ public class DrushInvocation {
 	public boolean testRun(File outputDir, String uri) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
-		args.add("--uri="+uri); // TODO if user did not provide uri, then do not set --uri
+		if (StringUtils.isNotEmpty(uri)) {
+			args.add("--uri="+uri);
+		}
 		
 		// TODO
 		// args.add("--all");
@@ -116,13 +116,13 @@ public class DrushInvocation {
 	 * @throws InterruptedException
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {
-		// TODO add more options to user (see drush help coder-review)
+		// TODO offer more options to user (see drush help coder-review)
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");
 		args.add("--ignores-pass");
 		args.add("--checkstyle");
-		args.add("--reviews="+StringUtils.join(reviews, ",")); // TODO pom.xml apache stringutils
+		args.add("--reviews="+StringUtils.join(reviews, ","));
 		for(String projectName: projectNames) {
 			// drush coder-review comment ends up with error "use --reviews or --comment."
 			// TODO find a workaround
@@ -130,49 +130,8 @@ public class DrushInvocation {
 				args.add(projectName);
 			}
 		}
-    	File outputFile = new File(outputDir, "coder_review.xml"); // TODO let user set output file
+    	File outputFile = new File(outputDir, "coder_review.xml");
     	return execute(args, new StreamTaskListener(outputFile));
 	}
-	
-	/* TODO drop (unused)
-	public Collection<DrupalProject> getProjects() throws IOException, InterruptedException {
-		File file = new File("/tmp/modules"); // TODO do not use an intermediate file
-		file.delete(); // Make sure file does not already exists TODO do not use intermediate file
-		
-		ArgumentListBuilder args = getArgumentListBuilder();
-		args.add("sql-query");
-		args.add("select filename, name from system order by filename into outfile '/tmp/modules' fields terminated  by ',' enclosed by '\"' lines terminated by '\\n'"); // TODO do not dump into intermediate file TODO does this work with mariadb, psql etc
-		execute(args); // TODO check result of execute()
-
-		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
-		CSVParser parser = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT);
-		for (CSVRecord project : parser) {
-			projects.add(new DrupalProject(project.get(0).toString(), project.get(1).toString()));
-		}
-
-		return projects;
-	}
-	
-	class DrupalProject {
-	
-		private String filename;
-		private String name;
-		
-		public DrupalProject(String filename, String name) {
-			this.filename = filename;
-			this.name = name;
-		}
-		
-		public String getFilename() {
-			return filename;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
-	}
-	
-	*/
 
 }
