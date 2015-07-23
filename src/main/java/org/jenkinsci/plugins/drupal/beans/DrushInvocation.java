@@ -13,6 +13,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.drupal.config.DrupalInstallation;
 
 /**
  * TODO do not download drupal root once this plugin is stable (user should be responsible for checking out drupal): https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin
@@ -25,7 +26,6 @@ public class DrushInvocation {
 	protected final TaskListener listener;
 	
 	// TODO-0 document
-	// TODO make sure drush is installed
 	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener) {
 		this.root = root;
 		this.workspace = workspace;
@@ -33,15 +33,17 @@ public class DrushInvocation {
 		this.listener = listener;
 	}
 	
+	// TODO complain if drush is not installed.
+	// TODO drush version min ?
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		return new ArgumentListBuilder("drush").add("--yes").add("--nocolor").add("--root="+root.getRemote());
+		String drushExe = DrupalInstallation.getDefaultInstallation().getDrushExe();
+		return new ArgumentListBuilder(drushExe).add("--yes").add("--nocolor").add("--root="+root.getRemote());
 	}
 	
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
 		return execute(args, null);
 	}
 
-	// TODO global option to set the location of drush executable
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		ProcStarter starter = launcher.launch().pwd(workspace).cmds(args);
 		if (out == null) {
