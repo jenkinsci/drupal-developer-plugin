@@ -39,7 +39,6 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DrupalInstanceBuilder extends Builder {
 
     public final String db;
-    public final String core;
     public final String root;
     public final String profile;
     
@@ -49,9 +48,8 @@ public class DrupalInstanceBuilder extends Builder {
     // TODO - make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
     // TODO - another default port at random ?
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String core, String root, String profile) {
+    public DrupalInstanceBuilder(String db, String root, String profile) {
     	this.db = db;
-        this.core = core;
         this.root = root;
         this.profile = profile;
     }
@@ -65,35 +63,17 @@ public class DrupalInstanceBuilder extends Builder {
     	return true;
     }
 
-    /**
-     * Descriptor for {@link DrupalInstanceBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See <tt>src/main/resources/hudson/plugins/drupal/DrupalInstanceBuilder/*.jelly</tt>
-     * for the actual HTML fragment for the configuration screen.
-     */
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         /**
-         * In order to load the persisted global configuration, you have to 
-         * call load() in the constructor.
+         * Load the persisted global configuration.
          */
         public DescriptorImpl() {
             load();
         }
 
         /**
-         * Performs on-the-fly validation of the form field 'name'.
-         *
-         * @param value
-         *      This parameter receives the value that the user has typed.
-         * @return
-         *      Indicates the outcome of the validation. This is sent to the browser.
-         *      <p>
-         *      Note that returning {@link FormValidation#error(String)} does not
-         *      prevent the form from being saved. It just means that a message
-         *      will be displayed to the user. 
+         * Field 'db' should not be empty.
          */
         public FormValidation doCheckDb(@QueryParameter String value) {
             if (value.length() == 0) {

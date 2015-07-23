@@ -109,33 +109,26 @@ public class CoderReviewBuilder extends Builder {
     	return true;
     }
 
-    /**
-     * Descriptor for {@link CoderReviewBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See <tt>src/main/resources/hudson/plugins/drupal/DrupalInstanceBuilder/*.jelly</tt>
-     * for the actual HTML fragment for the configuration screen.
-     */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         /**
-         * In order to load the persisted global configuration, you have to 
-         * call load() in the constructor.
+         * Load the persisted global configuration.
          */
         public DescriptorImpl() {
             load();
         }
 
-        public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-            // Indicates that this builder can be used with all kinds of project types 
+        /**
+         * This builder can be used with all kinds of project types.
+         */
+        public boolean isApplicable(Class<? extends AbstractProject> aClass) { 
             return true;
         }
         
 		// TODO-0 validate that rootDir exists (for all builders)
 
         /**
-         * This human readable name is used in the configuration screen.
+         * Human readable name used in the configuration screen.
          */
         public String getDisplayName() {
             return "Run Coder Review on Drupal";
