@@ -3,6 +3,7 @@ package org.jenkinsci.plugins.drupal.scm;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.AbstractProject;
 import hudson.model.TaskListener;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -11,6 +12,7 @@ import hudson.scm.PollingResult;
 import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.scm.SCM;
+import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,7 +22,9 @@ import java.io.Writer;
 
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Checkout Drupal source code based on a Drush Makefile. 
@@ -36,7 +40,6 @@ public class DrushMakefileSCM extends SCM {
 	private final String makefile;
 	private final String root;
 	
-	// TODO if root is not specified, should be workspace root
 	// TODO-0 help "codebase will be fully recreated when makefile is updated"
 	@DataBoundConstructor
 	public DrushMakefileSCM(String makefile, String root) {
@@ -57,9 +60,7 @@ public class DrushMakefileSCM extends SCM {
 		// TODO does not seem to be called
 		// TODO compare with _baseline ?
 
-		// TODO-0 support drush remake ?
 		// TODO if Makefile value has been updated then rebuild.
-listener.getLogger().println("PLOP");
 		
 		// TODO-0 log  all of this
 		return PollingResult.NO_CHANGES;
@@ -75,7 +76,7 @@ listener.getLogger().println("PLOP");
 			// Make sure drupal/sites/defaults is writable so we can delete its contents.
 			File defaultDir = new File(rootDir, "sites/default");
 			defaultDir.setWritable(true);
-			FileUtils.deleteDirectory(rootDir);	
+			FileUtils.deleteDirectory(rootDir);
 		}
 
 		// Save Makefile into local file.
@@ -112,7 +113,30 @@ listener.getLogger().println("PLOP");
 		    return "Drush Makefile";
 		}
 		
-		// TODO-0 validate Drupal root (+cannot be empty, cannot be ./)
+		/**
+         * Field 'makefile' should not be empty.
+         */
+        public FormValidation doCheckMakefile(@QueryParameter String value) {
+            if (value.length() == 0) {
+              return FormValidation.error("Please set a Makefile");
+            }
+            return FormValidation.ok();
+        }
+		
+        /**
+         * Field 'root' should be a valid directory.
+         * Field 'root' cannot be empty ('drush make' expects an empty directory so workspace root cannot be used as Drupal root).
+         */
+        public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
+        	// TODO ./ should not be allowed
+        	if (value.length() == 0) {
+            	return FormValidation.error("Please set a Drupal root");
+            }
+            if (project != null) {
+                return FilePath.validateFileMask(project.getSomeWorkspace(), value);
+            }
+        	return FormValidation.ok();
+        }
 		
 	}
 	
