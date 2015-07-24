@@ -131,6 +131,7 @@ public class DrushInvocation {
 		if (enabledOnly) {
 			args.add("--status=enabled");
 		}
+		
 		File jsonFile;
 		try {
 			// TODO piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
@@ -152,6 +153,10 @@ public class DrushInvocation {
 			listener.getLogger().println(e);
 			return MapUtils.EMPTY_MAP;
 		}
+		if (entries == null) {
+			listener.getLogger().println("[DRUPAL] Could not list available projects");
+			return MapUtils.EMPTY_MAP;
+		}
 		for (Object name: entries.keySet()) {
 			JSONObject entry = (JSONObject) entries.get(name);
 			DrupalProject project = new DrupalProject(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
@@ -166,6 +171,42 @@ public class DrushInvocation {
 	 */
 	public boolean isModuleInstalled(String name, boolean enabledOnly) {
 		return getProjects(true, enabledOnly).keySet().contains(name);
+	}
+	
+	/**
+	 * Return true if the site is already installed, false otherwise.
+	 */
+	public boolean status() {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("status").add("--format=json");
+
+		File jsonFile;
+		try {
+			// TODO piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
+			jsonFile = File.createTempFile("drupal", "status");
+			execute(args, new StreamTaskListener(jsonFile));
+		} catch (IOException e1) {
+			listener.getLogger().println(e1);
+			return false;
+		} catch (InterruptedException e2) {
+			listener.getLogger().println(e2);
+			return false;
+		}
+		
+		JSONObject values;
+		try {
+			values = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
+		} catch (FileNotFoundException e) {
+			listener.getLogger().println(e);
+			return false;
+		}
+		
+		if (values == null) {
+			listener.getLogger().println("[DRUPAL] Could not determine the site status.");
+			return false;
+		}
+	
+		return values.containsKey("db-name");
 	}
 	
 	/**

@@ -31,6 +31,7 @@ public class DrupalInstanceBuilder extends Builder {
     public final String db;
     public final String root;
     public final String profile;
+    public final boolean refresh;
     
     // TODO separate plugin to run php webserver:
     // TODO - explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"
@@ -38,18 +39,23 @@ public class DrupalInstanceBuilder extends Builder {
     // TODO - make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
     // TODO - another default port at random ?
     @DataBoundConstructor
-    public DrupalInstanceBuilder(String db, String root, String profile) {
+    public DrupalInstanceBuilder(String db, String root, String profile, boolean refresh) {
     	this.db = db;
         this.root = root;
         this.profile = profile;
+        this.refresh = refresh;
     }
 
-    // TODO do not re-install if user said so (checkbox "rebuild a fresh instance for every build")
     // TODO allow to run drush updb if we don't re-install the site for every build
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	DrushInvocation drush = new DrushInvocation(new FilePath(new File(root)), build.getWorkspace(), launcher, listener);
-    	drush.siteInstall(db, profile);
+    	if (refresh || !drush.status()) {
+    		listener.getLogger().println("[DRUPAL] No Drupal installation detected, installing Drupal...");
+    		drush.siteInstall(db, profile);	
+    	} else {
+    		listener.getLogger().println("[DRUPAL] Drupal is already installed, skipping installation");
+    	}
     	return true;
     }
 
