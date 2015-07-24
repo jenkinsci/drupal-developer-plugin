@@ -130,7 +130,7 @@ public class DrushInvocation {
 	/**
 	 * Get a map of projects installed on Drupal.
 	 */
-	public Map<String, DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) {
+	public Map<String, DrupalExtension> getProjects(boolean modulesOnly, boolean enabledOnly) {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-list").add("--pipe").add("--format=json");
 		if (modulesOnly) {
@@ -153,7 +153,7 @@ public class DrushInvocation {
 			return MapUtils.EMPTY_MAP;
 		}
 		
-		Map<String, DrupalProject> projects = new HashMap<String, DrupalProject>();
+		Map<String, DrupalExtension> projects = new HashMap<String, DrupalExtension>();
 		JSONObject entries;
 		try {
 			entries = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
@@ -167,7 +167,7 @@ public class DrushInvocation {
 		}
 		for (Object name: entries.keySet()) {
 			JSONObject entry = (JSONObject) entries.get(name);
-			DrupalProject project = new DrupalProject(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
+			DrupalExtension project = new DrupalExtension(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
 			projects.put(name.toString(), project);
 		}
 		
@@ -240,7 +240,7 @@ public class DrushInvocation {
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, final Collection<String> projectNames, boolean ignoresPass) throws IOException, InterruptedException {	
 		// Make sure Coder is enabled.
-		DrupalProject coder = getProjects(true, true).get("coder");
+		DrupalExtension coder = getProjects(true, true).get("coder");
 		if (coder == null) {
 			listener.getLogger().println("[DRUPAL] Coder does not exist: aborting code review");
 			return false;

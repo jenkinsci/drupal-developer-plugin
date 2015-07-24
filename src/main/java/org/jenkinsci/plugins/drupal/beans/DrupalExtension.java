@@ -1,20 +1,20 @@
 package org.jenkinsci.plugins.drupal.beans;
 
 /**
- * Drupal project (theme/module).
+ * Drupal extension (theme/module).
  * 
  * 
  * @author Fengtan https://github.com/Fengtan/
  *
  */
-public class DrupalProject {
+public class DrupalExtension {
 
 	private String name;
 	private String type;
 	private String status;
 	private String version;
 	
-	public DrupalProject(String name, String type, String status, String version) {
+	public DrupalExtension(String name, String type, String status, String version) {
 		this.name = name;
 		this.type = type;
 		this.status = status;
