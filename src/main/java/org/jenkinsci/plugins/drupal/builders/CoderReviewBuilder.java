@@ -154,7 +154,15 @@ public class CoderReviewBuilder extends Builder {
         	return FormValidation.ok();
         }
         
-        // TODO validate that logDir is not empty
+        /**
+         * Field 'logs' should not be empty.
+         */
+        public FormValidation doCheckLogs(@QueryParameter String value) throws IOException {
+            if (value.length() == 0) {
+            	return FormValidation.error("Please set a logs directory.");
+            }
+            return FormValidation.ok();
+        }
 
     }
 }
