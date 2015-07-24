@@ -1,11 +1,9 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     
-    <!-- TODO set default value in yaml -->
-    <!-- TODO getHTMLValue http://wiki.servicenow.com/index.php?title=How_to_Escape_in_Jelly#gsc.tab=0 -->
     <!-- TODO-0 explain save temporary file in workspace -->
     <!-- TODO-0 explain new codebase will be generated every time you update the makefile --> 
-    <f:entry title="${%Makefile}" field="makefile"><f:textarea default="core=7.x\napi=2\nprojects[drupal][version]=7.38"/></f:entry>
-    <f:entry title="${%Drupal root}" field="root"><f:textbox default="drupal"/></f:entry>
+    <f:entry title="${%Makefile}" field="makefile"><f:textarea default="api=2&#xD;core=7.x&#xD;projects[drupal][version]=7.38"/></f:entry>
+    <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
 
 </j:jelly>

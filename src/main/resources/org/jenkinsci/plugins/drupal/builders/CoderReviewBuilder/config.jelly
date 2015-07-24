@@ -9,7 +9,7 @@
   <f:entry title="${%Internationalization}"        field="i18n"    ><f:checkbox default="true"/></f:entry>
   
   <f:advanced>
-    <f:entry title="${%Drupal root directory}" field="root"><f:textbox default="drupal"/></f:entry>
+    <f:entry title="${%Drupal root directory}" field="root"><f:textbox default=""/></f:entry>
     <!-- TODO-0 explain: "you can publish checkstyle by using value in this textfield" -->
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.coder"/></f:entry>
     <!-- TODO-0 later: radio "review everything / only these modules / everything except these modules -->
