@@ -13,10 +13,13 @@ import java.util.Collection;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.drupal.config.DrupalInstallation;
+import org.jenkinsci.plugins.drupal.config.DrushInstallation;
 
 /**
- * TODO do not download drupal root once this plugin is stable (user should be responsible for checking out drupal): https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin
+ * Invoke Drush commands.
+ * 
+ * @author Fengtan https://github.com/Fengtan/
+ *
  */
 public class DrushInvocation {
 
@@ -25,37 +28,49 @@ public class DrushInvocation {
 	protected final Launcher launcher;
 	protected final TaskListener listener;
 	
-	// TODO-0 document
 	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener) {
 		this.root = root;
 		this.workspace = workspace;
 		this.launcher = launcher;
 		this.listener = listener;
 	}
-	
-	// TODO complain if drush is not installed.
-	// TODO drush version min ?
+
+	/**
+	 * Get default Drush options.
+	 */
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		String drushExe = DrupalInstallation.getDefaultInstallation().getDrushExe();
+		String drushExe = DrushInstallation.getDefaultInstallation().getDrushExe();
 		return new ArgumentListBuilder(drushExe).add("--yes").add("--nocolor").add("--root="+root.getRemote());
 	}
 	
+	/**
+	 * Execute a Drush command.
+	 */
 	protected boolean execute(ArgumentListBuilder args) throws IOException, InterruptedException {
 		return execute(args, null);
 	}
 
+	// TODO test when workspace root = drupal root
+	/**
+	 * Execute a Drush command.
+	 */
 	protected boolean execute(ArgumentListBuilder args, TaskListener out) throws IOException, InterruptedException {
 		ProcStarter starter = launcher.launch().pwd(workspace).cmds(args);
 		if (out == null) {
+			// Output stdout/stderr into listener.
 			starter.stdout(listener);
 		} else {
-			// Do not display stderr since this breaks the XML formatting on stdout.
+			// Output stdout into out.
+			// Do not output stderr since this breaks the XML formatting on stdout.
 			starter.stdout(out).stderr(NullOutputStream.NULL_OUTPUT_STREAM);
 		}
 		starter.join();
 		return true;
 	}
 	
+	/**
+	 * Make a Drupal site using a Makefile.
+	 */
 	public boolean make(String makefile, String buildPath) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("make");
@@ -64,7 +79,9 @@ public class DrushInvocation {
 		return execute(args);
 	}
 	
-	
+	/**
+	 * Install a Drupal site using an installation profile.
+	 */
 	public boolean siteInstall(String db, String profile) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("site-install");
@@ -73,7 +90,9 @@ public class DrushInvocation {
 		return execute(args);
 	}
 	
-	// TODO what if codebase already contains coder / has the wrong version of coder ? delete (mention in help)
+	/**
+	 * Download projects/modules into a destination directory.
+	 */
 	public boolean download(String projects, String destination) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-download").add(projects);
@@ -83,12 +102,18 @@ public class DrushInvocation {
 		return execute(args);
 	}
 	
+	/**
+	 * Enable extensions/modules.
+	 */
 	public boolean enable(String extensions) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-enable").add(extensions);
 		return execute(args);
 	}
 
+	/**
+	 * Run tests.
+	 */
 	public boolean testRun(File outputDir, String uri) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
@@ -105,16 +130,9 @@ public class DrushInvocation {
 	}
 	
 	/**
-	 * 
-	 * @param outputDir
-	 * @param reviews See drush coder-review --reviews (set of i18n, style, etc)
-	 * @param projects Drupal projects to review
-	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * Run a code review.
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {
-		// TODO-0 offer more options to user (see drush help coder-review)
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("coder-review");
 		args.add("--minor");

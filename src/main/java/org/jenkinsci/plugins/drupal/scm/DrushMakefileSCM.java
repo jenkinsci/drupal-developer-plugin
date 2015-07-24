@@ -20,6 +20,12 @@ import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+/**
+ * Checkout Drupal source code based on a Drush Makefile. 
+ * 
+ * @author Fengtan https://github.com/Fengtan/
+ *
+ */
 public class DrushMakefileSCM extends SCM {
 
 	private String root;
@@ -106,18 +112,25 @@ public class DrushMakefileSCM extends SCM {
 	
 	@Extension
     public static class DescriptorImpl extends SCMDescriptor {
-
+        /**
+         * Load the persisted global configuration.
+         */
         public DescriptorImpl() {
             super(DrushMakefileSCM.class, null);
             load();
         }
-
-		// TODO-0 validate that makefile exists
         
+        /**
+         * Human readable name is used in the configuration screen.
+         */
 		@Override
 		public String getDisplayName() {
 		    return "Drush Makefile";
 		}
+		
+
+		// TODO-0 validate that makefile exists
+		
 	}
 	
 }

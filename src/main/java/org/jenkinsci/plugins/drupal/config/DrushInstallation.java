@@ -29,50 +29,53 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
-public class DrupalInstallation extends ToolInstallation implements NodeSpecific<DrupalInstallation>, EnvironmentSpecific<DrupalInstallation> {
+/**
+ * Handle Drush installations.
+ * 
+ * @author Fengtan https://github.com/Fengtan/
+ *
+ */
+public class DrushInstallation extends ToolInstallation implements NodeSpecific<DrushInstallation>, EnvironmentSpecific<DrushInstallation> {
 
     @DataBoundConstructor
-    public DrupalInstallation(String name, String home, List<? extends ToolProperty<?>> properties) {
+    public DrushInstallation(String name, String home, List<? extends ToolProperty<?>> properties) {
         super(name, home, properties);
     }
 
-    /** Constant <code>DEFAULT="Default"</code> */
     public static transient final String DEFAULT = "Default";
     
-    private static final Logger LOGGER = Logger.getLogger(DrupalInstallation.class.getName());
-
+    private static final Logger LOGGER = Logger.getLogger(DrushInstallation.class.getName());
 
     /**
-     * getDrushExe.
-     *
-     * @return {@link java.lang.String} that will be used to execute drush (e.g. "drush" or "/usr/bin/drush")
+     * Get Drush executable.
      */
     public String getDrushExe() {
         return getHome();
     }
 
-    private static DrupalInstallation[] getInstallations(DescriptorImpl descriptor) {
-    	DrupalInstallation[] installations = null;
+    /**
+     * Return all installations.
+     */
+    private static DrushInstallation[] getInstallations(DescriptorImpl descriptor) {
+    	DrushInstallation[] installations = null;
         try {
             installations = descriptor.getInstallations();
         } catch (NullPointerException e) {
-            installations = new DrupalInstallation[0];
+            installations = new DrushInstallation[0];
         }
         return installations;
     }
 
     /**
-     * Returns the default installation.
-     *
-     * @return default installation
+     * Return the default installation.
      */
-    public static DrupalInstallation getDefaultInstallation() {
-        DescriptorImpl drushTools = Jenkins.getInstance().getDescriptorByType(DrupalInstallation.DescriptorImpl.class);
-        DrupalInstallation tool = drushTools.getInstallation(DrupalInstallation.DEFAULT);
+    public static DrushInstallation getDefaultInstallation() {
+        DescriptorImpl drushTools = Jenkins.getInstance().getDescriptorByType(DrushInstallation.DescriptorImpl.class);
+        DrushInstallation tool = drushTools.getInstallation(DrushInstallation.DEFAULT);
         if (tool != null) {
             return tool;
         } else {
-        	DrupalInstallation[] installations = drushTools.getInstallations();
+        	DrushInstallation[] installations = drushTools.getInstallations();
             if (installations.length > 0) {
                 return installations[0];
             } else {
@@ -83,13 +86,13 @@ public class DrupalInstallation extends ToolInstallation implements NodeSpecific
     }
     
 	@Override
-	public DrupalInstallation forEnvironment(EnvVars environment) {
-        return new DrupalInstallation(getName(), environment.expand(getHome()), Collections.<ToolProperty<?>>emptyList());
+	public DrushInstallation forEnvironment(EnvVars environment) {
+        return new DrushInstallation(getName(), environment.expand(getHome()), Collections.<ToolProperty<?>>emptyList());
 	}
 
 	@Override
-	public DrupalInstallation forNode(Node node, TaskListener log) throws IOException, InterruptedException {
-        return new DrupalInstallation(getName(), translateFor(node, log), Collections.<ToolProperty<?>>emptyList());
+	public DrushInstallation forNode(Node node, TaskListener log) throws IOException, InterruptedException {
+        return new DrushInstallation(getName(), translateFor(node, log), Collections.<ToolProperty<?>>emptyList());
 	}
 
     @Override
@@ -99,30 +102,35 @@ public class DrupalInstallation extends ToolInstallation implements NodeSpecific
 
     @Initializer(after=EXTENSIONS_AUGMENTED)
     public static void onLoaded() {
-        //Creates default tool installation if needed. Uses "drush" or migrates data from previous versions
-
-        DescriptorImpl descriptor = (DescriptorImpl) Jenkins.getInstance().getDescriptor(DrupalInstallation.class);
-        DrupalInstallation[] installations = getInstallations(descriptor);
+        // Create default tool installation if needed. Uses "drush" or migrates data from previous versions.
+        DescriptorImpl descriptor = (DescriptorImpl) Jenkins.getInstance().getDescriptor(DrushInstallation.class);
+        DrushInstallation[] installations = getInstallations(descriptor);
 
         if (installations != null && installations.length > 0) {
-            //No need to initialize if there's already something
+            //No need to initialize if there's already something.
             return;
         }
 
         String defaultDrushExe = Functions.isWindows() ? "drush.bat" : "drush";
-        DrupalInstallation tool = new DrupalInstallation(DEFAULT, defaultDrushExe, Collections.<ToolProperty<?>>emptyList());
-        descriptor.setInstallations(new DrupalInstallation[] { tool });
+        DrushInstallation tool = new DrushInstallation(DEFAULT, defaultDrushExe, Collections.<ToolProperty<?>>emptyList());
+        descriptor.setInstallations(new DrushInstallation[] { tool });
         descriptor.save();
     }
 
     @Extension
-    public static class DescriptorImpl extends ToolDescriptor<DrupalInstallation> {
+    public static class DescriptorImpl extends ToolDescriptor<DrushInstallation> {
 
+        /**
+         * Load the persisted global configuration.
+         */
         public DescriptorImpl() {
         	super();
             load();
         }
         
+        /**
+         * Human readable name is used in the configuration screen.
+         */
         @Override
         public String getDisplayName() {
             return "Drush";
@@ -130,20 +138,25 @@ public class DrupalInstallation extends ToolInstallation implements NodeSpecific
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
-            setInstallations(req.bindJSONToList(clazz, json.get("tool")).toArray(new DrupalInstallation[0]));
+            setInstallations(req.bindJSONToList(clazz, json.get("tool")).toArray(new DrushInstallation[0]));
             save();
             return true;
         }
         
+        /**
+         * Executable should be a valid path.
+         */
         public FormValidation doCheckHome(@QueryParameter File value) {
             Jenkins.getInstance().checkPermission(Jenkins.ADMINISTER);
             String path = value.getPath();
-
             return FormValidation.validateExecutable(path);
         }
         
-        public DrupalInstallation getInstallation(String name) {
-            for(DrupalInstallation i : getInstallations()) {
+        /**
+         * Get Drush installation.
+         */
+        public DrushInstallation getInstallation(String name) {
+            for(DrushInstallation i : getInstallations()) {
                 if(i.getName().equals(name)) {
                     return i;
                 }
@@ -154,10 +167,13 @@ public class DrupalInstallation extends ToolInstallation implements NodeSpecific
             return null;
         }
 
-        public List<ToolDescriptor<? extends DrupalInstallation>> getApplicableDesccriptors() {
-            List<ToolDescriptor<? extends DrupalInstallation>> r = new ArrayList<ToolDescriptor<? extends DrupalInstallation>>();
+        /**
+         * Get all Drush installations.
+         */
+        public List<ToolDescriptor<? extends DrushInstallation>> getApplicableDesccriptors() {
+            List<ToolDescriptor<? extends DrushInstallation>> r = new ArrayList<ToolDescriptor<? extends DrushInstallation>>();
             for (ToolDescriptor td : Jenkins.getInstance().<ToolInstallation,ToolDescriptor<?>>getDescriptorList(ToolInstallation.class)) {
-                if (DrupalInstallation.class.isAssignableFrom(td.clazz))
+                if (DrushInstallation.class.isAssignableFrom(td.clazz))
                     r.add(td);
             }
             return r;

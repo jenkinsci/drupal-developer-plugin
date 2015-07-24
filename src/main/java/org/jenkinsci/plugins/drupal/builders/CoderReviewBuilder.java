@@ -30,24 +30,15 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Sample {@link Builder}.
- *
- * <p>
- * When the user configures the project and enables this builder,
- * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link CoderReviewBuilder} is created. The created
- * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #name})
- * to remember the configuration.
- *
- * <p>
- * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
- * method will be invoked. 
- *
- * @author Fengtan
+ * Run Coder Review on Drupal.
+ * 
+ * @author Fengtan https://github.com/Fengtan/
+ * 
  */
 public class CoderReviewBuilder extends Builder {
 
+	private static final String CODER_RELEASE = "coder-7.x-2.5";
+	
 	public final boolean style;
 	public final boolean comment;
 	public final boolean sql;
@@ -78,12 +69,15 @@ public class CoderReviewBuilder extends Builder {
     		logsDir.mkdir();
     	}
 
-    	// Run Coder Review.
+    	// Install and enable Coder if necessary.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
-    	// TODO do not download module if already exists -- makes the task slow
-		drush.download("coder-7.x-2.5", "modules"); // TODO coder version should be selectable from UI
-		drush.enable("coder_review"); // TODO unless already enabled
+    	// TODO do not download module if already exists
+		drush.download(CODER_RELEASE, "drush");
+		// TODO do not enablemodule is already enabled
+		drush.enable("coder_review");
+		// TODO what if Coder is in codebase ? adapt parameters or delete (mention in help)
+		// TODO logs everywhere
 
 		Collection<String> reviews = new HashSet<String>();
 		if (this.style)    reviews.add("style");
