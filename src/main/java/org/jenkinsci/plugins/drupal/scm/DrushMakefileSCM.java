@@ -3,8 +3,8 @@ package org.jenkinsci.plugins.drupal.scm;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.AbstractProject;
 import hudson.model.TaskListener;
+import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.scm.ChangeLogParser;
@@ -15,10 +15,7 @@ import hudson.scm.SCM;
 import hudson.util.FormValidation;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
@@ -34,7 +31,7 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class DrushMakefileSCM extends SCM {
 
-	// Save Makefile data in this file.  
+	// Save Makefile data into this file.  
 	private static final String MAKEFILE_FILE = "drupal.make";
 	
 	private final String makefile;
@@ -59,19 +56,17 @@ public class DrushMakefileSCM extends SCM {
 	public PollingResult compareRemoteRevisionWith(Job<?,?> project, Launcher launcher, FilePath workspace, TaskListener listener, SCMRevisionState _baseline) {
 		// TODO does not seem to be called
 		// TODO compare with _baseline ?
-
 		// TODO if Makefile value has been updated then rebuild.
-		
 		// TODO-0 log  all of this
 		return PollingResult.NO_CHANGES;
 	}
 
 	@Override
 	public void checkout(Run<?,?> build, Launcher launcher, FilePath workspace, TaskListener listener, File changelogFile, SCMRevisionState baseline) throws IOException, InterruptedException {
-		// If necessary, delete destination directory so we can install Drupal.
-		// TODO unless root = workspace home ?
+		// If necessary, delete destination directory so we can install Drupal (unless Drupal root is workspace root).
 		File rootDir = new File(workspace.getRemote(), root);
-		if (rootDir.exists()) {
+		FilePath rootPath = new FilePath(rootDir);
+		if (rootDir.exists() && !rootPath.getRemote().equals(workspace.getRemote())) {
 			listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
 			// Make sure drupal/sites/defaults is writable so we can delete its contents.
 			File defaultDir = new File(rootDir, "sites/default");
@@ -80,12 +75,12 @@ public class DrushMakefileSCM extends SCM {
 		}
 
 		// Save Makefile into local file.
-		listener.getLogger().println("[DRUPAL] Saving Makefile into "+rootDir.getAbsolutePath());
 		File makefileFile = new File(workspace.getRemote(), MAKEFILE_FILE);
+		listener.getLogger().println("[DRUPAL] Saving Makefile into "+makefileFile.getAbsolutePath());
 		FileUtils.writeStringToFile(makefileFile, makefile);
 
 		// Make Drupal.
-		DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), workspace, launcher, listener);
+		DrushInvocation drush = new DrushInvocation(rootPath, workspace, launcher, listener);
 		drush.make(makefileFile);
 	}
 	
@@ -124,16 +119,11 @@ public class DrushMakefileSCM extends SCM {
         }
 		
         /**
-         * Field 'root' should be a valid directory.
          * Field 'root' cannot be empty ('drush make' expects an empty directory so workspace root cannot be used as Drupal root).
          */
         public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
-        	// TODO ./ should not be allowed
         	if (value.length() == 0) {
             	return FormValidation.error("Please set a Drupal root");
-            }
-            if (project != null) {
-                return FilePath.validateFileMask(project.getSomeWorkspace(), value);
             }
         	return FormValidation.ok();
         }
