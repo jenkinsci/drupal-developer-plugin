@@ -91,7 +91,7 @@ public class DrushMakefileSCM extends SCM {
 		if (rootDir.exists()) {
 			// Make sure drupal/sites/defaults is writable so we can delete its contents.
 			File defaultDir = new File(rootDir, "sites/default");
-			listener.getLogger().println("Deleting destination directory "+rootDir.getAbsolutePath());
+			listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
 			defaultDir.setWritable(true);
 			FileUtils.deleteDirectory(rootDir);	
 		}

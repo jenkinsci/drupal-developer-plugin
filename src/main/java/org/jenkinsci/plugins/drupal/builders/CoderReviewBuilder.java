@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
 
@@ -25,6 +27,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.jenkinsci.plugins.drupal.beans.DrupalProject;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
+import org.jenkinsci.plugins.drupal.config.DrushInstallation;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -71,13 +74,21 @@ public class CoderReviewBuilder extends Builder {
     		logsDir.mkdir();
     	}
     	
-    	// Install and enable Coder if necessary.
+    	// Download and enable Coder if necessary.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
-    	// TODO do not download module if already exists
-		drush.download(CODER_RELEASE, "drush");
-		// TODO do not enablemodule is already enabled
-		drush.enable("coder_review");
+    	if (drush.isModuleInstalled("coder", false)) {
+    		listener.getLogger().println("[DRUPAL] Coder already exists");
+    	} else {
+    		listener.getLogger().println("[DRUPAL] Coder does not exist. Downloading Coder...");
+    		drush.download(CODER_RELEASE, "modules");
+    	}
+    	if (drush.isModuleInstalled("coder_review", true)) {
+    		listener.getLogger().println("[DRUPAL] Coder is already enabled");
+    	} else {
+    		listener.getLogger().println("[DRUPAL] Coder is not enabled. Enabling Coder...");
+    		drush.enable("coder_review");
+    	}
 		// TODO what if Coder is in codebase ? adapt parameters or delete (mention in help)
 		// TODO logs everywhere		
 		

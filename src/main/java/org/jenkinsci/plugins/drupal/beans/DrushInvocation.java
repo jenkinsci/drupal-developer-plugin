@@ -8,12 +8,15 @@ import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.config.DrushInstallation;
@@ -119,8 +122,9 @@ public class DrushInvocation {
 	
 	/**
 	 * Get a list of projects installed on Drupal.
+	 * TODO cache result set and return a clone ?
 	 */
-	public Collection<DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) throws IOException, InterruptedException, ParseException {
+	public Collection<DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-list").add("--pipe").add("--format=json");
 		if (modulesOnly) {
@@ -130,10 +134,24 @@ public class DrushInvocation {
 			args.add("--status=enabled");
 		}
 		File tmpFile = new File("/tmp/modules.json"); // TODO use Jenkins API for temporary files ? use listener output ?
-		execute(args, new StreamTaskListener(tmpFile));
+		try {
+			execute(args, new StreamTaskListener(tmpFile));
+		} catch (IOException e1) {
+			listener.getLogger().println(e1);
+			return CollectionUtils.EMPTY_COLLECTION;
+		} catch (InterruptedException e2) {
+			listener.getLogger().println(e2);
+			return CollectionUtils.EMPTY_COLLECTION;
+		}
 		
 		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
-		JSONObject entries = (JSONObject) JSONValue.parse(new FileReader(tmpFile));
+		JSONObject entries;
+		try {
+			entries = (JSONObject) JSONValue.parse(new FileReader(tmpFile));
+		} catch (FileNotFoundException e) {
+			listener.getLogger().println(e);
+			return CollectionUtils.EMPTY_COLLECTION;
+		}
 		for (Object name: entries.keySet()) {
 			JSONObject entry = (JSONObject) entries.get(name);
 			DrupalProject project = new DrupalProject(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
@@ -141,6 +159,20 @@ public class DrushInvocation {
 		}
 		
 		return projects;
+	}
+	
+	/**
+	 * Check if a module exists / is enabled
+	 */
+	public boolean isModuleInstalled(final String name, boolean enabledOnly) {
+		Collection<DrupalProject> projects = getProjects(true, enabledOnly);
+		CollectionUtils.filter(projects, new Predicate() {
+			@Override
+			public boolean evaluate(Object project) {
+				return StringUtils.equals(name, ((DrupalProject) project).getName());
+			}
+		});
+		return CollectionUtils.isNotEmpty(projects);
 	}
 	
 	/**
