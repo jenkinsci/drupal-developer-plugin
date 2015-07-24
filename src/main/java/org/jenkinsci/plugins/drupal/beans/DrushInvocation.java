@@ -132,9 +132,10 @@ public class DrushInvocation {
 		if (enabledOnly) {
 			args.add("--status=enabled");
 		}
-		File tmpFile = new File("/tmp/modules.json"); // TODO use Jenkins API for temporary files ? use listener output ?
+		File jsonFile;
 		try {
-			execute(args, new StreamTaskListener(tmpFile));
+			jsonFile = File.createTempFile("drush", "projects"); // TODO use listener output ?
+			execute(args, new StreamTaskListener(jsonFile));
 		} catch (IOException e1) {
 			listener.getLogger().println(e1);
 			return CollectionUtils.EMPTY_COLLECTION;
@@ -146,7 +147,7 @@ public class DrushInvocation {
 		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
 		JSONObject entries;
 		try {
-			entries = (JSONObject) JSONValue.parse(new FileReader(tmpFile));
+			entries = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
 		} catch (FileNotFoundException e) {
 			listener.getLogger().println(e);
 			return CollectionUtils.EMPTY_COLLECTION;
