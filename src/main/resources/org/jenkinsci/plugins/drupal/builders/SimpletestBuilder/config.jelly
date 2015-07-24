@@ -2,7 +2,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   
   <!-- TODO-0 "help/documentation: this will be used when running drush -uri" -->
-  <f:entry title="${%URI}" field="uri"><f:textbox default="http://example.net/"/></f:entry>
+  <f:entry title="${%URI}" field="uri"><f:textbox default="http://localhost/"/></f:entry>
   
   <f:advanced>
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default=""/></f:entry>

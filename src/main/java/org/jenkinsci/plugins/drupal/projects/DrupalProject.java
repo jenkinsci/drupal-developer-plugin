@@ -4,7 +4,16 @@ import hudson.Extension;
 import hudson.model.ItemGroup;
 import hudson.model.TopLevelItem;
 import hudson.model.Project;
+import hudson.tasks.Builder;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import jenkins.model.Jenkins;
+
+import org.jenkinsci.plugins.drupal.builders.CoderReviewBuilder;
+import org.jenkinsci.plugins.drupal.builders.DrupalInstanceBuilder;
+import org.jenkinsci.plugins.drupal.builders.SimpletestBuilder;
 
 /**
  * Drupal project (top level item).
@@ -27,6 +36,17 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 		return (DescriptorImpl) Jenkins.getInstance().getDescriptorOrDie(getClass());
 	}
 	
+	@Override
+	public List<Builder> getBuilders() {
+		List<Builder> builders = new ArrayList<Builder>();
+		builders.add(new DrupalInstanceBuilder("mysql://user:password@localhost/db", "drupal", "standard", false, false));
+		builders.add(new CoderReviewBuilder(true, true, true, true, true, "drupal", "logs.coder", "", false)); // TODO profiles/** ?
+		builders.add(new SimpletestBuilder("http://localhost/", "drupal", "logs.simpletest"));
+		return builders;
+		// TODO add Makefile
+		// TODO add publishers
+	}
+	
 	@Extension
 	public static final class DescriptorImpl extends AbstractProjectDescriptor {
 		
@@ -37,8 +57,8 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 			return "Drupal project";
 		}
 		// TODO description does not seem to show up
-		// TODO add builders
 		
+		@Override
 		public DrupalProject newInstance(ItemGroup parent, String name) {
 			return new DrupalProject(parent, name);
 		}
