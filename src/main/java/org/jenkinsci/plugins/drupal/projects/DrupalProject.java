@@ -4,7 +4,9 @@ import hudson.Extension;
 import hudson.model.ItemGroup;
 import hudson.model.TopLevelItem;
 import hudson.model.Project;
+import hudson.plugins.checkstyle.CheckStylePublisher;
 import hudson.tasks.Builder;
+import hudson.tasks.junit.JUnitResultArchiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,12 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 
 	public DrupalProject(ItemGroup parent, String name) {
 		super(parent, name);
+		getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs.coder/*"));
+		getPublishersList().add(new JUnitResultArchiver("logs.simpletest/*"));
+		// TODO test unstable/fail thresholds
+		// TODO move into this.getPublishersList() { super() }
+		// TODO analysis collector ?
+		// TODO make sure dependency shows up in UI when installing module
 	}
 	
 	@Override
@@ -43,8 +51,7 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 		builders.add(new CoderReviewBuilder(true, true, true, true, true, "drupal", "logs.coder", "", false)); // TODO profiles/** ?
 		builders.add(new SimpletestBuilder("http://localhost/", "drupal", "logs.simpletest"));
 		return builders;
-		// TODO add Makefile
-		// TODO add publishers
+		// TODO add Makefile / git checkout drupal
 	}
 	
 	@Extension
