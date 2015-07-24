@@ -23,6 +23,7 @@ import org.apache.commons.collections4.Transformer;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.plugins.drupal.beans.DrupalProject;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -37,6 +38,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class CoderReviewBuilder extends Builder {
 
+	// 'drush dl coder' downloads coder-7.x-1.3 so we will explicitely use 'drush dl coder-7.x-2.5'.  
 	private static final String CODER_RELEASE = "coder-7.x-2.5";
 	
 	public final boolean style;
@@ -68,7 +70,7 @@ public class CoderReviewBuilder extends Builder {
     	if (!logsDir.exists()) {
     		logsDir.mkdir();
     	}
-
+    	
     	// Install and enable Coder if necessary.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
@@ -77,8 +79,8 @@ public class CoderReviewBuilder extends Builder {
 		// TODO do not enablemodule is already enabled
 		drush.enable("coder_review");
 		// TODO what if Coder is in codebase ? adapt parameters or delete (mention in help)
-		// TODO logs everywhere
-
+		// TODO logs everywhere		
+		
 		Collection<String> reviews = new HashSet<String>();
 		if (this.style)    reviews.add("style");
 		if (this.comment)  reviews.add("comment");

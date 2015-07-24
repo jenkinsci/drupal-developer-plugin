@@ -8,12 +8,18 @@ import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.config.DrushInstallation;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
 
 /**
  * Invoke Drush commands.
@@ -110,7 +116,33 @@ public class DrushInvocation {
 		args.add("pm-enable").add(extensions);
 		return execute(args);
 	}
-
+	
+	/**
+	 * Get a list of projects installed on Drupal.
+	 */
+	public Collection<DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) throws IOException, InterruptedException, ParseException {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("pm-list").add("--pipe").add("--format=json");
+		if (modulesOnly) {
+			args.add("--type=module");
+		}
+		if (enabledOnly) {
+			args.add("--status=enabled");
+		}
+		File tmpFile = new File("/tmp/modules.json"); // TODO use Jenkins API for temporary files ? use listener output ?
+		execute(args, new StreamTaskListener(tmpFile));
+		
+		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
+		JSONObject entries = (JSONObject) JSONValue.parse(new FileReader(tmpFile));
+		for (Object name: entries.keySet()) {
+			JSONObject entry = (JSONObject) entries.get(name);
+			DrupalProject project = new DrupalProject(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
+			projects.add(project);
+		}
+		
+		return projects;
+	}
+	
 	/**
 	 * Run tests.
 	 */
