@@ -74,7 +74,9 @@ public class CoderReviewBuilder extends Builder {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.
     	File logsDir = new File(build.getWorkspace().getRemote(), logs);
-    	logsDir.mkdir(); // TODO what if already exists
+    	if (!logsDir.exists()) {
+    		logsDir.mkdir();
+    	}
 
     	// Run Coder Review.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
@@ -106,7 +108,7 @@ public class CoderReviewBuilder extends Builder {
 			}
 		});
 
-		// Run the code review.
+		// Run code review.
 		drush.coderReview(logsDir, reviews, projects);
 
     	return true;

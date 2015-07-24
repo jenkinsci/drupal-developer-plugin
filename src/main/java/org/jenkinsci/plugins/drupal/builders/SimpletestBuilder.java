@@ -54,8 +54,11 @@ public class SimpletestBuilder extends Builder {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Make sure logs directory exists.
     	File logsDir = new File(build.getWorkspace().getRemote(), logs);
-    	logsDir.mkdir(); // TODO what if already exists
+    	if (!logsDir.exists()) {
+    		logsDir.mkdir();
+    	}
 
+    	// TODO ability to exclude certain test classes
     	// Run Simpletest.
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
