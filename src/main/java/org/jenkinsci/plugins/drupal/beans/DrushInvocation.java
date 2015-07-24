@@ -190,7 +190,7 @@ public class DrushInvocation {
 	/**
 	 * Run a code review.
 	 */
-	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {	
+	public boolean coderReview(File outputDir, Collection<String> reviews, final Collection<String> projectNames, boolean ignoresPass) throws IOException, InterruptedException {	
 		// Make sure Coder is enabled.
 		DrupalProject coder = getProjects(true, true).get("coder");
 		if (coder == null) {
@@ -203,7 +203,6 @@ public class DrushInvocation {
 		args.add("coder-review");
 		if (coder.getVersion().startsWith("7.x-2")) {
 			args.add("--minor");
-			args.add("--ignores-pass"); // TODO not always supported => expose to user ? "only if you use coder-7.x-XX+
 			args.add("--checkstyle");
 			args.add("--reviews="+StringUtils.join(reviews, ","));	
 		} else if (coder.getVersion().startsWith("7.x-1")) {
@@ -216,16 +215,28 @@ public class DrushInvocation {
 			listener.getLogger().println("[DRUPAL] Unsupported Coder version "+coder.getVersion());
 			return false;
 		}
-		
-		// 'drush coder-review comment' fails with error "use --reviews or --comment."
-		// TODO find a workaround.
-		// TODO same for i18n with coder-7.x-1.x ?
-		for(String projectName: projectNames) {
-			if (!projectName.equals("comment")) {
-				args.add(projectName);
+
+		// Ignores pass if needed.
+		// This option works only with coder-7.x-2.4+.
+		if (ignoresPass && coder.getVersion().startsWith("7.x-2")) {
+			int minorVersion = Integer.parseInt(coder.getVersion().substring(12, coder.getVersion().length()));
+			if (minorVersion >= 4) { // TODO test
+				args.add("--ignores-pass");	
 			}
 		}
-		
+
+		// In coder-7.x-2.x, 'drush coder-review comment' fails with error "use --reviews or --comment". Same for i18n.
+		// Ignore projects involved in conflicts.
+		Collection<String> conflicts = CollectionUtils.intersection(projectNames, reviews);
+		if (!conflicts.isEmpty()) {
+			listener.getLogger().println("[DRUPAL] Ignoring project(s) conflicting with Coder options: "+StringUtils.join(conflicts, ", "));
+		}
+		for (String projectName: projectNames) {
+			if (!conflicts.contains(projectName)) {
+				args.add(projectName);	
+			}
+		}
+
 		// Run command.
     	File outputFile = new File(outputDir, "coder_review.xml");
     	return execute(args, new StreamTaskListener(outputFile));

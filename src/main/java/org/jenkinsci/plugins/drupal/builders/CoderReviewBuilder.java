@@ -53,9 +53,10 @@ public class CoderReviewBuilder extends Builder {
 	public final String root;
 	public final String logs;
 	public final String except;
+	public final boolean ignoresPass;
 	
     @DataBoundConstructor
-    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except) {
+    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except, boolean ignoresPass) {
     	this.style = style;
     	this.comment = comment;
     	this.sql = sql;
@@ -64,6 +65,7 @@ public class CoderReviewBuilder extends Builder {
     	this.root = root;
     	this.logs = logs;
     	this.except = except;
+    	this.ignoresPass = ignoresPass;
     }
 
     @Override
@@ -114,7 +116,7 @@ public class CoderReviewBuilder extends Builder {
 		});
 
 		// Run code review.
-		drush.coderReview(logsDir, reviews, projects);
+		drush.coderReview(logsDir, reviews, projects, ignoresPass);
 
     	return true;
     }
