@@ -77,6 +77,17 @@ public class DrushInvocation {
 	}
 	
 	/**
+	 * Run update.php
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public boolean upDb() throws IOException, InterruptedException {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("updatedb");
+		return execute(args);
+	}
+	
+	/**
 	 * Make a Drupal site using a Makefile.
 	 */
 	public boolean make(String makefile, String buildPath) throws IOException, InterruptedException {
