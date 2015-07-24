@@ -15,6 +15,7 @@ import java.io.IOException;
 import net.sf.json.JSONObject;
 
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -73,22 +74,14 @@ public class DrupalInstanceBuilder extends Builder {
         }
 
         /**
-         * Field 'db' should not be empty.
+         * This builder can be used with all kinds of project types.
          */
-        public FormValidation doCheckDb(@QueryParameter String value) {
-            if (value.length() == 0) {
-              return FormValidation.error("Please set a database URL");
-            }
-            return FormValidation.ok();
-        }
-
-        public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-            // Indicates that this builder can be used with all kinds of project types 
+        public boolean isApplicable(Class<? extends AbstractProject> aClass) { 
             return true;
         }
 
         /**
-         * This human readable name is used in the configuration screen.
+         * Human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
             return "Build a Drupal instance";
@@ -99,6 +92,30 @@ public class DrupalInstanceBuilder extends Builder {
             save();
             return super.configure(req, formData);
         }
+        
+        /**
+         * Field 'db' should not be empty.
+         */
+        public FormValidation doCheckDb(@QueryParameter String value) {
+            if (value.length() == 0) {
+              return FormValidation.error("Please set a database URL");
+            }
+            return FormValidation.ok();
+        }
+        
+        /**
+         * Field 'root' should be a valid directory.
+         */
+        public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
+            if (value.length() == 0) {
+            	return FormValidation.warning("Workspace root will be used as Drupal root");
+            }
+            if (project != null) {
+                return FilePath.validateFileMask(project.getSomeWorkspace(), value);
+            }
+        	return FormValidation.ok();
+        }
+
     }
 }
 

@@ -7,6 +7,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import net.sf.json.JSONObject;
 
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -62,33 +65,24 @@ public class SimpletestBuilder extends Builder {
     	return true;
     }
 
-    /**
-     * Descriptor for {@link SimpletestBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See <tt>src/main/resources/hudson/plugins/drupal/DrupalInstanceBuilder/*.jelly</tt>
-     * for the actual HTML fragment for the configuration screen.
-     */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         /**
-         * In order to load the persisted global configuration, you have to 
-         * call load() in the constructor.
+         * Load the persisted global configuration.
          */
         public DescriptorImpl() {
             load();
         }
-
-        // TODO-0 doCheckRoot to make sure Drupal exists ?
         
-        public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-            // Indicates that this builder can be used with all kinds of project types 
+        /**
+         * This builder can be used with all kinds of project types.
+         */
+        public boolean isApplicable(Class<? extends AbstractProject> aClass) { 
             return true;
         }
 
         /**
-         * This human readable name is used in the configuration screen.
+         * Human readable name used in the configuration screen.
          */
         public String getDisplayName() {
             return "Run Simpletest on Drupal";
@@ -99,6 +93,20 @@ public class SimpletestBuilder extends Builder {
             save();
             return super.configure(req, formData);
         }
+
+        /**
+         * Field 'root' should be a valid directory.
+         */
+        public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
+            if (value.length() == 0) {
+            	return FormValidation.warning("Workspace root will be used as Drupal root");
+            }
+            if (project != null) {
+                return FilePath.validateFileMask(project.getSomeWorkspace(), value);
+            }
+        	return FormValidation.ok();
+        }
+        
     }
 }
 

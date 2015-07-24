@@ -8,6 +8,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
+import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
+import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
@@ -125,8 +128,6 @@ public class CoderReviewBuilder extends Builder {
             return true;
         }
         
-		// TODO-0 validate that rootDir exists (for all builders)
-
         /**
          * Human readable name used in the configuration screen.
          */
@@ -139,6 +140,22 @@ public class CoderReviewBuilder extends Builder {
             save();
             return super.configure(req, formData);
         }
+        
+        /**
+         * Field 'root' should be a valid directory.
+         */
+        public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
+            if (value.length() == 0) {
+            	return FormValidation.warning("Workspace root will be used as Drupal root");
+            }
+            if (project != null) {
+                return FilePath.validateFileMask(project.getSomeWorkspace(), value);
+            }
+        	return FormValidation.ok();
+        }
+        
+        // TODO validate that logDir is not empty
+
     }
 }
 
