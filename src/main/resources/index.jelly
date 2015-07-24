@@ -1,7 +1,4 @@
 <?jelly escape-by-default='true'?>
-<!--
-  This view is used to render the installed plugins page (/pluginManager/installed).
--->
 <div>
   Run code reviews and tests on Drupal projects.
 </div>
