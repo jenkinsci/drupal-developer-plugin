@@ -58,7 +58,7 @@ public class DrushInvocation {
 		return execute(args, null);
 	}
 
-	// TODO test when workspace root = drupal root
+	// TODO-0 test when workspace root = drupal root
 	/**
 	 * Execute a Drush command.
 	 */
@@ -77,9 +77,7 @@ public class DrushInvocation {
 	}
 	
 	/**
-	 * Run update.php
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * Run update.php.
 	 */
 	public boolean upDb() throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
@@ -90,11 +88,11 @@ public class DrushInvocation {
 	/**
 	 * Make a Drupal site using a Makefile.
 	 */
-	public boolean make(String makefile, String buildPath) throws IOException, InterruptedException {
+	public boolean make(File makefile) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("make");
-		args.add(makefile);
-		args.add(buildPath);
+		args.add(makefile.getAbsolutePath());
+		args.add(root.getRemote());
 		return execute(args);
 	}
 	
@@ -145,7 +143,7 @@ public class DrushInvocation {
 		
 		File jsonFile;
 		try {
-			// TODO piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
+			// TODO-0 piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
 			jsonFile = File.createTempFile("drupal", "projects");
 			execute(args, new StreamTaskListener(jsonFile));
 		} catch (IOException e1) {
@@ -193,7 +191,7 @@ public class DrushInvocation {
 
 		File jsonFile;
 		try {
-			// TODO piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
+			// TODO-0 piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
 			jsonFile = File.createTempFile("drupal", "status");
 			execute(args, new StreamTaskListener(jsonFile));
 		} catch (IOException e1) {

@@ -13,10 +13,12 @@ import hudson.scm.SCMRevisionState;
 import hudson.scm.SCM;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -28,31 +30,22 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class DrushMakefileSCM extends SCM {
 
-	private String root;
-	private String type;
-	private String makefilePath;
-	private String makefileInput;
+	// Save Makefile data in this file.  
+	private static final String MAKEFILE_FILE = "drupal.make";
+	
+	private final String makefile;
+	private final String root;
 	
 	// TODO if root is not specified, should be workspace root
 	// TODO-0 help "codebase will be fully recreated when makefile is updated"
 	@DataBoundConstructor
-	public DrushMakefileSCM(String root, String type, String makefilePath, String makefileInput) {
+	public DrushMakefileSCM(String makefile, String root) {
+		this.makefile = makefile;
 		this.root = root;
-		this.type = type;
-		this.makefilePath = makefilePath;
-		this.makefileInput = makefileInput;
 	}
 	
-	public String getType() {
-		return type;
-	}
-	
-	public String getMakefilePath() {
-		return makefilePath;
-	}
-	
-	public String getMakefileInput() {
-		return makefileInput;
+	public String getMakefile() {
+		return makefile;
 	}
 	
 	public String getRoot() {
@@ -65,19 +58,8 @@ public class DrushMakefileSCM extends SCM {
 		// TODO compare with _baseline ?
 
 		// TODO-0 support drush remake ?
-		// TODO support when Makefile type==input
-		// TODO support when Makefile is http remote
-		// If Drupal root does not exist, then build now.
-		File rootDir = new File(workspace.getRemote(), root);
-		if (!rootDir.exists()) {
-			return PollingResult.BUILD_NOW;
-		}
-		
-		// If Makefile was modified after Drupal root was created, then rebuild.
-		File makefile = new File(workspace.getRemote(), makefilePath);
-		if (makefile.lastModified() > rootDir.lastModified()) {
-			return PollingResult.BUILD_NOW;
-		}
+		// TODO if Makefile value has been updated then rebuild.
+listener.getLogger().println("PLOP");
 		
 		// TODO-0 log  all of this
 		return PollingResult.NO_CHANGES;
@@ -89,19 +71,21 @@ public class DrushMakefileSCM extends SCM {
 		// TODO unless root = workspace home ?
 		File rootDir = new File(workspace.getRemote(), root);
 		if (rootDir.exists()) {
+			listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
 			// Make sure drupal/sites/defaults is writable so we can delete its contents.
 			File defaultDir = new File(rootDir, "sites/default");
-			listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
 			defaultDir.setWritable(true);
 			FileUtils.deleteDirectory(rootDir);	
 		}
-		
+
+		// Save Makefile into local file.
+		listener.getLogger().println("[DRUPAL] Saving Makefile into "+rootDir.getAbsolutePath());
+		File makefileFile = new File(workspace.getRemote(), MAKEFILE_FILE);
+		FileUtils.writeStringToFile(makefileFile, makefile);
+
 		// Make Drupal.
 		DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), workspace, launcher, listener);
-		if (StringUtils.equals(type, "input")) {
-			// TODO create temporary file (or pipe, if possible)
-		}
-		drush.make(makefilePath, root);
+		drush.make(makefileFile);
 	}
 	
 	@Override
@@ -128,7 +112,7 @@ public class DrushMakefileSCM extends SCM {
 		    return "Drush Makefile";
 		}
 		
-		// TODO-0 validate that makefile exists
+		// TODO-0 validate Drupal root (+cannot be empty, cannot be ./)
 		
 	}
 	
