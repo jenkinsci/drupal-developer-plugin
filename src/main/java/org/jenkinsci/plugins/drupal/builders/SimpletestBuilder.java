@@ -122,6 +122,16 @@ public class SimpletestBuilder extends Builder {
             save();
             return super.configure(req, formData);
         }
+        
+        /**
+         * Field 'uri' should not be empty.
+         */
+        public FormValidation doCheckUri(@QueryParameter String value) throws IOException {
+            if (value.length() == 0) {
+            	return FormValidation.error("Please set a URI");
+            }
+            return FormValidation.ok();
+        }
 
         /**
          * Field 'root' should be a valid directory.
@@ -141,12 +151,10 @@ public class SimpletestBuilder extends Builder {
          */
         public FormValidation doCheckLogs(@QueryParameter String value) throws IOException {
             if (value.length() == 0) {
-            	return FormValidation.error("Please set a logs directory.");
+            	return FormValidation.error("Please set a logs directory");
             }
             return FormValidation.ok();
         }
-        
-        // TODO warning if URI is empty
         
     }
 }
