@@ -37,7 +37,7 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class CoderReviewBuilder extends Builder {
 
-	// 'drush dl coder' downloads coder-7.x-1.3 so we will explicitely use 'drush dl coder-7.x-2.5'.  
+	// 'drush dl coder' downloads coder-7.x-1.3 so we will use 'drush dl coder-7.x-2.5' explicitly.  
 	private static final String CODER_RELEASE = "coder-7.x-2.5";
 	
 	public final boolean style;

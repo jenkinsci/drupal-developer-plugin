@@ -7,10 +7,12 @@ import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,27 +142,19 @@ public class DrushInvocation {
 			args.add("--status=enabled");
 		}
 		
-		File jsonFile;
+		OutputStream json = new ByteArrayOutputStream();
 		try {
-			// TODO-0 piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
-			jsonFile = File.createTempFile("drupal", "projects");
-			execute(args, new StreamTaskListener(jsonFile));
+			execute(args, new StreamTaskListener(json));
 		} catch (IOException e1) {
 			listener.getLogger().println(e1);
 			return MapUtils.EMPTY_MAP;
 		} catch (InterruptedException e2) {
 			listener.getLogger().println(e2);
 			return MapUtils.EMPTY_MAP;
-		}
+		}		
 		
 		Map<String, DrupalExtension> projects = new HashMap<String, DrupalExtension>();
-		JSONObject entries;
-		try {
-			entries = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
-		} catch (FileNotFoundException e) {
-			listener.getLogger().println(e);
-			return MapUtils.EMPTY_MAP;
-		}
+		JSONObject entries = (JSONObject) JSONValue.parse(json.toString());
 		if (entries == null) {
 			listener.getLogger().println("[DRUPAL] Could not list available projects");
 			return MapUtils.EMPTY_MAP;
@@ -188,11 +182,9 @@ public class DrushInvocation {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("status").add("--format=json");
 
-		File jsonFile;
+		OutputStream json = new ByteArrayOutputStream();
 		try {
-			// TODO-0 piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
-			jsonFile = File.createTempFile("drupal", "status");
-			execute(args, new StreamTaskListener(jsonFile));
+			execute(args, new StreamTaskListener(json));
 		} catch (IOException e1) {
 			listener.getLogger().println(e1);
 			return false;
@@ -200,20 +192,13 @@ public class DrushInvocation {
 			listener.getLogger().println(e2);
 			return false;
 		}
-		
-		JSONObject values;
-		try {
-			values = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
-		} catch (FileNotFoundException e) {
-			listener.getLogger().println(e);
-			return false;
-		}
-		
+
+		JSONObject values = (JSONObject) JSONValue.parse(json.toString());
 		if (values == null) {
 			listener.getLogger().println("[DRUPAL] Could not determine the site status.");
 			return false;
 		}
-	
+		
 		return values.containsKey("db-name");
 	}
 	
@@ -226,11 +211,8 @@ public class DrushInvocation {
 		if (StringUtils.isNotEmpty(uri)) {
 			args.add("--uri="+uri);
 		}
-		
-		// TODO-0 args.add("--all");
-		args.add("--methods=testSettingsPage");
-		args.add("AggregatorConfigurationTestCase");
-		
+		// TODO allow user to exclude classes/groups ? e.g. core tests
+		args.add("--all");
 		args.add("--xml="+outputDir.getAbsolutePath());
 		return execute(args);
 	}

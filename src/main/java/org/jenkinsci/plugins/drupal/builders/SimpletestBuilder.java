@@ -116,6 +116,8 @@ public class SimpletestBuilder extends Builder {
             return FormValidation.ok();
         }
         
+        // TODO warning if URI is empty
+        
     }
 }
 
