@@ -58,7 +58,6 @@ public class DrushInvocation {
 		return execute(args, null);
 	}
 
-	// TODO-0 test when workspace root = drupal root
 	/**
 	 * Execute a Drush command.
 	 */

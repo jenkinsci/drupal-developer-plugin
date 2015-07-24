@@ -31,13 +31,12 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class DrushMakefileSCM extends SCM {
 
-	// Save Makefile data into this file.  
+    // Save Makefile data into this file.  
 	private static final String MAKEFILE_FILE = "drupal.make";
 	
 	private final String makefile;
 	private final String root;
 	
-	// TODO-0 help "codebase will be fully recreated when makefile is updated"
 	@DataBoundConstructor
 	public DrushMakefileSCM(String makefile, String root) {
 		this.makefile = makefile;
@@ -51,46 +50,41 @@ public class DrushMakefileSCM extends SCM {
 	public String getRoot() {
 		return root;
 	}
+		
+    @Override
+    public PollingResult compareRemoteRevisionWith(Job<?,?> project, Launcher launcher, FilePath workspace, TaskListener listener, SCMRevisionState _baseline) {
+        return PollingResult.NO_CHANGES;
+    }
 	
-	@Override
-	public PollingResult compareRemoteRevisionWith(Job<?,?> project, Launcher launcher, FilePath workspace, TaskListener listener, SCMRevisionState _baseline) {
-		// TODO does not seem to be called
-		// TODO compare with _baseline ?
-		// TODO if Makefile value has been updated then rebuild.
-		// TODO-0 log  all of this
-		return PollingResult.NO_CHANGES;
-	}
+    @Override
+    public void checkout(Run<?,?> build, Launcher launcher, FilePath workspace, TaskListener listener, File changelogFile, SCMRevisionState baseline) throws IOException, InterruptedException {
+	    // If necessary, delete destination directory so we can install Drupal (unless Drupal root is workspace root).
+	    File rootDir = new File(workspace.getRemote(), root);
+	    FilePath rootPath = new FilePath(rootDir);
+	    if (rootDir.exists() && !rootPath.getRemote().equals(workspace.getRemote())) {
+		    listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
+		    // Make sure drupal/sites/defaults is writable so we can delete its contents.
+		    File defaultDir = new File(rootDir, "sites/default");
+		    defaultDir.setWritable(true);
+		    FileUtils.deleteDirectory(rootDir);
+	    }
 
-	@Override
-	public void checkout(Run<?,?> build, Launcher launcher, FilePath workspace, TaskListener listener, File changelogFile, SCMRevisionState baseline) throws IOException, InterruptedException {
-		// If necessary, delete destination directory so we can install Drupal (unless Drupal root is workspace root).
-		File rootDir = new File(workspace.getRemote(), root);
-		FilePath rootPath = new FilePath(rootDir);
-		if (rootDir.exists() && !rootPath.getRemote().equals(workspace.getRemote())) {
-			listener.getLogger().println("[DRUPAL] Deleting destination directory "+rootDir.getAbsolutePath());
-			// Make sure drupal/sites/defaults is writable so we can delete its contents.
-			File defaultDir = new File(rootDir, "sites/default");
-			defaultDir.setWritable(true);
-			FileUtils.deleteDirectory(rootDir);
-		}
+	    // Save Makefile into local file.
+	    File makefileFile = new File(workspace.getRemote(), MAKEFILE_FILE);
+	    listener.getLogger().println("[DRUPAL] Saving Makefile into "+makefileFile.getAbsolutePath());
+	    FileUtils.writeStringToFile(makefileFile, makefile);
 
-		// Save Makefile into local file.
-		File makefileFile = new File(workspace.getRemote(), MAKEFILE_FILE);
-		listener.getLogger().println("[DRUPAL] Saving Makefile into "+makefileFile.getAbsolutePath());
-		FileUtils.writeStringToFile(makefileFile, makefile);
-
-		// Make Drupal.
-		DrushInvocation drush = new DrushInvocation(rootPath, workspace, launcher, listener);
-		drush.make(makefileFile);
-	}
+	    // Make Drupal.
+	    DrushInvocation drush = new DrushInvocation(rootPath, workspace, launcher, listener);
+	    drush.make(makefileFile);
+    }
 	
-	@Override
-	public ChangeLogParser createChangeLogParser() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ChangeLogParser createChangeLogParser() {
+	   return null;
+    }
 	
-	@Extension
+    @Extension
     public static class DescriptorImpl extends SCMDescriptor {
         /**
          * Load the persisted global configuration.
