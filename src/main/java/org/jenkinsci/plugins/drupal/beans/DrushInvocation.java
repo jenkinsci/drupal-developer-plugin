@@ -12,17 +12,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.config.DrushInstallation;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 /**
  * Invoke Drush commands.
@@ -121,9 +121,9 @@ public class DrushInvocation {
 	}
 	
 	/**
-	 * Get a list of projects installed on Drupal.
+	 * Get a map of projects installed on Drupal.
 	 */
-	public Collection<DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) {
+	public Map<String, DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("pm-list").add("--pipe").add("--format=json");
 		if (modulesOnly) {
@@ -134,28 +134,29 @@ public class DrushInvocation {
 		}
 		File jsonFile;
 		try {
-			jsonFile = File.createTempFile("drush", "projects"); // TODO use listener output ?
+			// TODO piping the results of execute() into the JSON parser might be more efficient than using a temporary file.
+			jsonFile = File.createTempFile("drupal", "projects");
 			execute(args, new StreamTaskListener(jsonFile));
 		} catch (IOException e1) {
 			listener.getLogger().println(e1);
-			return CollectionUtils.EMPTY_COLLECTION;
+			return MapUtils.EMPTY_MAP;
 		} catch (InterruptedException e2) {
 			listener.getLogger().println(e2);
-			return CollectionUtils.EMPTY_COLLECTION;
+			return MapUtils.EMPTY_MAP;
 		}
 		
-		Collection<DrupalProject> projects = new HashSet<DrupalProject>();
+		Map<String, DrupalProject> projects = new HashMap<String, DrupalProject>();
 		JSONObject entries;
 		try {
 			entries = (JSONObject) JSONValue.parse(new FileReader(jsonFile));
 		} catch (FileNotFoundException e) {
 			listener.getLogger().println(e);
-			return CollectionUtils.EMPTY_COLLECTION;
+			return MapUtils.EMPTY_MAP;
 		}
 		for (Object name: entries.keySet()) {
 			JSONObject entry = (JSONObject) entries.get(name);
 			DrupalProject project = new DrupalProject(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
-			projects.add(project);
+			projects.put(name.toString(), project);
 		}
 		
 		return projects;
@@ -164,15 +165,8 @@ public class DrushInvocation {
 	/**
 	 * Check if a module exists / is enabled
 	 */
-	public boolean isModuleInstalled(final String name, boolean enabledOnly) {
-		Collection<DrupalProject> projects = getProjects(true, enabledOnly);
-		CollectionUtils.filter(projects, new Predicate() {
-			@Override
-			public boolean evaluate(Object project) {
-				return StringUtils.equals(name, ((DrupalProject) project).getName());
-			}
-		});
-		return CollectionUtils.isNotEmpty(projects);
+	public boolean isModuleInstalled(String name, boolean enabledOnly) {
+		return getProjects(true, enabledOnly).keySet().contains(name);
 	}
 	
 	/**
@@ -196,21 +190,43 @@ public class DrushInvocation {
 	/**
 	 * Run a code review.
 	 */
-	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {
+	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {	
+		// Make sure Coder is enabled.
+		DrupalProject coder = getProjects(true, true).get("coder");
+		if (coder == null) {
+			listener.getLogger().println("[DRUPAL] Coder does not exist: aborting code review");
+			return false;
+		}
+		
+		// Build command depending on Coder's version.
 		ArgumentListBuilder args = getArgumentListBuilder();
-		// TODO if old version of Coder, then adapt parameters
 		args.add("coder-review");
-		args.add("--minor");
-		args.add("--ignores-pass");
-		args.add("--checkstyle");
-		args.add("--reviews="+StringUtils.join(reviews, ","));
+		if (coder.getVersion().startsWith("7.x-2")) {
+			args.add("--minor");
+			args.add("--ignores-pass"); // TODO not always supported => expose to user ? "only if you use coder-7.x-XX+
+			args.add("--checkstyle");
+			args.add("--reviews="+StringUtils.join(reviews, ","));	
+		} else if (coder.getVersion().startsWith("7.x-1")) {
+			args.add("minor");
+			args.add("checkstyle");
+			for (String review: reviews) {
+				args.add(review);
+			}
+		} else {
+			listener.getLogger().println("[DRUPAL] Unsupported Coder version "+coder.getVersion());
+			return false;
+		}
+		
+		// 'drush coder-review comment' fails with error "use --reviews or --comment."
+		// TODO find a workaround.
+		// TODO same for i18n with coder-7.x-1.x ?
 		for(String projectName: projectNames) {
-			// drush coder-review comment ends up with error "use --reviews or --comment."
-			// TODO-0 find a workaround
 			if (!projectName.equals("comment")) {
 				args.add(projectName);
 			}
 		}
+		
+		// Run command.
     	File outputFile = new File(outputDir, "coder_review.xml");
     	return execute(args, new StreamTaskListener(outputFile));
 	}
