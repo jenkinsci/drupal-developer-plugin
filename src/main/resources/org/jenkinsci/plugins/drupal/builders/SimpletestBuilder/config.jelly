@@ -8,6 +8,8 @@
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default=""/></f:entry>
     <!-- TODO-0 explain: "you can publish junit by using value in this textfield" -->
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.simpletest"/></f:entry>
+    <f:entry title="${%Exclude these test groups}" field="exceptGroups"><f:textarea default=""/></f:entry>
+    <f:entry title="${%Exclude these test classes}" field="exceptClasses"><f:textarea default=""/></f:entry>
   </f:advanced>
   
 </j:jelly>

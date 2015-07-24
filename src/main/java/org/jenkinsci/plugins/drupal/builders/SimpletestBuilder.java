@@ -11,9 +11,18 @@ import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.Closure;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.plugins.drupal.beans.DrupalTest;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -31,12 +40,16 @@ public class SimpletestBuilder extends Builder {
     public final String uri;
     public final String root;
     public final String logs;
+    public final String exceptGroups;
+    public final String exceptClasses;
 	
     @DataBoundConstructor
-    public SimpletestBuilder(String uri, String root, String logs) {
+    public SimpletestBuilder(String uri, String root, String logs, String exceptGroups, String exceptClasses) {
         this.uri = uri;
         this.root = root;
         this.logs = logs;
+        this.exceptGroups = exceptGroups;
+        this.exceptClasses = exceptClasses;
     }
 
     @Override
@@ -58,8 +71,25 @@ public class SimpletestBuilder extends Builder {
     		drush.enable("simpletest");
     	}
     	
+    	// Filter out excluded test groups/classes if necessary.
+    	final List<String> targets = new ArrayList<String>();
+    	if (StringUtils.isNotEmpty(exceptGroups) || StringUtils.isNotEmpty(exceptClasses)) {
+    		final Collection<String> groups = Arrays.asList(StringUtils.split(exceptGroups.toLowerCase(), ","));
+    		final Collection<String> classes = Arrays.asList(StringUtils.split(exceptClasses.toLowerCase(), ","));
+    		CollectionUtils.forAllDo(drush.getTests(), new Closure() {
+				@Override
+				public void execute(Object input) {
+					DrupalTest test = (DrupalTest) input;
+					if (!groups.contains(test.getGroup().toLowerCase()) && !classes.contains(test.getClassName().toLowerCase())) {
+						targets.add(test.getClassName());	
+					}
+				}
+			});
+    	}
+    	Collections.sort(targets);
+    	
     	// Run Simpletest.
-    	drush.testRun(logsDir, uri);
+    	drush.testRun(logsDir, uri, targets);
 
     	return true;
     }

@@ -9,12 +9,11 @@ import hudson.util.StreamTaskListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -22,6 +21,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.config.DrushInstallation;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -130,7 +130,7 @@ public class DrushInvocation {
 	}
 	
 	/**
-	 * Get a map of projects installed on Drupal.
+	 * Get a map of projects installed on Drupal, keyed by machine name.
 	 */
 	public Map<String, DrupalExtension> getProjects(boolean modulesOnly, boolean enabledOnly) {
 		ArgumentListBuilder args = getArgumentListBuilder();
@@ -151,7 +151,7 @@ public class DrushInvocation {
 		} catch (InterruptedException e2) {
 			listener.getLogger().println(e2);
 			return MapUtils.EMPTY_MAP;
-		}		
+		}
 		
 		Map<String, DrupalExtension> projects = new HashMap<String, DrupalExtension>();
 		JSONObject entries = (JSONObject) JSONValue.parse(json.toString());
@@ -203,17 +203,52 @@ public class DrushInvocation {
 	}
 	
 	/**
+	 * Get a list of test classes available.
+	 */
+	public Collection<DrupalTest> getTests() {
+		ArgumentListBuilder args = getArgumentListBuilder();
+		args.add("test-run").add("--format=json");
+
+		OutputStream json = new ByteArrayOutputStream();
+		try {
+			execute(args, new StreamTaskListener(json));
+		} catch (IOException e1) {
+			listener.getLogger().println(e1);
+			return CollectionUtils.EMPTY_COLLECTION;
+		} catch (InterruptedException e2) {
+			listener.getLogger().println(e2);
+			return CollectionUtils.EMPTY_COLLECTION;
+		}
+		
+		Collection<DrupalTest> tests = new HashSet<DrupalTest>();
+		JSONArray entries = (JSONArray) JSONValue.parse(json.toString());
+		if (entries == null) {
+			listener.getLogger().println("[DRUPAL] Could not list available tests");
+			return CollectionUtils.EMPTY_COLLECTION;
+		}
+		for (Object entry: entries) {
+			JSONObject test = (JSONObject) entry;
+			tests.add(new DrupalTest(test.get("group").toString(), test.get("class").toString()));
+		}
+		
+		return tests;
+	}
+	
+	/**
 	 * Run tests.
 	 */
-	public boolean testRun(File outputDir, String uri) throws IOException, InterruptedException {
+	public boolean testRun(File outputDir, String uri, Collection<String> targets) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
 		args.add("test-run");
+		args.add("--xml="+outputDir.getAbsolutePath());
 		if (StringUtils.isNotEmpty(uri)) {
 			args.add("--uri="+uri);
 		}
-		// TODO allow user to exclude classes/groups ? e.g. core tests
-		args.add("--all");
-		args.add("--xml="+outputDir.getAbsolutePath());
+		if (CollectionUtils.isEmpty(targets)) {
+			args.add("--all");
+		} else {
+			args.add(StringUtils.join(targets, ","));
+		}
 		return execute(args);
 	}
 	
