@@ -71,6 +71,7 @@ public class CoderReviewBuilder extends Builder {
     	// Make sure logs directory exists.
     	File logsDir = new File(build.getWorkspace().getRemote(), logs);
     	if (!logsDir.exists()) {
+    		listener.getLogger().println("[DRUPAL] Creating logs directory "+logs);
     		logsDir.mkdir();
     	}
     	
@@ -89,8 +90,6 @@ public class CoderReviewBuilder extends Builder {
     		listener.getLogger().println("[DRUPAL] Coder is not enabled. Enabling Coder...");
     		drush.enable("coder_review");
     	}
-		// TODO what if Coder is in codebase ? adapt parameters or delete (mention in help)
-		// TODO logs everywhere		
 		
 		Collection<String> reviews = new HashSet<String>();
 		if (this.style)    reviews.add("style");
@@ -102,11 +101,10 @@ public class CoderReviewBuilder extends Builder {
 		// Remove projects the user wants to exclude.
 		// **/*.info matches all modules, themes and installation profiles.
 		// Installation profiles cannot be reviewed and will be just ignored by Coder.
-		// TODO array_diff with drush pml --status=enabled --format=json ? 
 		FileSet fileSet = Util.createFileSet(rootDir, "**/*.info", except);
 		DirectoryScanner scanner = fileSet.getDirectoryScanner();
 		Collection<String> projects = Arrays.asList(scanner.getIncludedFiles());
-		
+
 		// Transform sites/all/modules/mymodule/mymodule.module into mymodule.
 		CollectionUtils.transform(projects, new Transformer<String, String>() {
 			@Override

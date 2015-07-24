@@ -44,14 +44,21 @@ public class SimpletestBuilder extends Builder {
     	// Make sure logs directory exists.
     	File logsDir = new File(build.getWorkspace().getRemote(), logs);
     	if (!logsDir.exists()) {
+    		listener.getLogger().println("[DRUPAL] Creating logs directory "+logs);
     		logsDir.mkdir();
     	}
 
-    	// TODO ability to exclude certain test classes
-    	// Run Simpletest.
+    	// Enable Simpletest if necessary.
     	File rootDir = new File(build.getWorkspace().getRemote(), root);
     	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
-    	drush.enable("simpletest"); // TODO-0 unless already enabled
+    	if (drush.isModuleInstalled("simpletest", true)) {
+    		listener.getLogger().println("[DRUPAL] Simpletest is already enabled");
+    	} else {
+    		listener.getLogger().println("[DRUPAL] Simpletest is not enabled. Enabling Simpletest...");
+    		drush.enable("simpletest");
+    	}
+    	
+    	// Run Simpletest.
     	drush.testRun(logsDir, uri);
 
     	return true;

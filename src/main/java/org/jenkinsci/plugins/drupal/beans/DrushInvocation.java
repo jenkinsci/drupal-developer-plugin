@@ -122,7 +122,6 @@ public class DrushInvocation {
 	
 	/**
 	 * Get a list of projects installed on Drupal.
-	 * TODO cache result set and return a clone ?
 	 */
 	public Collection<DrupalProject> getProjects(boolean modulesOnly, boolean enabledOnly) {
 		ArgumentListBuilder args = getArgumentListBuilder();
@@ -198,6 +197,7 @@ public class DrushInvocation {
 	 */
 	public boolean coderReview(File outputDir, Collection<String> reviews, Collection<String> projectNames) throws IOException, InterruptedException {
 		ArgumentListBuilder args = getArgumentListBuilder();
+		// TODO if old version of Coder, then adapt parameters
 		args.add("coder-review");
 		args.add("--minor");
 		args.add("--ignores-pass");

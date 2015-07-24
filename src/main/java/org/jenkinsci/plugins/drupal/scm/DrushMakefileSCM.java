@@ -79,7 +79,7 @@ public class DrushMakefileSCM extends SCM {
 			return PollingResult.BUILD_NOW;
 		}
 		
-		// TODO log  all of this
+		// TODO-0 log  all of this
 		return PollingResult.NO_CHANGES;
 	}
 
@@ -128,7 +128,6 @@ public class DrushMakefileSCM extends SCM {
 		    return "Drush Makefile";
 		}
 		
-
 		// TODO-0 validate that makefile exists
 		
 	}
