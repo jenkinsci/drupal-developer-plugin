@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.sf.json.JSONObject;
 
@@ -25,9 +23,7 @@ import org.apache.commons.collections4.Transformer;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.jenkinsci.plugins.drupal.beans.DrupalProject;
 import org.jenkinsci.plugins.drupal.beans.DrushInvocation;
-import org.jenkinsci.plugins.drupal.config.DrushInstallation;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;

@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.drupal.config.DrushInstallation;
@@ -218,10 +217,11 @@ public class DrushInvocation {
 
 		// Ignores pass if needed.
 		// This option works only with coder-7.x-2.4+.
-		if (ignoresPass && coder.getVersion().startsWith("7.x-2")) {
-			int minorVersion = Integer.parseInt(coder.getVersion().substring(12, coder.getVersion().length()));
-			if (minorVersion >= 4) { // TODO test
+		if (ignoresPass) {
+			if (coder.getVersion().startsWith("7.x-2") && (Integer.parseInt(coder.getVersion().replaceFirst("7\\.x-2\\.", "")) >= 4)) {
 				args.add("--ignores-pass");	
+			} else {
+				listener.getLogger().println("[DRUPAL] 'Ignores pass' option is available only with Coder-7.x-2.4+, ignoring option");
 			}
 		}
 
