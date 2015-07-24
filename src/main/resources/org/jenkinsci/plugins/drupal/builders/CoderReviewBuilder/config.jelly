@@ -15,7 +15,7 @@
     <!-- TODO-0 later: radio "review everything / only these modules / everything except these modules -->
     <!-- TODO-0 explain "multiple directory on multiple lines" -->
     <!-- TODO-0 explain syntax with wildcards (Ant file mask pattern), relative to Drupal root directory -->
-    <f:entry title="${%Exclude these files}" field="except"><f:textarea default="modules/**,profiles/**,themes/**,sites/all/modules/contrib/**,sites/default/modules/contrib/**"/></f:entry>
+    <f:entry title="${%Exclude these files}" field="except"><f:textarea default=""/></f:entry>
     <f:entry title="${%Ignores pass}" field="ignoresPass"><f:checkbox default="false"/></f:entry>
   </f:advanced>
 

@@ -3,10 +3,13 @@ package org.jenkinsci.plugins.drupal.projects;
 import hudson.Extension;
 import hudson.model.ItemGroup;
 import hudson.model.TopLevelItem;
-import hudson.model.AbstractProject.AbstractProjectDescriptor;
 import hudson.model.Project;
 import hudson.plugins.checkstyle.CheckStylePublisher;
 import hudson.tasks.junit.JUnitResultArchiver;
+
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import jenkins.model.Jenkins;
 
 import org.jenkinsci.plugins.drupal.builders.CoderReviewBuilder;
@@ -21,23 +24,11 @@ import org.jenkinsci.plugins.drupal.scm.DrushMakefileSCM;
  *
  */
 public class DrupalProject extends Project<DrupalProject, DrupalBuild> implements TopLevelItem {
-
+	
+    private static final Logger LOGGER = Logger.getLogger(DrupalProject.class.getName());
+	
 	public DrupalProject(ItemGroup parent, String name) {
 		super(parent, name);
-
-		// Add SCM.
-		// getSCMs().add(new DrushMakefileSCM("api=2&#xD;core=7.x&#xD;projects[drupal][version]=7.38", "drupal")); // TODO GitSCM ?
-		
-		// Add builders.
-		getBuildersList().add(new DrupalInstanceBuilder("mysql://user:password@localhost/db", "drupal", "standard", false, false));
-		getBuildersList().add(new CoderReviewBuilder(true, true, true, true, true, "drupal", "logs.coder", "", false));
-		getBuildersList().add(new SimpletestBuilder("http://localhost/", "drupal", "logs.simpletest"));
-		
-		// Add publishers.
-		getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs.coder/*"));
-		getPublishersList().add(new JUnitResultArchiver("logs.simpletest/*"));
-		// TODO make sure dependency shows up in UI when installing module
-		// TODO project settings are not persisted
 	}
 	
 	@Override
@@ -61,7 +52,25 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 		
 		@Override
 		public DrupalProject newInstance(ItemGroup parent, String name) {
-			return new DrupalProject(parent, name);
+			DrupalProject project = new DrupalProject(parent, name);
+			
+			// Add SCM.
+			try {
+				project.setScm(new DrushMakefileSCM("api=2\r\ncore=7.x\r\nprojects[drupal][version]=7.38", "drupal"));
+			} catch (IOException e) {
+				LOGGER.warning("[DRUPAL] Unable to instantiate Makefile SCM: "+e.toString());
+			}
+
+			// Add builders.
+			project.getBuildersList().add(new DrupalInstanceBuilder("mysql://user:password@localhost/db", "drupal", "standard", false, false));
+			project.getBuildersList().add(new CoderReviewBuilder(true, true, true, true, true, "drupal", "logs.coder", "", false));
+			project.getBuildersList().add(new SimpletestBuilder("http://localhost/", "drupal", "logs.simpletest"));
+			
+			// Add publishers.
+			project.getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs.coder/*"));
+			project.getPublishersList().add(new JUnitResultArchiver("logs.simpletest/*"));
+
+			return project;
 		}
 		
 	}
