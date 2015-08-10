@@ -114,7 +114,7 @@ public class SimpletestBuilder extends Builder {
          * Human readable name used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Simpletest on Drupal";
+            return "Run tests on Drupal";
         }
 
         @Override

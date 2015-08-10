@@ -1,7 +1,12 @@
 [Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
 
+This plugin brings 4 Jenkins components:
+ * SCM 'Drush Makefile' allows to fetch code based on a [Makefile](https://www.drupal.org/node/1432374)
+ * Builder 'Build a Drupal instance' allows to [install Drupal](https://www.drupal.org/documentation/install/developers) into a given database, based on code already fetched
+ * Builder 'Review code on Drupal' brings a Jenkins interface for [Coder Review](https://www.drupal.org/project/coder)
+ * Builder 'Run tests on Drupal' brings a Jenkins interface for [Simpletest](https://www.drupal.org/simpletest)
+
 TODO screenshot
-![alt tag](https://raw.github.com/jenkinsci/php-builtin-web-server-plugin/master/screenshot.png)
 
 #### Compilation
 
@@ -29,19 +34,25 @@ Alternatively:
 #### Usage
 
  * TODO
+ * Install Drush, possibly using system config page
  * Run MySQL
- * Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL)
+ * Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
+
+ * Might want to run Apache / php web server for tests as recommended by simpletest
+ * Note that core simpletests run forever. you can monitor progress on /console ; might want to skip core tests
 
 #### Dependencies
 
- * checkstyle
- * junit
- * scm-api
- * jenkins 1.580.1
- * TODO version + link wiki
+ * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
+ * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
+ * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * [Jenkins](https://jenkins-ci.org/changelog) 1.580
+ * [Drush](http://www.drush.org/en/master/install/)
+ * TODO versions
 
 #### Troubleshooting
 
  * Plugin installed but does not show up => make sure dependencies are installed
  * Check /var/log/jenkins/jenkins.log
  * Check console output (http://localhost:8080/job/<myjob>/<id>/console)
+ * Drupal 7.x

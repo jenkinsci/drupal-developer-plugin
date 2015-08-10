@@ -137,7 +137,7 @@ public class CoderReviewBuilder extends Builder {
          * Human readable name used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Run Coder Review on Drupal";
+            return "Review code on Drupal";
         }
 
         @Override
