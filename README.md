@@ -29,11 +29,15 @@ Alternatively:
 #### Usage
 
  * TODO
- * TODO
 
 #### Dependencies
 
  * checkstyle
  * junit
  * scm-api
+ * jenkins 1.580.1
  * TODO version + link wiki
+
+#### FAQ
+
+ * Plugin installed but does not show up => make sure dependencies are installed. Check /var/log/jenkins/jenkins.log

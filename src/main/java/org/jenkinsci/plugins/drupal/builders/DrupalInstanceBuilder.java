@@ -34,11 +34,6 @@ public class DrupalInstanceBuilder extends Builder {
     public final boolean refresh;
     public final boolean updb;
     
-    // TODO separate plugin to run php webserver:
-    // TODO - explain https://www.drupal.org/project/php_server, "you can also run apache on the same server and point at workspace", "uri option should match"
-    // TODO - explain must be a different port for each job ; web server will run only during -->
-    // TODO - make sure PHP 5.4 exists ; make sure not a well known port ; not a used port ; not empty -->
-    // TODO - another default port at random ?
     @DataBoundConstructor
     public DrupalInstanceBuilder(String db, String root, String profile, boolean refresh, boolean updb) {
     	this.db = db;

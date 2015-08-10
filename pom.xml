@@ -12,13 +12,13 @@
 
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>drupal</artifactId>
-  <version>1.13-SNAPSHOT</version>
+  <version>1.14-SNAPSHOT</version><!-- TODO -->
   <packaging>hpi</packaging>
   <name>Drupal</name>
-  <description>Run Coder Review and Simpletest on Drupal.</description>
+  <description>Review code and run tests on Drupal.</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
 
-  <licenses>
+  <licenses><!-- TODO -->
     <license>
       <name>MIT License</name>
       <url>http://opensource.org/licenses/MIT</url>

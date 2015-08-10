@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-  Run code reviews and tests on Drupal projects.
+  Review code and run tests on <a href="https://www.drupal.org/">Drupal</a>.
 </div>
