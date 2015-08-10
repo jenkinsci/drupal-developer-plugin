@@ -20,7 +20,7 @@ import org.jenkinsci.plugins.drupal.scm.DrushMakefileSCM;
 /**
  * Drupal project (top level item).
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrupalProject extends Project<DrupalProject, DrupalBuild> implements TopLevelItem {

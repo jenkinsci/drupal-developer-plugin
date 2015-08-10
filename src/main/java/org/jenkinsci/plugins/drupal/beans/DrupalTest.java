@@ -4,8 +4,7 @@ package org.jenkinsci.plugins.drupal.beans;
 /**
  * Drupal test class.
  * 
- * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrupalTest {

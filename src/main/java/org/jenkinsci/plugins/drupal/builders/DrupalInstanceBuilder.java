@@ -23,7 +23,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Install a Drupal instance.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrupalInstanceBuilder extends Builder {

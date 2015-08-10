@@ -28,7 +28,7 @@ import org.json.simple.JSONValue;
 /**
  * Invoke Drush commands.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrushInvocation {

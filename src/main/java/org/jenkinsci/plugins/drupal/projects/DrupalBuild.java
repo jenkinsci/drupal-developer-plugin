@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Drupal build.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrupalBuild extends Build<DrupalProject, DrupalBuild> {

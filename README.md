@@ -29,6 +29,8 @@ Alternatively:
 #### Usage
 
  * TODO
+ * Run MySQL
+ * Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL)
 
 #### Dependencies
 
@@ -38,6 +40,8 @@ Alternatively:
  * jenkins 1.580.1
  * TODO version + link wiki
 
-#### FAQ
+#### Troubleshooting
 
- * Plugin installed but does not show up => make sure dependencies are installed. Check /var/log/jenkins/jenkins.log
+ * Plugin installed but does not show up => make sure dependencies are installed
+ * Check /var/log/jenkins/jenkins.log
+ * Check console output (http://localhost:8080/job/<myjob>/<id>/console)

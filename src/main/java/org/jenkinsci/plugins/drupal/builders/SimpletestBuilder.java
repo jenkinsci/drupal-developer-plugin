@@ -32,7 +32,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Run Simpletest on Drupal.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class SimpletestBuilder extends Builder {

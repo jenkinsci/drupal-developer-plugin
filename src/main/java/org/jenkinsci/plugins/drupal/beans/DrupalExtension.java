@@ -3,8 +3,7 @@ package org.jenkinsci.plugins.drupal.beans;
 /**
  * Drupal extension (theme/module).
  * 
- * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrupalExtension {

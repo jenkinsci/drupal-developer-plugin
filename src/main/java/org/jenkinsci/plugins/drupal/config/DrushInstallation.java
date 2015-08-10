@@ -32,7 +32,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Handle Drush installations.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrushInstallation extends ToolInstallation implements NodeSpecific<DrushInstallation>, EnvironmentSpecific<DrushInstallation> {

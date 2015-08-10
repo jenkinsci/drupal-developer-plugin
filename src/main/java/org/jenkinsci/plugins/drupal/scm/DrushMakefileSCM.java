@@ -26,7 +26,7 @@ import org.kohsuke.stapler.QueryParameter;
 /**
  * Checkout Drupal source code based on a Drush Makefile. 
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class DrushMakefileSCM extends SCM {
