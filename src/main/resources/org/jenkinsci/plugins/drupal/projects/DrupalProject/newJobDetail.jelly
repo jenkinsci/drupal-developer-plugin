@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-  Create a Drupal installation, review code in modules/themes and run tests.
+  Build a Drupal instance, review code and run tests.
 </div>

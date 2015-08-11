@@ -43,6 +43,8 @@ Alternatively:
  1. TODO if you have Drupal in your codebase, then checkout into workspace root
  2. TODO if you don't, then checkout Drupal and your codebase using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin) (more efficient) or using the 'Drush Makefile' SCM
  * If create as freestyle project, then configure checkstyle + junit plugins
+ * TODO link to @ignore system
+ * TODO common values for codereview except (sites/all/modules/contrib etc) + simpletest except
 
 #### Dependencies
 
