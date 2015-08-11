@@ -51,13 +51,13 @@ Alternatively:
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [Jenkins](https://jenkins-ci.org/changelog) 1.580
- * [Drush](http://www.drush.org/en/master/install/)
- * TODO versions
+ * [Drush](http://www.drush.org/en/master/install/) TODO version
+ * TODO either Apache or PHP server
 
 #### Troubleshooting
 
  * Plugin installed but does not show up => make sure dependencies are installed
  * Check /var/log/jenkins/jenkins.log
  * Check console output (http://localhost:8080/job/<myjob>/<id>/console)
+ * Make sure you use the last version of dependencies
  * Drupal 7.x

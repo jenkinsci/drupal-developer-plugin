@@ -1,12 +1,12 @@
 <div>
   <p>Specify modules/themes that should not be reviewed, relative to the Drupal root directory.</p>
-  <p>For instance if the Drupal root is 'drupal' and if you want to review only custom code then you might want to exclude contributed projects:
+  <p>For instance if you want to review only custom code then you might want to exclude contributed projects:
     <pre>
-    drupal/sites/all/modules/contrib/**,
-    drupal/sites/all/themes/contrib/**,
-    drupal/modules/**,
-    drupal/themes/**,
-    drupal/profiles/**
+    sites/all/modules/contrib/**,
+    sites/all/themes/contrib/**,
+    modules/**,
+    themes/**,
+    profiles/**
     </pre>
   </p>
   <p>This field supports <a href="http://ant.apache.org/manual/Types/fileset.html">FileSet includes</a>.</p> 
