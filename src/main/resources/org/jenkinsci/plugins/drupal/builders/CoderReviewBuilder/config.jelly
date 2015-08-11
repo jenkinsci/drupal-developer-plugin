@@ -1,7 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   
-  <!-- TODO-0 mention additional info from admin/config/development/coder, including links to drupal.org -->
   <f:entry title="${%Drupal Coding Standards}"     field="style"   ><f:checkbox default="true"/></f:entry>
   <f:entry title="${%Drupal Commenting Standards}" field="comment" ><f:checkbox default="true"/></f:entry>
   <f:entry title="${%Drupal SQL Standards}"        field="sql"     ><f:checkbox default="true"/></f:entry>
@@ -10,11 +9,7 @@
   
   <f:advanced>
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default=""/></f:entry>
-    <!-- TODO-0 explain: "you can publish checkstyle by using value in this textfield" -->
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.coder"/></f:entry>
-    <!-- TODO-0 later: radio "review everything / only these modules / everything except these modules -->
-    <!-- TODO-0 explain "multiple directory on multiple lines" -->
-    <!-- TODO-0 explain syntax with wildcards (Ant file mask pattern), relative to Drupal root directory -->
     <f:entry title="${%Exclude these modules/themes}" field="except"><f:textarea default=""/></f:entry>
     <f:entry title="${%Ignores pass}" field="ignoresPass"><f:checkbox default="false"/></f:entry>
   </f:advanced>

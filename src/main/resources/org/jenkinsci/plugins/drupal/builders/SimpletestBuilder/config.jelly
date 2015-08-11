@@ -1,12 +1,10 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   
-  <!-- TODO-0 "help/documentation: this will be used when running drush -uri" -->
   <f:entry title="${%URI}" field="uri"><f:textbox default="http://localhost/"/></f:entry>
   
   <f:advanced>
     <f:entry title="${%Drupal root directory}" field="root"><f:textbox default=""/></f:entry>
-    <!-- TODO-0 explain: "you can publish junit by using value in this textfield" -->
     <f:entry title="${%Logs directory}" field="logs"><f:textbox default="logs.simpletest"/></f:entry>
     <f:entry title="${%Exclude these test groups}" field="exceptGroups"><f:textarea default=""/></f:entry>
     <f:entry title="${%Exclude these test classes}" field="exceptClasses"><f:textarea default=""/></f:entry>

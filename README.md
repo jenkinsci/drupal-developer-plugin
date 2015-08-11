@@ -36,6 +36,7 @@ Alternatively:
  * TODO
  * Install Drush, possibly using system config page
  * Run MySQL
+ * Create a MySQL database
  * Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
  * Might want to run Apache / php web server for tests as recommended by simpletest
  * Note that core simpletests run forever. you can monitor progress on /console ; might want to skip core tests
