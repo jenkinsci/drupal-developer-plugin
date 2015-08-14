@@ -27,7 +27,9 @@ import hudson.model.EnvironmentSpecific;
 import hudson.model.TaskListener;
 import hudson.model.Node;
 import hudson.slaves.NodeSpecific;
+import hudson.tools.ToolInstaller;
 import hudson.tools.ToolProperty;
+import hudson.tools.DownloadFromUrlInstaller;
 import hudson.tools.ToolDescriptor;
 import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
@@ -153,6 +155,11 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
         public String getDisplayName() {
             return "Drush";
         }
+        
+        @Override
+        public List<? extends ToolInstaller> getDefaultInstallers() {
+        	return Collections.singletonList(new DrushGithubInstaller(null));
+        }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
@@ -180,24 +187,36 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
                 }
             }
             if (name.length() > 0) {
-                LOGGER.log(Level.WARNING, "invalid drushTool selection {0}", name);
+                LOGGER.log(Level.WARNING, "Invalid drushTool selection {0}", name);
             }
             return null;
         }
 
-        /**
-         * Get all Drush installations.
-         */
-        public List<ToolDescriptor<? extends DrushInstallation>> getApplicableDesccriptors() {
-            List<ToolDescriptor<? extends DrushInstallation>> r = new ArrayList<ToolDescriptor<? extends DrushInstallation>>();
-            for (ToolDescriptor td : Jenkins.getInstance().<ToolInstallation,ToolDescriptor<?>>getDescriptorList(ToolInstallation.class)) {
-                if (DrushInstallation.class.isAssignableFrom(td.clazz))
-                    r.add(td);
-            }
-            return r;
-        }
-
     }
+/* TODO drop
+    public static class DrushGithubInstaller extends DownloadFromUrlInstaller {
 
+    	@DataBoundConstructor
+    	public DrushGithubInstaller(String id) {
+    		super(id);
+    	}
+    	
+    	@Extension
+    	public static final class DescriptorImpl extends DownloadFromUrlInstaller.DescriptorImpl<DownloadFromUrlInstaller> {
+
+			@Override
+			public String getDisplayName() {
+				return "Install from Github";
+			}
+
+			@Override
+			public boolean isApplicable(Class<? extends ToolInstallation> toolType) {
+				return toolType==DrushInstallation.class;
+			}
+    		
+    	}    	
+
+    }  
+    */
 
 }

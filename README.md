@@ -5,7 +5,7 @@ TODO screenshot
 #### Quick start
 
  * TODO
- * Install Checkstyle, Junit, SCM API and this plugin using the release page
+ * Install Checkstyle, Junit, SCM API, (github api ?) and this plugin using the release page
  * Create a database
  * Create a fresh Drupal project, update database connection string, build project
  * Might want to have a look at detailed steps, especially for web server config
@@ -39,7 +39,7 @@ Alternatively:
 
  * TODO mysql commands (user jenkins)
  * TODO unless sqlite
- * TODO Install Drush ?, possibly using system config page
+ * TODO Install Drush ?, possibly using system config page / possibly using Github installer
 
 ##### Create Project
 
@@ -84,6 +84,7 @@ Alternatively:
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * [Drush](http://www.drush.org/en/master/install/) TODO version
+ * TODO github api
  * TODO either Apache or PHP server
 
 #### Troubleshooting
