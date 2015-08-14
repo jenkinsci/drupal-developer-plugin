@@ -6,6 +6,7 @@ TODO screenshot
 
  * TODO
  * Install Checkstyle, Junit, SCM API, (github api ?) and this plugin using the release page
+ * Install Drush 7.0.0-rc2 globally
  * Create a database
  * Create a fresh Drupal project, update database connection string, build project
  * Might want to have a look at detailed steps, especially for web server config
@@ -40,7 +41,14 @@ Alternatively:
 
  * TODO mysql commands (user jenkins)
  * TODO unless sqlite
- * TODO Install Drush ?, possibly using system config page / possibly using Github installer
+ * TODO Install Drush ?, possibly using system config page with shell installer:
+VERSION=7.0.0-rc2
+curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1
+curl -sSL https://getcomposer.org/installer | php
+php composer.phar install
+  * tool dir -> '.'
+  * see http://docs.drush.org/en/master/install/
+  * global install is preferred
 
 ##### Create Project
 

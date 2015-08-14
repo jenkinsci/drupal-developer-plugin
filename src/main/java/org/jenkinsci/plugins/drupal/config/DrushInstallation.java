@@ -18,11 +18,13 @@
 
 package org.jenkinsci.plugins.drupal.config;
 
+import static hudson.init.InitMilestone.EXTENSIONS_AUGMENTED;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Functions;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.init.Initializer;
 import hudson.model.EnvironmentSpecific;
 import hudson.model.TaskListener;
 import hudson.model.Node;
@@ -40,9 +42,11 @@ import java.util.Collections;
 import java.util.List;
 
 import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Handle Drush installations.
@@ -104,6 +108,23 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) Jenkins.getInstance().getDescriptorOrDie(getClass());
     }
+    
+    @Initializer(after=EXTENSIONS_AUGMENTED)
+    public static void onLoaded() {
+    	// Create default tool installation if needed.
+    	DescriptorImpl descriptor = (DescriptorImpl) Jenkins.getInstance().getDescriptor(DrushInstallation.class);
+    	DrushInstallation[] installations = descriptor.getInstallations();
+    
+		// No need to initialize if there's already something.
+    	if (installations != null && installations.length > 0) {
+    		return;
+    	}
+
+    	String defaultDrushExe = Functions.isWindows() ? "drush.bat" : "drush";
+    	DrushInstallation tool = new DrushInstallation("Default", defaultDrushExe, Collections.<ToolProperty<?>>emptyList());
+    	descriptor.setInstallations(new DrushInstallation[] { tool });
+    	descriptor.save();
+    }
 
     @Extension
     public static class DescriptorImpl extends ToolDescriptor<DrushInstallation> {
@@ -115,32 +136,22 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
 
         @Override
         public List<? extends ToolInstaller> getDefaultInstallers() {
-            return Collections.EMPTY_LIST; // TODO ZipInstaller
+            return Collections.EMPTY_LIST;
         }
 
         /**
-         * Installation directory should not be empty.
-         * Installation directory should be a directory.
-         * Installation directory should contain 'druhs.php'.
-         * TODO test
-         * TODO buggy: do not check if using auto installer
-         * TODO "Path to drush executable" => "Path to drush home"
+         * Load the persisted global configuration.
          */
-        public FormValidation doCheckHome(@QueryParameter File value) {
-            if(value.getPath().equals("")) {
-                return FormValidation.error("Required");
-            }
+        public DescriptorImpl() {
+        	super();
+        	load();
+        }
 
-            if(!value.isDirectory()) {
-                return FormValidation.error(value+" is not a directory");
-            }
-
-            File drushPhp = new File(value, "drush.php");
-            if(!drushPhp.exists()) {
-                return FormValidation.error(value+" does not seem to be a Drush directory");
-            }
-            
-            return FormValidation.ok();
+        @Override
+        public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
+            setInstallations(req.bindJSONToList(clazz, json.get("tool")).toArray(new DrushInstallation[0]));
+            save();
+            return true;
         }
 
         /**
