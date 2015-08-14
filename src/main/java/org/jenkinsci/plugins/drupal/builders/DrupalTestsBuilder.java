@@ -54,16 +54,16 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Fengtan https://github.com/fengtan/
  *
  */
-public class SimpletestBuilder extends Builder {
+public class DrupalTestsBuilder extends Builder {
 
     public final String uri;
     public final String root;
     public final String logs;
     public final String exceptGroups;
     public final String exceptClasses;
-	
+
     @DataBoundConstructor
-    public SimpletestBuilder(String uri, String root, String logs, String exceptGroups, String exceptClasses) {
+    public DrupalTestsBuilder(String uri, String root, String logs, String exceptGroups, String exceptClasses) {
         this.uri = uri;
         this.root = root;
         this.logs = logs;

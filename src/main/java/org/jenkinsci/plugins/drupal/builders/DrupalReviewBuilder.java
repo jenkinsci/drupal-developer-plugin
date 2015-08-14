@@ -54,7 +54,7 @@ import org.kohsuke.stapler.StaplerRequest;
  * @author Fengtan https://github.com/fengtan/
  * 
  */
-public class CoderReviewBuilder extends Builder {
+public class DrupalReviewBuilder extends Builder {
 
 	// 'drush dl coder' downloads coder-7.x-1.3 so we will use 'drush dl coder-7.x-2.5' explicitly.  
 	private static final String CODER_RELEASE = "coder-7.x-2.5";
@@ -71,7 +71,7 @@ public class CoderReviewBuilder extends Builder {
 	public final boolean ignoresPass;
 	
     @DataBoundConstructor
-    public CoderReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except, boolean ignoresPass) {
+    public DrupalReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except, boolean ignoresPass) {
     	this.style = style;
     	this.comment = comment;
     	this.sql = sql;

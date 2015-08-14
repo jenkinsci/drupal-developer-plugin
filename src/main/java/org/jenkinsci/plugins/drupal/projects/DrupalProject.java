@@ -30,9 +30,9 @@ import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
 
-import org.jenkinsci.plugins.drupal.builders.CoderReviewBuilder;
+import org.jenkinsci.plugins.drupal.builders.DrupalReviewBuilder;
 import org.jenkinsci.plugins.drupal.builders.DrupalInstanceBuilder;
-import org.jenkinsci.plugins.drupal.builders.SimpletestBuilder;
+import org.jenkinsci.plugins.drupal.builders.DrupalTestsBuilder;
 import org.jenkinsci.plugins.drupal.scm.DrushMakefileSCM;
 
 /**
@@ -81,8 +81,8 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 
 			// Add builders.
 			project.getBuildersList().add(new DrupalInstanceBuilder("mysql://user:password@localhost/db", "drupal", "standard", false, false));
-			project.getBuildersList().add(new CoderReviewBuilder(true, true, true, true, true, "drupal", "logs_codereview", "", false));
-			project.getBuildersList().add(new SimpletestBuilder("http://localhost/", "drupal", "logs_tests", "", ""));
+			project.getBuildersList().add(new DrupalReviewBuilder(true, true, true, true, true, "drupal", "logs_codereview", "", false));
+			project.getBuildersList().add(new DrupalTestsBuilder("http://localhost/", "drupal", "logs_tests", "", ""));
 			
 			// Add publishers.
 			project.getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs_codereview/*"));
