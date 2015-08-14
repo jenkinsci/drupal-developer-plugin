@@ -106,7 +106,11 @@ public class DrupalTestsBuilder extends Builder {
     	Collections.sort(targets);
     	
     	// Run Simpletest.
-    	drush.testRun(logsDir, uri, targets);
+    	if (CollectionUtils.isEmpty(targets)) {
+    		listener.getLogger().println("[DRUPAL] No test groups/classes to run");
+    	} else {
+        	drush.testRun(logsDir, uri, targets);	
+    	}
 
     	return true;
     }
