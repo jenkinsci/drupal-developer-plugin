@@ -92,8 +92,8 @@ public class DrupalTestsBuilder extends Builder {
     	
     	// Build list of targets and filter out excluded groups/classes.
     	final List<String> targets = new ArrayList<String>();
-		final Collection<String> groups = Arrays.asList(StringUtils.split(exceptGroups.toLowerCase(), ","));
-		final Collection<String> classes = Arrays.asList(StringUtils.split(exceptClasses.toLowerCase(), ","));
+		final Collection<String> groups = Arrays.asList(exceptGroups.toLowerCase().split(",[\\s]*"));
+		final Collection<String> classes = Arrays.asList(exceptClasses.toLowerCase().split(",[\\s]*"));
 		CollectionUtils.forAllDo(drush.getTests(), new Closure() {
 			@Override
 			public void execute(Object input) {
