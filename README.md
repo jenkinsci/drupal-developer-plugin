@@ -1,6 +1,6 @@
 [Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
 
-TODO screenshot
+TODO screenshots
 
 #### Quick start
 
@@ -40,7 +40,7 @@ Alternatively:
 ##### Create Local Database
 
  * TODO mysql commands (user jenkins)
- * TODO unless sqlite
+ * TODO sqlite is also OK for code reviews but probably not efficient enough for tests
 
 ##### Install Drush
  * TODO Install Drush
@@ -68,11 +68,14 @@ php composer.phar install
  * TODO Multiple-SCMs example
  1. TODO if you have Drupal in your codebase, then checkout into workspace root
  2. TODO if you don't, then checkout Drupal and your codebase using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin) (more efficient) or using the 'Drush Makefile' SCM
+ * Drush Makefile -> codebase will be fetched every time a new build runs. ideally use Git or other SCMs, possibly using Multiple SCMs plugin
 
 ##### Configure Local Web Server
 
- * Might want to run Apache / php web server for tests as recommended by simpletest
+ * Might want to run Apache on same server / php web server for tests otherwise simpletest might return false positives
  * Apache config example, should point at Drupal root (possibly workspace root)
+ * otherwise some tests might throw false positives like this:
+Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http://localhost/user returned 0 (0 bytes). in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047
 
 ##### Configure Builds
 
@@ -82,6 +85,7 @@ php composer.phar install
  * TODO common values for codereview except (sites/all/modules/contrib etc) + simpletest except
  * Simpletest URI should match web server config
  * TODO link to @ignore system
+ * if code has coder, ok. otherwise gets downloaded it automatically into $DRUPAL_ROOT/modules/
 
 ##### Configure Code Review/Tests Reports
  
@@ -106,3 +110,4 @@ php composer.phar install
  * Check console output (http://localhost:8080/job/<myjob>/<id>/console)
  * Make sure you use the last version of dependencies
  * Drupal 7.x
+
