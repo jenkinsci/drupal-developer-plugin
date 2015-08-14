@@ -88,6 +88,8 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
 
     /**
      * Return the default installation.
+     * 
+     * TODO what if user change name "Default" to smth else ?
      */
     public static DrushInstallation getDefaultInstallation() {
         DescriptorImpl drushTools = Jenkins.getInstance().getDescriptorByType(DrushInstallation.DescriptorImpl.class);
@@ -155,11 +157,6 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
         public String getDisplayName() {
             return "Drush";
         }
-        
-        @Override
-        public List<? extends ToolInstaller> getDefaultInstallers() {
-        	return Collections.singletonList(new DrushGithubInstaller(null));
-        }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
@@ -193,30 +190,5 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
         }
 
     }
-/* TODO drop
-    public static class DrushGithubInstaller extends DownloadFromUrlInstaller {
-
-    	@DataBoundConstructor
-    	public DrushGithubInstaller(String id) {
-    		super(id);
-    	}
-    	
-    	@Extension
-    	public static final class DescriptorImpl extends DownloadFromUrlInstaller.DescriptorImpl<DownloadFromUrlInstaller> {
-
-			@Override
-			public String getDisplayName() {
-				return "Install from Github";
-			}
-
-			@Override
-			public boolean isApplicable(Class<? extends ToolInstallation> toolType) {
-				return toolType==DrushInstallation.class;
-			}
-    		
-    	}    	
-
-    }  
-    */
 
 }
