@@ -65,7 +65,7 @@ public class DrupalInstanceBuilder extends Builder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
     	// Create Drupal installation if needed.
-    	DrushInvocation drush = new DrushInvocation(new FilePath(new File(root)), build.getWorkspace(), launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(new FilePath(new File(root)), build.getWorkspace(), launcher, listener, build.getEnvironment(listener));
     	if (refresh || !drush.status()) {
     		listener.getLogger().println("[DRUPAL] No Drupal installation detected, installing Drupal...");
     		drush.siteInstall(db, profile);	

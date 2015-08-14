@@ -14,6 +14,7 @@ TODO screenshot
 
  * `git clone https://github.com/fengtan/drupal-plugin`
  * `cd drupal-plugin/`
+ * `git checkout tags/0.1`
  * `mvn clean install -DskipTests=true`
  
 Alternatively, download a pre-compiled .hpi archive from the [releases page] (https://github.com/fengtan/drupal-plugin/releases)

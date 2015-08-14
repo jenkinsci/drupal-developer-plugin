@@ -18,10 +18,13 @@
 
 package org.jenkinsci.plugins.drupal.beans;
 
+import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Launcher.ProcStarter;
 import hudson.model.TaskListener;
+import hudson.model.Computer;
+import hudson.tools.ToolInstallation;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.StreamTaskListener;
 
@@ -55,21 +58,59 @@ public class DrushInvocation {
 	protected final FilePath workspace;
 	protected final Launcher launcher;
 	protected final TaskListener listener;
+	protected final EnvVars environment;
 	
-	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener) {
+	public DrushInvocation(FilePath root, FilePath workspace, Launcher launcher, TaskListener listener, EnvVars environment) {
 		this.root = root;
 		this.workspace = workspace;
 		this.launcher = launcher;
 		this.listener = listener;
+		this.environment = environment;
 	}
 
 	/**
 	 * Get default Drush options.
 	 */
 	protected ArgumentListBuilder getArgumentListBuilder() {
-		String drushExe = DrushInstallation.getDefaultInstallation().getDrushExe();
-		return new ArgumentListBuilder(drushExe).add("--yes").add("--nocolor").add("--root="+root.getRemote());
+		return new ArgumentListBuilder(getDrushExe()).add("--yes").add("--nocolor").add("--root="+root.getRemote());
 	}
+
+	/**
+	 * Get Drush executable.
+	 */
+	protected String getDrushExe() {
+    	DrushInstallation installation = getDrushInstallation();
+    	String defaultExe = launcher.isUnix() ? "drush" : "drush.bat";
+        if (installation == null) {
+			listener.getLogger().println("[DRUPAL] No Drush installation configured, fall back to '"+defaultExe+"'");
+            return defaultExe;
+        }
+		try {
+			// TODO ? installation.buildEnvVars(environment);
+			installation = installation.forNode(Computer.currentComputer().getNode(), listener);
+			installation = installation.forEnvironment(environment);
+			String exe = installation.getExecutable(launcher);
+	        if (exe == null) {
+				listener.getLogger().println("[DRUPAL] Drush executable '"+exe+"' from installation '"+installation.getName()+"' could not be found, fall back to '"+defaultExe+"'");
+	            return defaultExe;
+	        }
+	        return exe;
+		} catch (IOException e) {
+			listener.getLogger().println("[DRUPAL] Fall back to '"+defaultExe+"' due to error: "+e.getMessage());
+			return defaultExe;
+		} catch (InterruptedException e) {
+			listener.getLogger().println("[DRUPAL] Fall back to '"+defaultExe+"' due to error: "+e.getMessage());
+			return defaultExe;
+		}     
+    }
+	
+	/**
+	 * Get first Drush installation configured, or null if no installation is configured.
+	 */
+	protected DrushInstallation getDrushInstallation() {
+    	DrushInstallation[] installations = ToolInstallation.all().get(DrushInstallation.DescriptorImpl.class).getInstallations();
+        return (installations.length > 0) ? installations[0] : null;
+    }
 	
 	/**
 	 * Execute a Drush command.

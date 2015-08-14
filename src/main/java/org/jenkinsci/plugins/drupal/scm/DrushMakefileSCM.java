@@ -93,7 +93,7 @@ public class DrushMakefileSCM extends SCM {
 	    FileUtils.writeStringToFile(makefileFile, makefile);
 
 	    // Make Drupal.
-	    DrushInvocation drush = new DrushInvocation(rootPath, workspace, launcher, listener);
+	    DrushInvocation drush = new DrushInvocation(rootPath, workspace, launcher, listener, build.getEnvironment(listener));
 	    drush.make(makefileFile);
     }
 	

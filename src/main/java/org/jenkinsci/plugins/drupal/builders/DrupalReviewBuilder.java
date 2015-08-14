@@ -94,7 +94,7 @@ public class DrupalReviewBuilder extends Builder {
     	
     	// Download and enable Coder if necessary.
     	final File rootDir = new File(build.getWorkspace().getRemote(), root);
-    	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener);
+    	DrushInvocation drush = new DrushInvocation(new FilePath(rootDir), build.getWorkspace(), launcher, listener, build.getEnvironment(listener));
     	if (drush.isModuleInstalled("coder", false)) {
     		listener.getLogger().println("[DRUPAL] Coder already exists");
     	} else {
