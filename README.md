@@ -1,12 +1,14 @@
 [Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
 
-This plugin brings 4 Jenkins components:
- * SCM 'Drush Makefile' allows to fetch code based on a [Makefile](https://www.drupal.org/node/1432374)
- * Builder 'Build a Drupal instance' allows to [install Drupal](https://www.drupal.org/documentation/install/developers) into a given database, based on code already fetched
- * Builder 'Review code on Drupal' brings a Jenkins interface for [Coder Review](https://www.drupal.org/project/coder)
- * Builder 'Run tests on Drupal' brings a Jenkins interface for [Simpletest](https://www.drupal.org/simpletest)
-
 TODO screenshot
+
+#### Quick start
+
+ * TODO
+ * Install Checkstyle, Junit, SCM API and this plugin using the release page
+ * Create a database
+ * Create a fresh Drupal project, update database connection string, build project
+ * Might want to have a look at detailed steps, especially for web server config
 
 #### Compilation
 
@@ -33,18 +35,48 @@ Alternatively:
 
 #### Usage
 
- * TODO
- * Install Drush, possibly using system config page
- * Run MySQL
- * Create a MySQL database
- * Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
- * Might want to run Apache / php web server for tests as recommended by simpletest
- * Note that core simpletests run forever. you can monitor progress on /console ; might want to skip core tests
+##### Create Local Database
+
+ * TODO mysql commands (user jenkins)
+ * TODO unless sqlite
+ * TODO Install Drush ?, possibly using system config page
+
+##### Create Project
+
+ * Create a new Freestyle project
+ * TODO (skip most of config below except web server config, and also makefile is not ideal) Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
+
+##### Configure Source Code Management
+ * Checkout a Drupal codebase
+ * TODO ideally in a subdirectory
+ * TODO git example (drupal.git)
+ * TODO Makefile example
+ * TODO subversion example (subdirectory)
+ * TODO Multiple-SCMs example
  1. TODO if you have Drupal in your codebase, then checkout into workspace root
  2. TODO if you don't, then checkout Drupal and your codebase using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin) (more efficient) or using the 'Drush Makefile' SCM
- * If create as freestyle project, then configure checkstyle + junit plugins
- * TODO link to @ignore system
+
+##### Configure Local Web Server
+
+ * Might want to run Apache / php web server for tests as recommended by simpletest
+ * Apache config example, should point at Drupal root (possibly workspace root)
+
+##### Configure Builds
+
+ * TODO each build/field
+ * TODO configure Mysql
+ * Note that core simpletests run forever. you can monitor progress on /console ; might want to skip core tests
  * TODO common values for codereview except (sites/all/modules/contrib etc) + simpletest except
+ * Simpletest URI should match web server config
+ * TODO link to @ignore system
+
+##### Configure Reports
+ 
+ * TODO checkstyle + junit
+
+##### Build Project
+
+ * Click 'build now', after some time graphs should show up
 
 #### Dependencies
 
