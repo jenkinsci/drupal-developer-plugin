@@ -262,11 +262,7 @@ public class DrushInvocation {
 		if (StringUtils.isNotEmpty(uri)) {
 			args.add("--uri="+uri);
 		}
-		if (CollectionUtils.isEmpty(targets)) {
-			args.add("--all");
-		} else {
-			args.add(StringUtils.join(targets, ","));
-		}
+		args.add(StringUtils.join(targets, ","));
 		return execute(args);
 	}
 	

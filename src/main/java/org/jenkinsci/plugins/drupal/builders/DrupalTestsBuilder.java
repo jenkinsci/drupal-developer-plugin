@@ -90,21 +90,19 @@ public class DrupalTestsBuilder extends Builder {
     		drush.enable("simpletest");
     	}
     	
-    	// Filter out excluded test groups/classes if necessary.
+    	// Build list of targets and filter out excluded groups/classes.
     	final List<String> targets = new ArrayList<String>();
-    	if (StringUtils.isNotEmpty(exceptGroups) || StringUtils.isNotEmpty(exceptClasses)) {
-    		final Collection<String> groups = Arrays.asList(StringUtils.split(exceptGroups.toLowerCase(), ","));
-    		final Collection<String> classes = Arrays.asList(StringUtils.split(exceptClasses.toLowerCase(), ","));
-    		CollectionUtils.forAllDo(drush.getTests(), new Closure() {
-				@Override
-				public void execute(Object input) {
-					DrupalTest test = (DrupalTest) input;
-					if (!groups.contains(test.getGroup().toLowerCase()) && !classes.contains(test.getClassName().toLowerCase())) {
-						targets.add(test.getClassName());	
-					}
+		final Collection<String> groups = Arrays.asList(StringUtils.split(exceptGroups.toLowerCase(), ","));
+		final Collection<String> classes = Arrays.asList(StringUtils.split(exceptClasses.toLowerCase(), ","));
+		CollectionUtils.forAllDo(drush.getTests(), new Closure() {
+			@Override
+			public void execute(Object input) {
+				DrupalTest test = (DrupalTest) input;
+				if (!groups.contains(test.getGroup().toLowerCase()) && !classes.contains(test.getClassName().toLowerCase())) {
+					targets.add(test.getClassName());	
 				}
-			});
-    	}
+			}
+		});
     	Collections.sort(targets);
     	
     	// Run Simpletest.
