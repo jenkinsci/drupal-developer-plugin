@@ -86,7 +86,6 @@ public class DrushInvocation {
             return defaultExe;
         }
 		try {
-			// TODO ? installation.buildEnvVars(environment);
 			installation = installation.forNode(Computer.currentComputer().getNode(), listener);
 			installation = installation.forEnvironment(environment);
 			String exe = installation.getExecutable(launcher);
@@ -135,7 +134,7 @@ public class DrushInvocation {
 		starter.join();
 		return true;
 	}
-	
+
 	/**
 	 * Run update.php.
 	 */

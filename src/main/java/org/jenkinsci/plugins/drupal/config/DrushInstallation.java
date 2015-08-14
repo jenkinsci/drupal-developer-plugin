@@ -90,12 +90,12 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
         return getExecutable(new Launcher.LocalLauncher(TaskListener.NULL)) != null;
     }
 
-    private static final long serialVersionUID = 1L; // TODO drop ?
-
+    @Override
     public DrushInstallation forEnvironment(EnvVars environment) {
         return new DrushInstallation(getName(), environment.expand(getHome()), getProperties().toList());
     }
 
+    @Override
     public DrushInstallation forNode(Node node, TaskListener log) throws IOException, InterruptedException {
         return new DrushInstallation(getName(), translateFor(node, log), getProperties().toList());
     }
