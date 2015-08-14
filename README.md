@@ -41,8 +41,12 @@ Alternatively:
 
  * TODO mysql commands (user jenkins)
  * TODO unless sqlite
- * TODO Install Drush ?, possibly using system config page with shell installer:
-VERSION=7.0.0-rc2
+
+##### Install Drush
+ * TODO Install Drush
+  * possibly using system config page
+  * ssibly using the shell installer but for some reason jenkins will download drush every time it needs to call a drush command:
+VERSION=7.0.0
 curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1
 curl -sSL https://getcomposer.org/installer | php
 php composer.phar install
@@ -79,11 +83,11 @@ php composer.phar install
  * Simpletest URI should match web server config
  * TODO link to @ignore system
 
-##### Configure Reports
+##### Configure Code Review/Tests Reports
  
  * TODO checkstyle + junit
 
-##### Build Project
+##### Build The Project
 
  * Click 'build now', after some time graphs should show up
 
@@ -92,8 +96,7 @@ php composer.phar install
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [Drush](http://www.drush.org/en/master/install/) TODO version
- * TODO github api
+ * [Drush](http://www.drush.org/en/master/install/) 7.0.0-rc2
  * TODO either Apache or PHP server
 
 #### Troubleshooting
