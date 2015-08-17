@@ -11,7 +11,8 @@
  * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * Upload the [.hpi archive](https://github.com/fengtan/drupal-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
  * Create a Drupal Project and update the database URL (you need to create the DB yourself)
- * You may still want to check the detailed instructions below, e.g. regarding the web server configuration
+
+You may still want to check the detailed instructions below, e.g. regarding the web server configuration.
 
 #### Compilation
 
@@ -26,7 +27,7 @@ Alternatively, download a pre-compiled .hpi archive from the [releases page](htt
 
 Install dependencies by going to `http://localhost:8080/pluginManager/`:
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
- * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) (installed by default on fresh Jenkins installations)
+ * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) (installed by default on Jenkins)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
 
 Install the plugin from the command line:
@@ -53,10 +54,10 @@ Go to `http://localhost:8080/configure` and make sure Drush is configured approp
  * If Drush is not installed, then you may configure an installer so Jenkins will install it locally - for instance a Shell installer could look like this:
   * Label: leave empty
   * Command:
-`VERSION=7.0.0-rc2
-curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1
-curl -sSL https://getcomposer.org/installer | php
-php composer.phar install`
+`VERSION=7.0.0-rc2`  
+`curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1`  
+`curl -sSL https://getcomposer.org/installer | php`  
+`php composer.phar install`
   * Tool Home: `.`
 
 For some reason the automatic installers seem to run every time Jenkins runs a Drush command, so it might be more efficient to install Drush manually than using an automatic intaller.
@@ -75,9 +76,9 @@ Configure the Source Code Management section to fetch a full Drupal code base. H
  * If your own code repository includes a Drupal core, then just pull it
  * If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
  * Alternatively you may use a `Drush Makefile` source, e.g.:
-`api=2
-core=7.x
-projects[drupal][version]=7.38`
+`api=2`  
+`core=7.x`  
+`projects[drupal][version]=7.38`
 
 By default Jenkins pulls code into the workspace root but you might want to Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
  * If using the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
@@ -137,16 +138,16 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
 
 #### Troubleshooting
 
-Q: Where are the log files ?
-A: Jenkins logs: `/var/log/jenkins/jenkins.log`
-   Jenkins logs: `http://localhost:8080/log/all`
+Q: Where are the log files ?  
+A: Jenkins logs: `/var/log/jenkins/jenkins.log`  
+   Jenkins logs: `http://localhost:8080/log/all`  
    Console output: `http://localhost:8080/job/<my-job>/<id>/console`
 
-Q: The plugin is installed but the build steps do not show up
+Q: The plugin is installed but the build steps do not show up  
 A: Make sure dependencies are installed and up to date
 
-Q: Many tests fail with this kind of error:
-   `Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed:
-   GET http://localhost/user returned 0 (0 bytes).
-   in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047`
+Q: Many tests fail with this kind of error:  
+   `Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed:`  
+   `GET http://localhost/user returned 0 (0 bytes).`  
+   `in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047`  
 A: Make sure Drupal runs behind a web server
