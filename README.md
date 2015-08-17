@@ -44,7 +44,7 @@ Or from the web interface:
 ##### 1. Create Local Database
 
  * Just create a local database in MySQL: `CREATE DATABASE jenkins;`
- * SQLite is also OK for code reviews but not very efficient for running tests
+ * SQLite is OK for code reviews but not very efficient for running tests
 
 ##### 2. Install Drush
 
@@ -64,8 +64,9 @@ For some reason the automatic installers seem to run every time Jenkins runs a D
 
 ##### 3. Create Project
 
- * Just create a new 'Freestyle' project
- * Alternatively you may create a 'Drupal' project which generates a ready-to-use job to review code and run tests on a vanilla Drupal core. If you use this option then you may skip most of the instrutions below: just update the database URL and possibly set up a web server
+Just create a new 'Freestyle' project.
+
+Alternatively you may create a 'Drupal' project which generates a ready-to-use job to review code and run tests on a vanilla Drupal core. If you use this option then you may skip most of the instrutions below: just update the database URL and possibly set up a web server.
 
 ##### 4. Configure Source Code Management
 
@@ -89,13 +90,14 @@ Note that a Drush Makefile source will fetch the code every time a new build run
 
 ##### 5. Configure Local Web Server
 
- * Simpletest may return false positives if Drupal does not run behind a web server
- * Here are a couple of options:
-  * Install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
-   * Port: `8000`
-   * Host: `localhost`
-   * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
-  * Install Apache locally and make it point at the Drupal root (e.g. `/var/lib/jenkins/jobs/myproject/workspace/drupal`)
+Simpletest may return false positives if Drupal does not run behind a web server.
+
+Here are a couple of options:
+ * Install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
+  * Port: `8000`
+  * Host: `localhost`
+  * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
+ * Install Apache locally and make it point at the Drupal root (e.g. `/var/lib/jenkins/jobs/myproject/workspace/drupal`)
 
 ##### 6. Configure Builds
 
