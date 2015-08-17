@@ -48,7 +48,7 @@ Or from the web interface:
 
 ##### 2. Install Drush
 
-Go to `http://localhost:8080/configure` and make sure Drush is configured appropriately:
+[Install Drush](http://docs.drush.org/en/master/install/) and make sure it is configured on `http://localhost:8080/configure`:
  * If Drush is installed globally, then Drush home should be empty (default value)
  * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then Drush home should be `/usr/local/tools/drush`
  * If Drush is not installed, then you may configure an installer so Jenkins will install it locally - for instance a Shell installer could look like this:
@@ -60,7 +60,7 @@ Go to `http://localhost:8080/configure` and make sure Drush is configured approp
 `php composer.phar install`
   * Tool Home: `.`
 
-For some reason the automatic installers seem to run every time Jenkins runs a Drush command, so it might be more efficient to install Drush manually than using an automatic intaller.
+For some reason the automatic installer seems to run every time Jenkins runs a Drush command, so it is better to install Drush manually than using an automatic intaller.
 
 ##### 3. Create Project
 
