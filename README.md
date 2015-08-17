@@ -1,6 +1,9 @@
 [Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
 
-TODO screenshots
+#### Screenshots
+
+![alt tag](https://raw.github.com/fengtan/drupal-plugin/master/screenshot_admin.png)
+![alt tag](https://raw.github.com/fengtan/drupal-plugin/master/screenshot_trends.png)
 
 #### Quick start
 
@@ -37,12 +40,12 @@ Alternatively:
 
 #### Usage
 
-##### Create Local Database
+##### 1. Create Local Database
 
  * TODO mysql commands (user jenkins)
  * TODO sqlite is also OK for code reviews but probably not efficient enough for tests
 
-##### Install Drush
+##### 2. Install Drush
  * TODO Install Drush
   * possibly using system config page
   * ssibly using the shell installer but for some reason jenkins will download drush every time it needs to call a drush command:
@@ -54,12 +57,12 @@ php composer.phar install
   * see http://docs.drush.org/en/master/install/
   * global install is preferred
 
-##### Create Project
+##### 3. Create Project
 
  * Create a new Freestyle project
  * TODO (skip most of config below except web server config, and also makefile is not ideal) Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
 
-##### Configure Source Code Management
+##### 4. Configure Source Code Management
  * Checkout a Drupal codebase
  * TODO ideally in a subdirectory
  * TODO git example (drupal.git)
@@ -70,14 +73,14 @@ php composer.phar install
  2. TODO if you don't, then checkout Drupal and your codebase using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin) (more efficient) or using the 'Drush Makefile' SCM
  * Drush Makefile -> codebase will be fetched every time a new build runs. ideally use Git or other SCMs, possibly using Multiple SCMs plugin
 
-##### Configure Local Web Server
+##### 5. Configure Local Web Server
 
  * Might want to run Apache on same server / php web server for tests otherwise simpletest might return false positives
  * Apache config example, should point at Drupal root (possibly workspace root)
  * otherwise some tests might throw false positives like this:
 Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http://localhost/user returned 0 (0 bytes). in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047
 
-##### Configure Builds
+##### 6. Configure Builds
 
  * TODO each build/field
  * TODO configure Mysql
@@ -87,11 +90,11 @@ Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http:/
  * TODO link to @ignore system
  * if code has coder, ok. otherwise gets downloaded it automatically into $DRUPAL_ROOT/modules/
 
-##### Configure Code Review/Tests Reports
+##### 7. Configure Code Review/Tests Reports
  
  * TODO checkstyle + junit
 
-##### Build The Project
+##### 8. Build The Project
 
  * Click 'build now', after some time graphs should show up
 
