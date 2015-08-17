@@ -7,12 +7,13 @@
 
 #### Quick start
 
- * TODO
- * Install Checkstyle, Junit, SCM API, (github api ?) and this plugin using the release page
- * Install Drush 7.0.0-rc2 globally
- * Create a database
- * Create a fresh Drupal project, update database connection string, build project
- * Might want to have a look at detailed steps, especially for web server config
+ * Install [Drush 7.0.0-rc2](http://docs.drush.org/en/master/install/) globally
+ * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin) plugins
+ * Upload the [.hpi archive](https://github.com/fengtan/drupal-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
+ * Create a new Jenkins job and select 'Drupal Project'
+ * Under 'Build a Drupal instance', update the database URL to point at a valid database (you need to create this database manually)
+ * Build the project
+ * You might still want to go through the detailed instructions below, especially regarding the web server configuration
 
 #### Compilation
 
@@ -21,19 +22,20 @@
  * `git checkout tags/0.1`
  * `mvn clean install -DskipTests=true`
  
-Alternatively, download a pre-compiled .hpi archive from the [releases page] (https://github.com/fengtan/drupal-plugin/releases)
+Alternatively, download a pre-compiled .hpi archive from the [releases page](https://github.com/fengtan/drupal-plugin/releases)
 
 #### Installation
 
-Install dependencies:
- * TODO http://localhost:8080/pluginManager/
- * TODO Junit installed in core jenkins ?
+Install dependencies by going to `http://localhost:8080/pluginManager/`:
+ * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
+ * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) (installed by default on fresh Jenkins installations)
+ * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
 
-Assuming Jenkins runs on `http://localhost:8080/`:
+Install the plugin from the command line:
  * `wget http://localhost:8080/jnlpJars/jenkins-cli.jar`
  * `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin ./target/drupal.hpi -restart`
 
-Alternatively:
+Or from the web interface:
  * Go to `http://localhost:8080/pluginManager/advanced`
  * Upload `./target/drupal.hpi`
  * Restart Jenkins
@@ -42,53 +44,74 @@ Alternatively:
 
 ##### 1. Create Local Database
 
- * TODO mysql commands (user jenkins)
- * TODO sqlite is also OK for code reviews but probably not efficient enough for tests
+ * Just create a local database in MySQL: `CREATE DATABASE jenkins;`
+ * SQLite is also OK for code reviews but not very efficient for running tests
 
 ##### 2. Install Drush
- * TODO Install Drush
-  * possibly using system config page
-  * ssibly using the shell installer but for some reason jenkins will download drush every time it needs to call a drush command:
-VERSION=7.0.0
-curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1
-curl -sSL https://getcomposer.org/installer | php
-php composer.phar install
-  * tool dir -> '.'
-  * see http://docs.drush.org/en/master/install/
-  * global install is preferred
+
+Go to `http://localhost:8080/configure` and make sure Drush is configured appropriately:
+ * If Drush is installed globally, then Drush home should be empty (default value)
+ * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then Drush home should be `/usr/local/tools/drush`
+ * If Drush is not installed, then you may configure an installer so Jenkins will install it locally - for instance a Shell installer could look like this:
+  * Label: leave empty
+  * Command:
+`VERSION=7.0.0-rc2`
+`curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1`
+`curl -sSL https://getcomposer.org/installer | php`
+`php composer.phar install`
+  * Tool Home: `.`
+
+For some reason the automatic installers seem to run every time Jenkins runs a Drush command, so it might be more efficient to install Drush manually than using an automatic intaller.
 
 ##### 3. Create Project
 
- * Create a new Freestyle project
- * TODO (skip most of config below except web server config, and also makefile is not ideal) Top-level item creates a ready-to-use project to review code and run tests on a vanilla Drupal core (just set the DB URL). Just update the SCM info to run it on your code - use Makefile or any other SCM like [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) or [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin)
+ * Just create a new 'Freestyle' project
+ * Alternatively you may create a 'Drupal' project which generates a ready-to-use job to review code and run tests on a vanilla Drupal core. If you use this option then you may skip most of the instrutions below: just update the database URL and possibly set up a web server
 
 ##### 4. Configure Source Code Management
- * Checkout a Drupal codebase
- * TODO ideally in a subdirectory
- * TODO git example (drupal.git)
- * TODO Makefile example
- * TODO subversion example (subdirectory)
- * TODO Multiple-SCMs example
- 1. TODO if you have Drupal in your codebase, then checkout into workspace root
- 2. TODO if you don't, then checkout Drupal and your codebase using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin) (more efficient) or using the 'Drush Makefile' SCM
- * Drush Makefile -> codebase will be fetched every time a new build runs. ideally use Git or other SCMs, possibly using Multiple SCMs plugin
+
+Configure the Source Code Management section to fetch a full Drupal code base. Here are a few options:
+ * If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) e.g.:
+  * Repository: `http://git.drupal.org/project/drupal.git`
+  * Branch Specifier: `tags/7.38`
+ * If your own code repository includes a Drupal core, then just pull it
+ * If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
+ * Alternatively you may use a `Drush Makefile` source, e.g.:
+`api=2`
+`core=7.x`
+`projects[drupal][version]=7.38`
+
+By default Jenkins pulls code into the workspace root but you might want to Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
+ * If using the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
+ * If using the [Subversion Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin): set option `Local module directory` to `drupal`
+ * If using a Drush Makefile: set option `Drupal root directory` to `drupal`
+
+Note that a Drush Makefile source will fetch the code every time a new build runs. Using a regular source like Git or Subversion is probably more efficient.
 
 ##### 5. Configure Local Web Server
 
- * Might want to run Apache on same server / php web server for tests otherwise simpletest might return false positives
- * Apache config example, should point at Drupal root (possibly workspace root)
- * otherwise some tests might throw false positives like this:
-Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http://localhost/user returned 0 (0 bytes). in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047
+ * Sometimes Simpletest requires the site to run behind a web server - otherwise it might return false positives with errors like this:
+`Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http://localhost/user returned 0 (0 bytes). in /var/lib/jenkins/jobs/drupal/workspace/modules/user/user.test on line 2047`
+ * Here are a couple of options:
+  * Install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
+   * Port: `8000`
+   * Host: `localhost`
+   * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
+  * Install Apache locally and make it point at the Drupal root (e.g. `/var/lib/jenkins/jobs/myproject/workspace/drupal`)
 
 ##### 6. Configure Builds
 
- * TODO each build/field
- * TODO configure Mysql
- * Note that core simpletests run forever. you can monitor progress on /console ; might want to skip core tests
- * TODO common values for codereview except (sites/all/modules/contrib etc) + simpletest except
- * Simpletest URI should match web server config
- * TODO link to @ignore system
- * if code has coder, ok. otherwise gets downloaded it automatically into $DRUPAL_ROOT/modules/
+Add build steps:
+ * 'Build a Drupal instance' - this will install Drupal into a given DB, based on the code we have checked out
+ * 'Review code on Drupal'
+ * 'Run tests on Drupal'
+
+The default values should work by default though you need to update a few things:
+ * Update the database URL in step 'Build a Drupal instance' to point at your DB
+ * If Drupal has been checked out into a subdirectory (e.g. `drupal`) then update the Drupal root directory of every step accordingly ; otherwise, just leave it empty
+ * The URI of step 'Run tests on Drupal' should match what you have configured on your webserver (e.g. `http://localhost:8000`)
+
+Note that if your code base does not include a copy of the Coder module, then step 'Review code on Drupal' will automatically download it into `$DRUPAL/modules/`.
 
 ##### 7. Configure Code Review/Tests Reports
  
@@ -96,21 +119,22 @@ Test UserEditedOwnAccountTestCase->testUserEditedOwnAccount() failed: GET http:/
 
 ##### 8. Build The Project
 
- * Click 'build now', after some time graphs should show up
+ * TODO Click 'build now', after some time graphs should show up
 
 #### Dependencies
 
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * [PHP Built-in Web Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) or Apache
  * [Drush](http://www.drush.org/en/master/install/) 7.0.0-rc2
- * TODO either Apache or PHP server
 
 #### Troubleshooting
 
+ * TODO
  * Plugin installed but does not show up => make sure dependencies are installed
  * Check /var/log/jenkins/jenkins.log
  * Check console output (http://localhost:8080/job/<myjob>/<id>/console)
  * Make sure you use the last version of dependencies
- * Drupal 7.x
+ * only Drupal 7.x supported
 
