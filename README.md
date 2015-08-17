@@ -102,16 +102,16 @@ Here are a couple of options:
 ##### 6. Configure Builds
 
 Add build steps:
- * 'Build a Drupal instance' - this will install Drupal into a given DB, based on the code we have checked out
- * 'Review code on Drupal'
- * 'Run tests on Drupal'
+ * `Build a Drupal instance`
+ * `Review code on Drupal`
+ * `Run tests on Drupal`
 
 The default values should work by default though you need to update a few things:
- * Update the database URL in step 'Build a Drupal instance' to point at your DB
+ * Update the database URL in step `Build a Drupal instance` to point at your database
  * If Drupal has been checked out into a subdirectory (e.g. `drupal`) then update the Drupal root directory of every step accordingly ; otherwise, just leave it empty
- * The URI of step 'Run tests on Drupal' should match what you have configured on your webserver (e.g. `http://localhost:8000`)
+ * The URI of step `Run tests on Drupal` should match what you have configured on your webserver (e.g. `http://localhost:8000`)
 
-Note that if your code base does not include a copy of the Coder module, then step 'Review code on Drupal' will automatically download it into `$DRUPAL/modules/`.
+Note that if your code base does not include a copy of the Coder module, then step `Review code on Drupal` will automatically download it into `$DRUPAL/modules/`.
 
 ##### 7. Configure Code Review/Tests Reports
  
