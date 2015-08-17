@@ -53,7 +53,7 @@ Go to `http://localhost:8080/configure` and make sure Drush is configured approp
  * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then Drush home should be `/usr/local/tools/drush`
  * If Drush is not installed, then you may configure an installer so Jenkins will install it locally - for instance a Shell installer could look like this:
   * Label: leave empty
-  * Command:
+  * Command:  
 `VERSION=7.0.0-rc2`  
 `curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1`  
 `curl -sSL https://getcomposer.org/installer | php`  
@@ -75,7 +75,7 @@ Configure the Source Code Management section to fetch a full Drupal code base. H
   * Branch Specifier: `tags/7.38`
  * If your own code repository includes a Drupal core, then just pull it
  * If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
- * Alternatively you may use a `Drush Makefile` source, e.g.:
+ * Alternatively you may use a `Drush Makefile` source, e.g.:  
 `api=2`  
 `core=7.x`  
 `projects[drupal][version]=7.38`
