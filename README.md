@@ -56,8 +56,8 @@ Or from the web interface:
  * `php composer.phar install`
 
 Make sure Drush is configured on `http://localhost:8080/configure`:
- * If Drush is installed globally, then `Drush home` can be empty (default value)
- * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then `Drush home` should be `/usr/local/tools/drush`
+ * If Drush is installed globally, then `Path to Drush home` can be empty (default value)
+ * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then `Path to Drush home` should be `/usr/local/tools/drush`
  * If Drush is not installed, you may configure a shell installer so Jenkins will install it on the fly:
   * Label: leave empty
   * Command:  
