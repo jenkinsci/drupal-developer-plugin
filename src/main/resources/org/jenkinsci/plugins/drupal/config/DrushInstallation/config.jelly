@@ -3,7 +3,7 @@
   <f:entry title="${%Name}" field="name">
     <f:textbox />
   </f:entry>
-  <f:entry title="${%Path to Drush home}" field="home">
+  <f:entry title="${%Path to Drush home}" field="home" description="${%Leave empty if Drush is installed globally}">
     <f:textbox />
   </f:entry>
 </j:jelly>

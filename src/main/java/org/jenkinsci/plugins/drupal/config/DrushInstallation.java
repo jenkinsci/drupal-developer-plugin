@@ -120,8 +120,7 @@ public class DrushInstallation extends ToolInstallation implements NodeSpecific<
     		return;
     	}
 
-    	String defaultDrushExe = Functions.isWindows() ? "drush.bat" : "drush";
-    	DrushInstallation tool = new DrushInstallation("Default", defaultDrushExe, Collections.<ToolProperty<?>>emptyList());
+    	DrushInstallation tool = new DrushInstallation("Default", "", Collections.<ToolProperty<?>>emptyList());
     	descriptor.setInstallations(new DrushInstallation[] { tool });
     	descriptor.save();
     }
