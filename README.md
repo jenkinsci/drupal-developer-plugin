@@ -89,8 +89,8 @@ Configure the Source Code Management section to fetch a full Drupal code base. H
 `projects[drupal][version]=7.38`
 
 By default Jenkins pulls code into the workspace root but you might want to put Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
- * If using the [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
- * If using the [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin): set option `Local module directory` to `drupal`
+ * If using [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
+ * If using [Subversion](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin): set option `Local module directory` to `drupal`
  * If using a Drush Makefile: set option `Drupal root directory` to `drupal`
 
 Note that a Drush Makefile source will fetch the code every time a new build runs. Using a regular source like Git or Subversion is probably more efficient.
