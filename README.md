@@ -10,7 +10,7 @@
  * Install [Drush](http://docs.drush.org/en/master/install/) 7.0.0-rc2 globally
  * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * Upload the [.hpi archive](https://github.com/fengtan/drupal-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
- * Create a Drupal Project and update the database URL (you need to create the DB yourself)
+ * Create a Drupal Project and update field `Database URI` (you need to create the DB yourself)
 
 You may still want to check the detailed instructions below, e.g. regarding the web server configuration.
 
