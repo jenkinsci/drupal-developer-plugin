@@ -146,8 +146,7 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
 #### Troubleshooting
 
 Q: Where are the log files ?  
-A: Jenkins logs: `/var/log/jenkins/jenkins.log`  
-   Jenkins logs: `http://localhost:8080/log/all`  
+A: Jenkins logs: `/var/log/jenkins/jenkins.log` and `http://localhost:8080/log/all`  
    Console output: `http://localhost:8080/job/<my-job>/<id>/console`
 
 Q: The plugin is installed but the build steps do not show up  
