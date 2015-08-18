@@ -8,7 +8,7 @@
 #### Quick start
 
  * Install [Drush](http://docs.drush.org/en/master/install/) 7.0.0-rc2 globally
- * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin) and make sure you have the latest versions
  * Upload the [.hpi archive](https://github.com/fengtan/drupal-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
  * Create a Drupal Project and update the Database URL (you need to create the DB yourself)
 
@@ -30,6 +30,8 @@ Install dependencies by going to `http://localhost:8080/pluginManager/`:
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) (installed by default on Jenkins)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+
+Make sure you have the latest version of these plugins.
 
 Install the plugin from the command line:
  * `wget http://localhost:8080/jnlpJars/jenkins-cli.jar`
