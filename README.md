@@ -111,7 +111,7 @@ Add build steps:
  * `Review code on Drupal`
  * `Run tests on Drupal`
 
-The default values should work by default though you need to update a few things:
+The default values should work though you need to update a few things:
  * Update the database URL in step `Build a Drupal instance` to point at your database
  * If you have checked out Drupal into a subdirectory (e.g. `drupal`) then update the Drupal root directory of every step accordingly ; otherwise, just leave it empty
  * The URI of step `Run tests on Drupal` should match what you have configured on your webserver (e.g. `http://localhost:8000`)
