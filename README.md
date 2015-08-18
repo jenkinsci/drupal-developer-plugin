@@ -58,7 +58,7 @@ Or from the web interface:
 Make sure Drush is configured on `http://localhost:8080/configure`:
  * If Drush is installed globally, then `Path to Drush home` can be empty (default value)
  * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then `Path to Drush home` should be `/usr/local/tools/drush`
- * If Drush is not installed, you may configure a shell installer so Jenkins will install it on the fly:
+ * If Drush is not installed, you may configure a Shell installer so Jenkins will install it on the fly:
   * Label: leave empty
   * Command:  
 `VERSION=7.0.0-rc2`  
@@ -78,7 +78,7 @@ Alternatively you may create a 'Drupal' project which generates a ready-to-use j
 ##### 4. Configure Source Code Management
 
 Configure the Source Code Management section to fetch a full Drupal code base. Here are a few options:
- * If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin) e.g.:
+ * If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
   * Repository: `http://git.drupal.org/project/drupal.git`
   * Branch Specifier: `tags/7.38`
  * If your own code repository includes a Drupal core, then just pull it
