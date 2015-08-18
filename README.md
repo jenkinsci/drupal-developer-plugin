@@ -81,7 +81,7 @@ Configure the Source Code Management section to fetch a full Drupal code base. H
 `core=7.x`  
 `projects[drupal][version]=7.38`
 
-By default Jenkins pulls code into the workspace root but you might want to Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
+By default Jenkins pulls code into the workspace root but you might want to put Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
  * If using the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
  * If using the [Subversion Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin): set option `Local module directory` to `drupal`
  * If using a Drush Makefile: set option `Drupal root directory` to `drupal`
@@ -90,9 +90,7 @@ Note that a Drush Makefile source will fetch the code every time a new build run
 
 ##### 5. Configure Local Web Server
 
-Simpletest may return false positives if Drupal does not run behind a web server.
-
-Here are a couple of options:
+Some tests may fail if Drupal does not run behind a web server. Here are a couple of solutions:
  * Install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
   * Port: `8000`
   * Host: `localhost`
@@ -108,7 +106,7 @@ Add build steps:
 
 The default values should work by default though you need to update a few things:
  * Update the database URL in step `Build a Drupal instance` to point at your database
- * If Drupal has been checked out into a subdirectory (e.g. `drupal`) then update the Drupal root directory of every step accordingly ; otherwise, just leave it empty
+ * If you have checked out Drupal into a subdirectory (e.g. `drupal`) then update the Drupal root directory of every step accordingly ; otherwise, just leave it empty
  * The URI of step `Run tests on Drupal` should match what you have configured on your webserver (e.g. `http://localhost:8000`)
 
 Note that if your code base does not include a copy of the Coder module, then step `Review code on Drupal` will automatically download it into `$DRUPAL/modules/`.
@@ -134,7 +132,7 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
  * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
  * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [PHP Built-in Web Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) or Apache
+ * [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) or Apache
  * [Drush](http://www.drush.org/en/master/install/) 7.0.0-rc2
  * Only Drupal 7 is supported
 
