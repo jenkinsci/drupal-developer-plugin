@@ -102,7 +102,7 @@ Some tests may fail if Drupal does not run behind a web server. Here are a coupl
   * Port: `8000`
   * Host: `localhost`
   * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
- * Install Apache locally and make it point at the Drupal root (e.g. `/var/lib/jenkins/jobs/myproject/workspace/drupal`)
+ * Or install Apache locally and make it point at the Drupal root (e.g. `/var/lib/jenkins/jobs/myproject/workspace/drupal`)
 
 ##### 6. Configure Builds
 
