@@ -20,6 +20,7 @@ You may still want to check the detailed instructions below, e.g. regarding the 
  * `cd drupal-plugin/`
  * `git checkout tags/drupal-0.1`
  * `mvn clean install -DskipTests=true`
+ * This compiles the plugin into `./target/drupal.hpi`
  
 Alternatively, download a pre-compiled .hpi archive from the [releases page](https://github.com/fengtan/drupal-plugin/releases)
 
@@ -32,7 +33,7 @@ Install dependencies by going to `http://localhost:8080/pluginManager/`:
 
 Install the plugin from the command line:
  * `wget http://localhost:8080/jnlpJars/jenkins-cli.jar`
- * `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin ./target/drupal.hpi`
+ * `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin ./drupal.hpi`
  * `/etc/init.d/jenkins restart`
 
 Or from the web interface:
