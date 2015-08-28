@@ -16,7 +16,7 @@
   <packaging>hpi</packaging>
   <name>Drupal Developer</name>
   <description>Review code and run tests on Drupal.</description>
-  <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Drupal+Developer+Plugin</url>
 
   <licenses>
     <license>
