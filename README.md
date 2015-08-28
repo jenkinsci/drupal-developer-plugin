@@ -2,27 +2,27 @@
 
 #### Screenshots
 
-![alt tag](https://raw.github.com/fengtan/drupal-plugin/master/screenshot_admin.png)
-![alt tag](https://raw.github.com/fengtan/drupal-plugin/master/screenshot_trends.png)
+![alt tag](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_admin.png)
+![alt tag](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_trends.png)
 
 #### Quick start
 
  * Install [Drush](http://docs.drush.org/en/master/install/) 7.0.0-rc2 globally
  * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin) and make sure you have the latest versions
- * Upload the [.hpi archive](https://github.com/fengtan/drupal-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
+ * Upload the [.hpi archive](https://github.com/jenkinsci/drupal-developer-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
  * Create a Drupal Project and update the Database URL (you need to create the DB yourself)
 
 You may still want to check the detailed instructions below, e.g. regarding the web server configuration.
 
 #### Compilation
 
- * `git clone https://github.com/fengtan/drupal-plugin`
- * `cd drupal-plugin/`
- * `git checkout tags/drupal-0.1`
+ * `git clone https://github.com/jenkinsci/drupal-developer-plugin`
+ * `cd drupal-developer-plugin/`
+ * `git checkout tags/drupal-developer-0.1`
  * `mvn clean install -DskipTests=true`
- * This compiles the plugin into `./target/drupal.hpi`
+ * This compiles the plugin into `./target/drupal-developer.hpi`
  
-Alternatively, download a pre-compiled .hpi archive from the [releases page](https://github.com/fengtan/drupal-plugin/releases)
+Alternatively, download a pre-compiled .hpi archive from the [releases page](https://github.com/jenkinsci/drupal-developer-plugin/releases)
 
 #### Installation
 
