@@ -22,16 +22,14 @@ import hudson.Extension;
 import hudson.model.ItemGroup;
 import hudson.model.TopLevelItem;
 import hudson.model.Project;
-import hudson.plugins.checkstyle.CheckStylePublisher;
-import hudson.tasks.junit.JUnitResultArchiver;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 import jenkins.model.Jenkins;
 
-import org.jenkinsci.plugins.drupal.builders.DrupalReviewBuilder;
 import org.jenkinsci.plugins.drupal.builders.DrupalInstanceBuilder;
+import org.jenkinsci.plugins.drupal.builders.DrupalReviewBuilder;
 import org.jenkinsci.plugins.drupal.builders.DrupalTestsBuilder;
 import org.jenkinsci.plugins.drupal.scm.DrushMakefileSCM;
 
@@ -85,8 +83,8 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 			project.getBuildersList().add(new DrupalTestsBuilder("http://localhost/", "drupal", "logs_tests", "", ""));
 			
 			// Add publishers.
-			project.getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs_codereview/*"));
-			project.getPublishersList().add(new JUnitResultArchiver("logs_tests/*"));
+			// project.getPublishersList().add(new CheckStylePublisher("", "", "low", "", false, "", "", "0", "", "", "", "", "", "", "0", "", "", "", "", "", "", false, false, false, false, false, "logs_codereview/*"));
+			// project.getPublishersList().add(new JUnitResultArchiver("logs_tests/*"));
 
 			return project;
 		}
