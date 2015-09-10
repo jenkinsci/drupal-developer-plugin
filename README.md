@@ -1,14 +1,14 @@
-[Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
+[Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal 7](https://www.drupal.org/).
 
 #### Screenshots
 
-![alt tag](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_admin.png)
-![alt tag](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_trends.png)
+![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_admin.png)
+![trend graphs](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_trends.png)
 
 #### Quick start
 
- * Install [Drush](http://docs.drush.org/en/master/install/) 7.0.0-rc2 globally
- * Install plugins [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin) and make sure you have the latest versions
+ * Install [drush 7+](http://docs.drush.org/en/master/install/) globally
+ * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * Upload the [.hpi archive](https://github.com/jenkinsci/drupal-developer-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
  * Create a Drupal Project and update the Database URL (you need to create the DB yourself)
 
@@ -52,7 +52,7 @@ Or from the web interface:
 
 ##### 2. Install Drush
 
-[Install Drush](http://docs.drush.org/en/master/install/) 7.0.0-rc2, for instance:
+[Install drush 7+](http://docs.drush.org/en/master/install/), for instance:
  * `git clone https://github.com/drush-ops/drush.git /usr/local/tools/drush`
  * `cd /usr/local/tools/drush`
  * `git checkout tags/7.0.0-rc2`
@@ -140,12 +140,9 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
 
 #### Dependencies
 
- * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
- * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
  * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) or Apache
- * [Drush](http://www.drush.org/en/master/install/) 7.0.0-rc2
- * Only Drupal 7 is supported
+ * [drush 7+](http://www.drush.org/en/master/install/)
 
 #### Troubleshooting
 
