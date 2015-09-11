@@ -72,12 +72,13 @@ Alternatively you may create a 'Drupal' project which generates a ready-to-use j
 ##### 4. Configure Source Code Management
 
 Configure the Source Code Management section to fetch a full Drupal code base. Here are a few options:
-1. If you just want to run tests on a Drupal core, you may use [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
- * Repository: `http://git.drupal.org/project/drupal.git`
- * Branch Specifier: `tags/7.38`
-3. 2. If your own code repository includes a Drupal core, then just pull it
-4. If it does not, then you may combine your own repo with the drupal.org repo using [Multiple SCMs](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
-5. Alternatively you may use a `Drush Makefile` source
+
+ 1. If you just want to run tests on a Drupal core, you may use [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
+  * Repository: `http://git.drupal.org/project/drupal.git`
+  * Branch Specifier: `tags/7.38`
+ 2. If your own code repository includes a Drupal core, then just pull it
+ 3. If it does not, then you may combine your own repo with the drupal.org repo using [Multiple SCMs](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
+ 4. Alternatively you may use a `Drush Makefile` source
 
 By default Jenkins pulls code into the workspace root but you might want to put Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
  * If using [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
