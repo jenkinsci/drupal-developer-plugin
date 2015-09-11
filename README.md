@@ -2,17 +2,16 @@
 
 #### Screenshots
 
-![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_admin.png)
-![trend graphs](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/screenshot_trends.png)
+![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/admin.png)
+![trend graphs](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/trends.png)
 
 #### Quick start
 
  * Install [drush 7+](http://docs.drush.org/en/master/install/) globally
- * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * Upload the [.hpi archive](https://github.com/jenkinsci/drupal-developer-plugin/releases) on `http://localhost:8080/pluginManager/advanced`
- * Create a Drupal Project and update the Database URL (you need to create the DB yourself)
-
-You may still want to check the detailed instructions below, e.g. regarding the web server configuration.
+ * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin) and [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
+ * Create a local database: `CREATE DATABASE jenkins;`
+ * Create a Freestyle project that looks like [this](https://raw.githubg.com/jenkinsci/drupal-developer-plugin/master/img/config.png)
+ * Update the database URL
 
 #### Compilation
 
@@ -20,37 +19,30 @@ You may still want to check the detailed instructions below, e.g. regarding the 
  * `cd drupal-developer-plugin/`
  * `git checkout tags/drupal-developer-0.1`
  * `mvn clean install -DskipTests=true`
- * This compiles the plugin into `./target/drupal-developer.hpi`
- 
-Alternatively, download a pre-compiled .hpi archive from the [releases page](https://github.com/jenkinsci/drupal-developer-plugin/releases)
 
 #### Installation
 
-Install dependencies by going to `http://localhost:8080/pluginManager/`:
- * [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin)
- * [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) (installed by default on Jenkins)
- * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
-
-Make sure you have the latest version of these plugins.
+Install dependencies by going to `http://<jenkins-server>/pluginManager/`:
+ * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin) and [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) are not required but are relevant
 
 Install the plugin from the command line:
- * `wget http://localhost:8080/jnlpJars/jenkins-cli.jar`
- * `java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin ./drupal.hpi`
+ * `wget http://<jenkins-server>/jnlpJars/jenkins-cli.jar`
+ * `java -jar jenkins-cli.jar -s http://<jenkins-server>/ install-plugin ./drupal-developer.hpi`
  * `/etc/init.d/jenkins restart`
 
 Or from the web interface:
- * Go to `http://localhost:8080/pluginManager/advanced`
- * Upload `./target/drupal.hpi`
+ * Go to `http://<jenkins-server>/pluginManager/advanced`
+ * Upload `./target/drupal-developer.hpi`
  * Restart Jenkins
 
 #### Usage
 
 ##### 1. Create Local Database
 
- * Just create a local database in MySQL: `CREATE DATABASE jenkins;`
- * SQLite is OK for code reviews but not very efficient for running tests
+ * `CREATE DATABASE jenkins;`
 
-##### 2. Install Drush
+##### 2. Install drush
 
 [Install drush 7+](http://docs.drush.org/en/master/install/), for instance:
  * `git clone https://github.com/drush-ops/drush.git /usr/local/tools/drush`
@@ -59,7 +51,7 @@ Or from the web interface:
  * `curl -sSL https://getcomposer.org/installer | php`
  * `php composer.phar install`
 
-Make sure Drush is configured on `http://localhost:8080/configure`:
+Make sure Drush is configured on `http://<jenkins-server>/configure`:
  * If Drush is installed globally, then `Path to Drush home` can be empty (default value)
  * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then `Path to Drush home` should be `/usr/local/tools/drush`
  * If Drush is not installed, you may configure a Shell installer so Jenkins will install it on the fly:
@@ -145,10 +137,6 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
  * [drush 7+](http://www.drush.org/en/master/install/)
 
 #### Troubleshooting
-
-Q: Where are the log files ?  
-A: Jenkins logs: `/var/log/jenkins/jenkins.log` and `http://localhost:8080/log/all`  
-   Console output: `http://localhost:8080/job/<my-job>/<id>/console`
 
 Q: The plugin is installed but the build steps do not show up  
 A: Make sure dependencies are installed and up to date
