@@ -67,15 +67,12 @@ Alternatively you may create a 'Drupal' project which generates a ready-to-use j
 ##### 4. Configure Source Code Management
 
 Configure the Source Code Management section to fetch a full Drupal code base. Here are a few options:
- * If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
-  * Repository: `http://git.drupal.org/project/drupal.git`
-  * Branch Specifier: `tags/7.38`
- * If your own code repository includes a Drupal core, then just pull it
- * If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
- * Alternatively you may use a `Drush Makefile` source, e.g.:  
-`api=2`  
-`core=7.x`  
-`projects[drupal][version]=7.38`
+1. If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
+ * Repository: `http://git.drupal.org/project/drupal.git`
+ * Branch Specifier: `tags/7.38`
+3. 2. If your own code repository includes a Drupal core, then just pull it
+4. If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
+5. Alternatively you may use a `Drush Makefile` source
 
 By default Jenkins pulls code into the workspace root but you might want to put Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
  * If using [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin): set option `Additional Behaviours / Check out to a sub-directory` to `drupal`
@@ -109,14 +106,18 @@ The default values should work though you need to update a few things:
 
 Note that if your code base does not include a copy of the Coder module, then step `Review code on Drupal` will automatically download it into `$DRUPAL/modules/`.
 
-##### 7. Configure Code Review/Tests Reports
+##### 7. Plot results
+
+###### Code Review results
  
-Code review results can be ploted using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
+Using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
  * Create a post-build action `Publish Checkstyle analysis results`
  * If the logs directory for the code review is `logs_codereview` then set `Checkstyle results` to `logs_codereview/**`
  * You might want to set the unstable threshold to 0 normal warning, and the failed threshold to 0 high warning
 
-Test results can be ploted using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
+##### Test results
+
+Using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
  * Create a post-build action `Publish JUnit test result report`
  * If the logs directory for the tests is `logs_tests` then set `Test report XMLs` to `logs_tests/**`
 
@@ -127,9 +128,9 @@ Test results can be ploted using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/
 
 #### Dependencies
 
+ * [drush 7+](http://www.drush.org/en/master/install/)
  * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
  * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (or Apache) are not required but are relevant
- * [drush 7+](http://www.drush.org/en/master/install/)
 
 #### Troubleshooting
 
