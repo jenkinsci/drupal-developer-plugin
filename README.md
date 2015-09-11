@@ -9,7 +9,7 @@ See https://wiki.jenkins-ci.org/display/JENKINS/Drupal+Developer+Plugin
 
 #### Quick start
 
- * Install [drush 7+](http://docs.drush.org/en/master/install/) globally or configure the path to Drush home on `http://<jenkins-server>/configure`
+ * Install [drush 7+](http://docs.drush.org/en/master/install/) globally or configure the path to Drush on `http://<jenkins-server>/configure`
  * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin)
  * Create a local database: `CREATE DATABASE db;`
  * Create a Freestyle project that looks like [this](https://github.com/jenkinsci/drupal-developer-plugin/blob/master/img/config.png), or create a Drupal project
