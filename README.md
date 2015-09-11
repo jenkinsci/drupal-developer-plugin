@@ -4,7 +4,12 @@ See https://wiki.jenkins-ci.org/display/JENKINS/Drupal+Developer+Plugin
 
 #### Screenshots
 
+##### Ploting results
+
 ![trend graphs](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/trends.png)
+
+##### Administration interface
+
 ![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/admin.png)
 
 #### Quick start
