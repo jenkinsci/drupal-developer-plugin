@@ -1,16 +1,18 @@
-[Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal 7](https://www.drupal.org/).
+[Jenkins](https://jenkins-ci.org/) plugin to [review code](https://www.drupal.org/project/coder) and [run tests](https://www.drupal.org/simpletest) on [Drupal](https://www.drupal.org/).
+
+See https://wiki.jenkins-ci.org/display/JENKINS/Drupal+Developer+Plugin
 
 #### Screenshots
 
-![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/admin.png)
 ![trend graphs](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/trends.png)
+![admin interface](https://raw.github.com/jenkinsci/drupal-developer-plugin/master/img/admin.png)
 
 #### Quick start
 
  * Install [drush 7+](http://docs.drush.org/en/master/install/) globally
- * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin) and [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin)
- * Create a local database: `CREATE DATABASE jenkins;`
- * Create a Freestyle project that looks like [this](https://raw.githubg.com/jenkinsci/drupal-developer-plugin/master/img/config.png)
+ * Install [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin)
+ * Create a local database: `CREATE DATABASE db;`
+ * Create a Freestyle project that looks like [this](https://github.com/jenkinsci/drupal-developer-plugin/blob/master/img/config.png)
  * Update the database URL
 
 #### Compilation
@@ -22,11 +24,15 @@
 
 #### Installation
 
-Install dependencies by going to `http://<jenkins-server>/pluginManager/`:
- * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin) and [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) are not required but are relevant
+##### Install depdendencies
 
-Install the plugin from the command line:
+`http://<jenkins-server>/pluginManager/`:
+ * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) are not required but are relevant
+
+##### Install the plugin
+
+Either from the command line:
  * `wget http://<jenkins-server>/jnlpJars/jenkins-cli.jar`
  * `java -jar jenkins-cli.jar -s http://<jenkins-server>/ install-plugin ./drupal-developer.hpi`
  * `/etc/init.d/jenkins restart`
@@ -40,34 +46,21 @@ Or from the web interface:
 
 ##### 1. Create Local Database
 
- * `CREATE DATABASE jenkins;`
+ * `CREATE DATABASE db;`
 
-##### 2. Install drush
+##### 2. Install drush 7+
 
-[Install drush 7+](http://docs.drush.org/en/master/install/), for instance:
- * `git clone https://github.com/drush-ops/drush.git /usr/local/tools/drush`
- * `cd /usr/local/tools/drush`
+ * `git clone https://github.com/drush-ops/drush.git /var/lib/jenkins/tools/drush`
+ * `cd /var/libs/jenkins/tools/drush`
  * `git checkout tags/7.0.0-rc2`
  * `curl -sSL https://getcomposer.org/installer | php`
  * `php composer.phar install`
-
-Make sure Drush is configured on `http://<jenkins-server>/configure`:
- * If Drush is installed globally, then `Path to Drush home` can be empty (default value)
- * If Drush is installed in a specific location (e.g. `/usr/local/tools/drush/drush.php` is a valid file), then `Path to Drush home` should be `/usr/local/tools/drush`
- * If Drush is not installed, you may configure a Shell installer so Jenkins will install it on the fly:
-  * Label: leave empty
-  * Command:  
-`VERSION=7.0.0-rc2`  
-`curl -sSL https://github.com/drush-ops/drush/archive/$VERSION.tar.gz | tar xz --strip-components=1`  
-`curl -sSL https://getcomposer.org/installer | php`  
-`php composer.phar install`
-  * Tool Home: `.`
-
-For some reason the automatic installer seems to run every time Jenkins runs a Drush command, so it is better to install Drush manually than using an automatic intaller.
+ * Go to `http://<jenkins-server>/configure`
+ * Under `Drush installations`, set `Path to Drush home` to `/var/lib/jenkins/tools/drush`
 
 ##### 3. Create Project
 
-Just create a new 'Freestyle' project.
+Create a new 'Freestyle' project.
 
 Alternatively you may create a 'Drupal' project which generates a ready-to-use job to review code and run tests on a vanilla Drupal core. If you use this option then you may skip most of the instrutions below: just update the database URL and possibly set up a web server.
 
@@ -91,10 +84,12 @@ By default Jenkins pulls code into the workspace root but you might want to put 
 
 Note that a Drush Makefile source will fetch the code every time a new build runs. Using a regular source like Git or Subversion is probably more efficient.
 
+Also only Drupal 7 code is supported.
+
 ##### 5. Configure Local Web Server
 
-Some tests may fail if Drupal does not run behind a web server. Here are a couple of solutions:
- * Install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
+Some tests fail if Drupal does not run behind a web server. Here are a couple of solutions:
+ * Either install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
   * Port: `8000`
   * Host: `localhost`
   * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
@@ -116,12 +111,12 @@ Note that if your code base does not include a copy of the Coder module, then st
 
 ##### 7. Configure Code Review/Tests Reports
  
-Code review results can be analyzed using the [Checkstyle Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
+Code review results can be ploted using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
  * Create a post-build action `Publish Checkstyle analysis results`
  * If the logs directory for the code review is `logs_codereview` then set `Checkstyle results` to `logs_codereview/**`
  * You might want to set the unstable threshold to 0 normal warning, and the failed threshold to 0 high warning
 
-Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
+Test results can be ploted using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
  * Create a post-build action `Publish JUnit test result report`
  * If the logs directory for the tests is `logs_tests` then set `Test report XMLs` to `logs_tests/**`
 
@@ -132,8 +127,8 @@ Test results can be analyzed using the [JUnit Plugin](://wiki.jenkins-ci.org/dis
 
 #### Dependencies
 
- * [SCM API Plugin](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) or Apache
+ * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
+ * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (or Apache) are not required but are relevant
  * [drush 7+](http://www.drush.org/en/master/install/)
 
 #### Troubleshooting
