@@ -108,16 +108,12 @@ Note that if your code base does not include a copy of the Coder module, then st
 
 ##### 7. Plot results
 
-###### Code Review results
- 
-Using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
+Plot Code Review results using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin):
  * Create a post-build action `Publish Checkstyle analysis results`
  * If the logs directory for the code review is `logs_codereview` then set `Checkstyle results` to `logs_codereview/**`
  * You might want to set the unstable threshold to 0 normal warning, and the failed threshold to 0 high warning
 
-###### Test results
-
-Using [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
+Plot Test results using [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
  * Create a post-build action `Publish JUnit test result report`
  * If the logs directory for the tests is `logs_tests` then set `Test report XMLs` to `logs_tests/**`
 
