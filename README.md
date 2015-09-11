@@ -115,9 +115,9 @@ Using [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin
  * If the logs directory for the code review is `logs_codereview` then set `Checkstyle results` to `logs_codereview/**`
  * You might want to set the unstable threshold to 0 normal warning, and the failed threshold to 0 high warning
 
-##### Test results
+###### Test results
 
-Using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
+Using [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
  * Create a post-build action `Publish JUnit test result report`
  * If the logs directory for the tests is `logs_tests` then set `Test report XMLs` to `logs_tests/**`
 
