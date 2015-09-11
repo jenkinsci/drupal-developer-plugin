@@ -28,7 +28,7 @@ See https://wiki.jenkins-ci.org/display/JENKINS/Drupal+Developer+Plugin
 
 `http://<jenkins-server>/pluginManager/`:
  * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) are not required but are relevant
+ * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) are not required but are relevant
 
 ##### Install the plugin
 
@@ -67,11 +67,11 @@ Alternatively you may create a 'Drupal' project which generates a ready-to-use j
 ##### 4. Configure Source Code Management
 
 Configure the Source Code Management section to fetch a full Drupal code base. Here are a few options:
-1. If you just want to run tests on a Drupal core, you may use the [Git Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
+1. If you just want to run tests on a Drupal core, you may use [Git](https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin):
  * Repository: `http://git.drupal.org/project/drupal.git`
  * Branch Specifier: `tags/7.38`
 3. 2. If your own code repository includes a Drupal core, then just pull it
-4. If it does not, then you may combine your own repo with the drupal.org repo using the [Multiple SCMs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
+4. If it does not, then you may combine your own repo with the drupal.org repo using [Multiple SCMs](https://wiki.jenkins-ci.org/display/JENKINS/Multiple+SCMs+Plugin)
 5. Alternatively you may use a `Drush Makefile` source
 
 By default Jenkins pulls code into the workspace root but you might want to put Drupal into a subdirectory to keep things clean (e.g. `$WORKSPACE/drupal`):
@@ -86,7 +86,7 @@ Also only Drupal 7 code is supported.
 ##### 5. Configure Local Web Server
 
 Some tests fail if Drupal does not run behind a web server. Here are a couple of solutions:
- * Either install the [PHP Built-in Web Server Plugin](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
+ * Either install [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (requires PHP >= 5.4.0) e.g.:
   * Port: `8000`
   * Host: `localhost`
   * Document root: `drupal` (or leave empty if the Drupal root is the workspace root)
@@ -130,7 +130,7 @@ Using [JUnit](://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin):
 
  * [drush 7+](http://www.drush.org/en/master/install/)
  * [SCM API](https://wiki.jenkins-ci.org/display/JENKINS/SCM+API+Plugin)
- * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit Plugin](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (or Apache) are not required but are relevant
+ * [Checkstyle](https://wiki.jenkins-ci.org/display/JENKINS/Checkstyle+Plugin), [JUnit](https://wiki.jenkins-ci.org/display/JENKINS/JUnit+Plugin) and [PHP Built-in Web Server](https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin) (or Apache) are not required but are relevant
 
 #### Troubleshooting
 
