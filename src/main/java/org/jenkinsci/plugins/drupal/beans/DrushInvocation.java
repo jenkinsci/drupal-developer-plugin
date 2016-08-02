@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -219,7 +220,12 @@ public class DrushInvocation {
 		}
 		for (Object name: entries.keySet()) {
 			JSONObject entry = (JSONObject) entries.get(name);
-			DrupalExtension project = new DrupalExtension(name.toString(), entry.get("type").toString(), entry.get("status").toString(), entry.get("version").toString());
+			DrupalExtension project = new DrupalExtension(
+				Objects.toString(name, ""),
+				Objects.toString(entry.get("type"), ""),
+				Objects.toString(entry.get("status"), ""),
+				Objects.toString(entry.get("version"), "")
+			);
 			projects.put(name.toString(), project);
 		}
 		
