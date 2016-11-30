@@ -68,10 +68,11 @@ public class DrupalReviewBuilder extends Builder {
 	public final String root;
 	public final String logs;
 	public final String except;
+    public final String include;
 	public final boolean ignoresPass;
 	
     @DataBoundConstructor
-    public DrupalReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except, boolean ignoresPass) {
+    public DrupalReviewBuilder(boolean style, boolean comment, boolean sql, boolean security, boolean i18n, String root, String logs, String except, String include, boolean ignoresPass) {
     	this.style = style;
     	this.comment = comment;
     	this.sql = sql;
@@ -79,6 +80,14 @@ public class DrupalReviewBuilder extends Builder {
     	this.i18n = i18n;
     	this.root = root;
     	this.logs = logs;
+
+        // If the String include is empty, default to "**/*.info"
+        if (include == "") {
+            this.include = "**/*.info";
+        } else {
+            this.include = include;
+        }
+
     	this.except = except;
     	this.ignoresPass = ignoresPass;
     }
@@ -118,7 +127,7 @@ public class DrupalReviewBuilder extends Builder {
 		// Remove projects the user wants to exclude.
 		// **/*.info matches all modules, themes and installation profiles.
 		// Installation profiles cannot be reviewed and will be just ignored by Coder.
-		FileSet fileSet = Util.createFileSet(rootDir, "**/*.info", except);
+		FileSet fileSet = Util.createFileSet(rootDir, include, except);
 		DirectoryScanner scanner = fileSet.getDirectoryScanner();
 		Collection<String> projects = Arrays.asList(scanner.getIncludedFiles());
 

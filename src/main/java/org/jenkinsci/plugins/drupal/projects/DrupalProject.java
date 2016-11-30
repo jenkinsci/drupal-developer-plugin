@@ -79,7 +79,7 @@ public class DrupalProject extends Project<DrupalProject, DrupalBuild> implement
 
 			// Add builders.
 			project.getBuildersList().add(new DrupalInstanceBuilder("mysql://user:password@localhost/db", "drupal", "standard", false, false));
-			project.getBuildersList().add(new DrupalReviewBuilder(true, true, true, true, true, "drupal", "logs_codereview", "", false));
+			project.getBuildersList().add(new DrupalReviewBuilder(true, true, true, true, true, "drupal", "logs_codereview", "", "", false));
 			project.getBuildersList().add(new DrupalTestsBuilder("http://localhost/", "drupal", "logs_tests", "", ""));
 			
 			// Add publishers.
